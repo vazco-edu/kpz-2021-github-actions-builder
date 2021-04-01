@@ -1,20 +1,17 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+
 import Editor from './Editor';
 function App() {
-  const [yaml, setYaml] = useState('')
+  const [yaml, setYaml] = useState('');
   return (
     <>
-    <div className = "text-editor">
-      <Editor  
-      value = {yaml} 
-      onChange = {setYaml} 
-      />
-    </div><div className = "result">
-      ja
+      <div className="text-editor">
+        <Editor value={yaml} onChange={setYaml} />
       </div>
-      <button className = "PRESSME"  >KONWERTUJ</button>
+      <div className="result">ja</div>
+      <button className="PRESSME">KONWERTUJ</button>
     </>
-  )
+  );
 }
 
 export default App;
