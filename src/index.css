@@ -1,13 +1,58 @@
-body {
+body{
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background: black;
+}
+.text-editor{
+  background-color: rgb(39,40,34);
+  height: 70vh;
+  width: 50vw;
+  display: inline-block;
+  flex-direction: column;
+  padding: 0.5rem;
+  
+}
+.result{
+  color: white;
+}
+.container{
+  height: 100%;
+}
+.CodeMirror{
+  height: 100% !important;
+}
+.editor-wrapper{
+  overflow: hidden;
+  height: 100%;
+  flex-grow: 1;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background-color: hsl(225, 6%, 25%);
+}
+.result{
+  display: inline-block;
+  background: url("http://custom-gwent.com/cardsBg/5112f73fa6b4dd9fa8a4081edcf0e5c1.jpeg");
+  width: 45vw;
+  height: 70vh;
+  vertical-align: top;
+  padding: 0.5rem;
+}
+.PRESSME{
+    background-color: slategray;
+    color: black;
+    margin-top: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    outline: none;
+    box-shadow: 0 9px #999;
+    margin-left: 40vw;
+}
+.PRESSME:hover{
+  background-color: #900;
+  color: white;
+}
+.PRESSME:active{
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
