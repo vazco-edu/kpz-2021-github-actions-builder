@@ -30,7 +30,7 @@ body{
 }
 .result{
   display: inline-block;
-  background: url("http://custom-gwent.com/cardsBg/5112f73fa6b4dd9fa8a4081edcf0e5c1.jpeg");
+  background: grey;
   width: 45vw;
   height: 70vh;
   vertical-align: top;
