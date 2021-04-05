@@ -3,11 +3,8 @@ import standaloneCode from 'ajv/dist/standalone';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 
-<<<<<<< HEAD
-=======
 import useLocalStorage from '../hooks/useLocalStorage';
 import { schema as schem } from '../schema/Schema';
->>>>>>> a79a9dd (added a retarded schema comparison)
 import Editor from './Editor';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
@@ -33,7 +30,7 @@ function App(): JSX.Element {
     return doc;
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  /*function validate(data: any) {
+  function validate(data: any) {
     const ajv = new Ajv();
 
     const validate = ajv.compile(schem);
@@ -48,20 +45,20 @@ function App(): JSX.Element {
     //const moduleCode = standaloneCode(ajv, valid);
     // eslint-disable-next-line no-console
     //console.log(typeof moduleCode);
-  }*/
+  }
   function handleClickEvent(event: any) {
     setClick(!click);
     // eslint-disable-next-line no-console
     console.log(click);
     if (click) {
       const x = parseYamltoJSON(man);
-      /*if (validate(x)) {
+      if (validate(x)) {
         // eslint-disable-next-line no-console
         console.log('valid');
       } else {
         // eslint-disable-next-line no-console
-        console.log('Unfortunetly, thats not quite right');
-      }*/
+        console.log('mmm');
+      }
       // eslint-disable-next-line no-console
       //console.log(man);
       // Tutaj chyba coś wywala, bo nie może wykonać JSON.parse (idk)
@@ -75,9 +72,7 @@ function App(): JSX.Element {
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} />
       </div>
-      <div className="result">
-        {click ? JSON.stringify(parseYamltoJSON(man)) : ''}
-      </div>
+      <div className="result">{click ? yaml : ''}</div>
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
