@@ -16,10 +16,17 @@ function App(): JSX.Element {
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
   const man = yaml;
   function parseYamltoJSON(text: string) {
+    let doc;
     // Parsing string to JSON
     // eslint-disable-next-line @typescript-eslint/ban-types
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const doc = jsyaml.load(text);
+    try {
+      doc = jsyaml.load(text);
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
+      const error = `${e.reason} on line ${e.mark.line}`;
+      return error;
+    }
     // eslint-disable-next-line no-console
     console.log(text);
     // eslint-disable-next-line no-console
@@ -33,18 +40,21 @@ function App(): JSX.Element {
   }
 
   function validate(data: any) {
+    if (typeof data === 'string') {
+      return 0;
+    }
     const ajv = new Ajv();
     const validate = ajv.compile(a);
     const valid = validate(data);
     return valid;
   }
-
+  //global variable, for storing parsed yaml in JSON  format
+  const x = parseYamltoJSON(man);
   function handleClickEvent(event: any) {
     setClick(!click);
     // eslint-disable-next-line no-console
     console.log(click);
     if (click) {
-      const x = parseYamltoJSON(man);
       if (validate(x)) {
         // eslint-disable-next-line no-console
         console.log('valid');
@@ -56,18 +66,29 @@ function App(): JSX.Element {
       //console.log(man);
     }
   }
+  function poka_obiekt(m: any) {
+    // eslint-disable-next-line no-constant-condition
+    if (true) {
+      // eslint-disable-next-line guard-for-in
+      for (const properties in m) {
+        // eslint-disable-next-line no-console, @typescript-eslint/no-unsafe-member-access
+        console.log(properties, m[properties]);
+      }
+    }
+  }
+  poka_obiekt(x);
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {click ? JSON.stringify(parseYamltoJSON(man)) : ''}
+        {click && validate(x) ? JSON.stringify(x) : ''}
       </div>
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
-      <div> {}</div>
+      <div className="checkValid"> {validate(x) ? '' : x}</div>
     </>
   );
 }

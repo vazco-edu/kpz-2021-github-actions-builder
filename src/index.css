@@ -55,4 +55,15 @@ body{
   box-shadow: 0 5px #666;
   transform: translateY(4px);
 }
+.checkValid{
+  color:white;
+  text-align: center;
+  margin-top: 50px;
+  width: 40%;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(202, 75, 75);
+}
 
