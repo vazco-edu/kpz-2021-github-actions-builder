@@ -30,7 +30,7 @@ function App(): JSX.Element {
     return doc;
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function validate(data: any) {
+  /*function validate(data: any) {
     const ajv = new Ajv();
 
     const validate = ajv.compile(schem);
@@ -45,20 +45,20 @@ function App(): JSX.Element {
     //const moduleCode = standaloneCode(ajv, valid);
     // eslint-disable-next-line no-console
     //console.log(typeof moduleCode);
-  }
+  }*/
   function handleClickEvent(event: any) {
     setClick(!click);
     // eslint-disable-next-line no-console
     console.log(click);
     if (click) {
       const x = parseYamltoJSON(man);
-      if (validate(x)) {
+      /*if (validate(x)) {
         // eslint-disable-next-line no-console
         console.log('valid');
       } else {
         // eslint-disable-next-line no-console
-        console.log('mmm');
-      }
+        console.log('Unfortunetly, thats not quite right');
+      }*/
       // eslint-disable-next-line no-console
       //console.log(man);
       // Tutaj chyba coś wywala, bo nie może wykonać JSON.parse (idk)
@@ -72,7 +72,9 @@ function App(): JSX.Element {
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
-      <div className="result">{click ? yaml : ''}</div>
+      <div className="result">
+        {click ? JSON.stringify(parseYamltoJSON(man)) : ''}
+      </div>
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
