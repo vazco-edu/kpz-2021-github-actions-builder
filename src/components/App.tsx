@@ -15,7 +15,6 @@ function App(): JSX.Element {
   function parseYamltoJSON(text: string) {
     let doc;
     // Parsing string to JSON
-    // eslint-disable-next-line @typescript-eslint/ban-types
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     try {
       doc = jsyaml.load(text);
@@ -109,6 +108,32 @@ function App(): JSX.Element {
   if (validate(x)) {
     showObject(x);
   }
+  const tab: string[] = [];
+  function returnArray(obj: any) {
+    // eslint-disable-next-line guard-for-in
+    for (const element in obj) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
+      console.log(element, obj[element]);
+      if (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        (typeof obj[element] !== 'object' ||
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          Array.isArray(obj[element]) === true) &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        typeof obj[element][0] !== 'object'
+      ) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+        tab.push(`${element}: ${obj[element]}`);
+      } else {
+        tab.push(`${element}:`);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        returnArray(obj[element]);
+      }
+    }
+    return tab;
+  }
+  const res = returnArray(x);
+  let i = 0;
   return (
     <>
       <div className="text-editor">
@@ -116,6 +141,14 @@ function App(): JSX.Element {
       </div>
       <div className="result">
         {click && validate(x) ? JSON.stringify(x) : ''}
+        <ol>
+          {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            res.map(data => (
+              <li key={i++}>{data}</li>
+            ))
+          }
+        </ol>
       </div>
       <div className="result">{click ? yaml : ''}</div>
       <button className="PRESSME" onClick={handleClickEvent}>
