@@ -1,5 +1,4 @@
 import Ajv from 'ajv';
-import standaloneCode from 'ajv/dist/standalone';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 
@@ -58,7 +57,7 @@ function App(): JSX.Element {
   }
   //global variable, for storing parsed yaml in JSON  format
   const x = parseYamltoJSON(man);
-  function handleClickEvent(event: any) {
+  function handleClickEvent() {
     setClick(!click);
     // eslint-disable-next-line no-console
     console.log(click);
@@ -68,7 +67,11 @@ function App(): JSX.Element {
         console.log('valid');
       } else {
         // eslint-disable-next-line no-console
+<<<<<<< HEAD
         console.log('mmm');
+=======
+        console.log('not valid');
+>>>>>>> bfa43b7 (added intelligent array reading (when array contains objects, it is read, if not, it is skipped)
       }
       // eslint-disable-next-line no-console
       //console.log(man);
@@ -87,6 +90,16 @@ function App(): JSX.Element {
         console.log(properties, obj[properties]);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (typeof obj[properties] === 'object') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          if (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            Array.isArray(obj[properties]) === true &&
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            typeof obj[properties][0] !== 'object'
+          ) {
+            //if said object is an array skip to the next iteration
+            continue;
+          }
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           showObject(obj[properties]);
         }
