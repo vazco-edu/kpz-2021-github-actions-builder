@@ -66,17 +66,24 @@ function App(): JSX.Element {
       //console.log(man);
     }
   }
-  function poka_obiekt(m: any) {
+  function showObject(obj: any) {
     // eslint-disable-next-line no-constant-condition
     if (true) {
       // eslint-disable-next-line guard-for-in
-      for (const properties in m) {
+      for (const properties in obj) {
         // eslint-disable-next-line no-console, @typescript-eslint/no-unsafe-member-access
-        console.log(properties, m[properties]);
+        console.log(properties, obj[properties]);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (typeof obj[properties] === 'object') {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          showObject(obj[properties]);
+        }
       }
     }
   }
-  poka_obiekt(x);
+  if (validate(x)) {
+    showObject(x);
+  }
   return (
     <>
       <div className="text-editor">
