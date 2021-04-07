@@ -35,6 +35,9 @@ body{
   height: 70vh;
   vertical-align: top;
   padding: 0.5rem;
+  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 .PRESSME{
     background-color: slategray;

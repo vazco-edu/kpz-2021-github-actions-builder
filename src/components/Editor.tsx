@@ -22,6 +22,9 @@ export default function Editor(props: any): JSX.Element {
             linewrapping: true,
             lint: true,
             mode: 'yaml',
+            indentWithTaba: false,
+            smartIndent: true,
+            tabSize: 2,
             gutters: [
               'CodeMirror-linenumbers',
               'CodeMirror-foldgutter',
