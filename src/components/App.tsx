@@ -1,6 +1,7 @@
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
+import util from 'util';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 import { schema as schem } from '../schema/Schema';
@@ -34,10 +35,18 @@ function App(): JSX.Element {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return doc;
   }
+<<<<<<< HEAD
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function validate(data: any) {
+=======
+  type gitHubAction = {
+    name: string;
+  };
+  //predykat
+  function validate(data: unknown): data is gitHubAction {
+>>>>>>> a5114cd (added codemirror, js-yaml, ajv)
     if (typeof data === 'string') {
-      return 0;
+      return false;
     }
     const ajv = new Ajv();
 
@@ -55,7 +64,7 @@ function App(): JSX.Element {
     //console.log(typeof moduleCode);
   }
   //global variable, for storing parsed yaml in JSON  format
-  const x = parseYamltoJSON(man);
+  const x: unknown = parseYamltoJSON(man);
   function handleClickEvent() {
     setClick(!click);
     // eslint-disable-next-line no-console
@@ -63,7 +72,7 @@ function App(): JSX.Element {
     if (click) {
       if (validate(x)) {
         // eslint-disable-next-line no-console
-        console.log('valid');
+        console.log('valid', x);
       } else {
         // eslint-disable-next-line no-console
 <<<<<<< HEAD
@@ -140,7 +149,12 @@ function App(): JSX.Element {
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {click && validate(x) ? JSON.stringify(x) : ''}
+        {click && validate(x) ? <pre>{JSON.stringify(x, null, 2)}</pre> : ''}
+        {click && validate(x) ? (
+          <pre>{util.inspect(x, { depth: null })}</pre>
+        ) : (
+          ''
+        )}
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
