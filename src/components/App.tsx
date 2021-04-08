@@ -163,6 +163,7 @@ function App(): JSX.Element {
   if (validate(x)) {
     showObject(x);
   }
+  /*<<<<<<< Updated upstream
   const tab: string[] = [];
   function returnArray(obj: any) {
     // eslint-disable-next-line guard-for-in
@@ -190,6 +191,29 @@ function App(): JSX.Element {
   const res = returnArray(x);
   console.log(Object.entries(x));
   let i = 0;
+=======*/
+  function retArray(obj: any) {
+    const tab: string[] = [];
+    let element: any;
+    // eslint-disable-next-line guard-for-in
+    for (element in obj) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
+      console.log(element, obj[element]);
+      if (element === 'jobs') {
+        // eslint-disable-next-line no-console
+        // eslint-disable-next-line guard-for-in, @typescript-eslint/no-unsafe-member-access
+        for (const myJobs in obj[element]) {
+          // eslint-disable-next-line no-console, @typescript-eslint/no-unsafe-member-access
+          // console.log(myJobs);
+          tab.push(myJobs);
+        }
+        // console.log(typeof element);
+      }
+    }
+    // eslint-disable-next-line no-console
+    console.log(tab);
+  }
+  retArray(x);
   return (
     <>
       <div className="text-editor">
