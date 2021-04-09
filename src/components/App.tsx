@@ -11,6 +11,8 @@ import Editor from './Editor';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 function App(): JSX.Element {
+  // eslint-disable-next-line no-console
+  console.log(a);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -41,13 +43,20 @@ function App(): JSX.Element {
     name: string;
   };
   //predykat
-  function validate(data: unknown): data is gitHubAction {
+  function validate(data: any): data is gitHubAction {
     if (typeof data === 'string') {
       return false;
     }
     const ajv = new Ajv();
-    const validate = ajv.compile(a);
-    const valid = validate(data);
+    try {
+      ajv.compile(data);
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
+      console.log(e);
+    }
+    const valid = true;
+    // eslint-disable-next-line no-console
+    console.log(valid);
     return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
@@ -59,7 +68,7 @@ function App(): JSX.Element {
     if (click) {
       if (validate(x)) {
         // eslint-disable-next-line no-console
-        console.log('valid', x);
+        console.log('valid', a);
       } else {
         // eslint-disable-next-line no-console
         console.log('not valid');
@@ -134,6 +143,7 @@ function App(): JSX.Element {
         ) : (
           ''
         )}
+        {JSON.stringify(parseYamltoJSON(man), null, 2)}
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
