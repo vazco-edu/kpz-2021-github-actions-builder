@@ -9,6 +9,8 @@ import Editor from './Editor';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 function App(): JSX.Element {
+  // eslint-disable-next-line no-console
+  console.log(a);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -43,12 +45,17 @@ function App(): JSX.Element {
     name: string;
   };
   //predykat
+<<<<<<< HEAD
   function validate(data: unknown): data is gitHubAction {
 >>>>>>> a5114cd (added codemirror, js-yaml, ajv)
+=======
+  function validate(data: any): data is gitHubAction {
+>>>>>>> 3001620 (fuck my life)
     if (typeof data === 'string') {
       return false;
     }
     const ajv = new Ajv();
+<<<<<<< HEAD
 
     const validate = ajv.compile(schem);
     const valid = validate(data);
@@ -58,6 +65,17 @@ function App(): JSX.Element {
     }
     // eslint-disable-next-line no-console
     //console.log(typeof valid);
+=======
+    try {
+      ajv.compile(data);
+    } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
+      console.log(e);
+    }
+    const valid = true;
+    // eslint-disable-next-line no-console
+    console.log(valid);
+>>>>>>> 3001620 (fuck my life)
     return valid;
     //const moduleCode = standaloneCode(ajv, valid);
     // eslint-disable-next-line no-console
@@ -72,7 +90,7 @@ function App(): JSX.Element {
     if (click) {
       if (validate(x)) {
         // eslint-disable-next-line no-console
-        console.log('valid', x);
+        console.log('valid', a);
       } else {
         // eslint-disable-next-line no-console
 <<<<<<< HEAD
@@ -155,6 +173,7 @@ function App(): JSX.Element {
         ) : (
           ''
         )}
+        {JSON.stringify(parseYamltoJSON(man), null, 2)}
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
