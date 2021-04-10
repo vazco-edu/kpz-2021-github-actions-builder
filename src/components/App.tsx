@@ -1,20 +1,32 @@
+/* eslint-disable no-console */
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
+import { log } from 'node:console';
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import tv4 from 'tv4';
+=======
+>>>>>>> 2324fa9 (working validator (?))
 import util from 'util';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { schema as schem } from '../schema/Schema';
 =======
 import a from '../schema/Schema.json';
+=======
+// import * as a from '../schema/Schema.json';
+import schema from '../schema/Schema.json';
+>>>>>>> 2324fa9 (working validator (?))
 // import  from '../schema/Schema.json';
 >>>>>>> c884438 (sa)
 import Editor from './Editor';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
 function App(): JSX.Element {
+  // eslint-disable-next-line no-console
+  console.log(schema);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -42,7 +54,14 @@ function App(): JSX.Element {
     return doc;
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+=======
+  // type gitHubAction = {
+  //   name: string;
+  // };
+  //predykat
+>>>>>>> 2324fa9 (working validator (?))
   function validate(data: any) {
 =======
   type gitHubAction = {
@@ -59,6 +78,7 @@ function App(): JSX.Element {
     if (typeof data === 'string') {
       return false;
     }
+<<<<<<< HEAD
     const ajv = new Ajv();
 <<<<<<< HEAD
 
@@ -111,6 +131,22 @@ function App(): JSX.Element {
   }
   //global variable, for storing parsed yaml in JSON  format
   const x: any = parseYamltoJSON(man);
+=======
+    // console.log(schema);
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    const validate = ajv.compile(schema);
+    const valid = validate(data);
+    if (!valid) {
+      console.log(validate.errors);
+    } else {
+      console.log('ES');
+    }
+    console.log(valid);
+    return true;
+  }
+  //global variable, for storing parsed yaml in JSON  format
+  const x: unknown = parseYamltoJSON(man);
+>>>>>>> 2324fa9 (working validator (?))
   function handleClickEvent() {
     setClick(!click);
     // eslint-disable-next-line no-console
@@ -118,7 +154,11 @@ function App(): JSX.Element {
     if (click) {
       if (validate(x)) {
         // eslint-disable-next-line no-console
+<<<<<<< HEAD
         console.log('valid', a);
+=======
+        console.log('valid', schema);
+>>>>>>> 2324fa9 (working validator (?))
       } else {
         // eslint-disable-next-line no-console
 <<<<<<< HEAD
@@ -163,7 +203,6 @@ function App(): JSX.Element {
   if (validate(x)) {
     showObject(x);
   }
-  /*<<<<<<< Updated upstream
   const tab: string[] = [];
   function returnArray(obj: any) {
     // eslint-disable-next-line guard-for-in
@@ -191,29 +230,6 @@ function App(): JSX.Element {
   const res = returnArray(x);
   console.log(Object.entries(x));
   let i = 0;
-=======*/
-  function retArray(obj: any) {
-    const tab: string[] = [];
-    let element: any;
-    // eslint-disable-next-line guard-for-in
-    for (element in obj) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
-      console.log(element, obj[element]);
-      if (element === 'jobs') {
-        // eslint-disable-next-line no-console
-        // eslint-disable-next-line guard-for-in, @typescript-eslint/no-unsafe-member-access
-        for (const myJobs in obj[element]) {
-          // eslint-disable-next-line no-console, @typescript-eslint/no-unsafe-member-access
-          // console.log(myJobs);
-          tab.push(myJobs);
-        }
-        // console.log(typeof element);
-      }
-    }
-    // eslint-disable-next-line no-console
-    console.log(tab);
-  }
-  retArray(x);
   return (
     <>
       <div className="text-editor">
@@ -226,7 +242,11 @@ function App(): JSX.Element {
         ) : (
           ''
         )}
+<<<<<<< HEAD
         <pre>{JSON.stringify(x, null, 2)}</pre>
+=======
+        {JSON.stringify(parseYamltoJSON(man), null, 2)}
+>>>>>>> 2324fa9 (working validator (?))
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
