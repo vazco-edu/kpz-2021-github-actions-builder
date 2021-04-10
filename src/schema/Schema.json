@@ -1,91 +1,75 @@
 {
-  "$schema": "http://json-schema.org/draft-06/schema#",
-  "$ref": "#/definitions/Welcome",
-  "definitions": {
-      "Welcome": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-              "name": {
-                  "type": "string"
-              },
-              "description": {
-                  "type": "string"
-              },
-              "inputs": {
-                  "$ref": "#/definitions/Inputs"
-              },
-              "outputs": {
-                  "$ref": "#/definitions/Outputs"
-              }
-          },
-          "required": [
-              "description",
-              "inputs",
-              "name",
-              "outputs"
-          ],
-          "title": "Welcome"
+    "$id": "http://mynet.com/schemas/user.json#",
+    "title": "User",
+    "description": "User profile with connections",
+    "type": "object",
+    "properties": {
+      "id": {
+        "description": "positive integer or string of digits",
+        "type": "integer",
+        "minimum": 1
       },
-      "Inputs": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-              "file-path": {
-                  "$ref": "#/definitions/FilePath"
-              }
-          },
-          "required": [
-              "file-path"
-          ],
-          "title": "Inputs"
+      "name": { "type": "string", "maxLength": 128 }, 
+      "address": {
+        "type": "object",
+        "additionalProperties": { "type": "string" },
+        "maxProperties": 6
       },
-      "FilePath": {
+      "personal": {
+        "type": "object",
+        "properties": {
+          "age": { "type": "integer", "minimum": 13 },
+          "gender": { "enum": ["female", "male"] }
+        },
+        "required": ["age"],
+        "additionalProperties": false
+      },
+      "connections": {
+        "type": "array",
+        "maxItems": 150,
+        "items": {
+          "title": "Connection",
+          "description": "User connection schema",
           "type": "object",
-          "additionalProperties": false,
           "properties": {
-              "description": {
-                  "type": "string"
+            "id": {
+              "type": "integer"
+            },
+            "name": { "type": "string", "maxLength": 128 },
+            "connType": { "type": "string" }
+          },
+          "oneOf": [
+            {
+              "properties": {
+                "connType": { "enum": ["relative"] },
+                "relation": { "type": "string" }
               },
-              "required": {
-                  "type": "boolean"
-              },
-              "default": {
-                  "type": "string"
+              "dependencies": {
+                "relation": ["close"]
               }
-          },
-          "required": [
-              "default",
-              "description",
-              "required"
+            },
+            {
+              "properties": {
+                "connType": { "enum": ["friend", "colleague", "other"] },
+                "relation": { "not": {} },
+                "close": { "not": {} }
+              }
+            }
           ],
-          "title": "FilePath"
+          "required": ["id", "name","connType"],
+          "additionalProperties": false
+        }
       },
-      "Outputs": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-              "results-file": {
-                  "$ref": "#/definitions/ResultsFile"
-              }
-          },
-          "required": [
-              "results-file"
-          ],
-          "title": "Outputs"
+      "feeds": {
+        "title": "feeds",
+        "description": "Feeds user subscribes to",
+        "type": "object",
+        "patternProperties": {
+          "^[A-Za-z]+$": { "type": "boolean" }
+        },
+        "additionalProperties": false
       },
-      "ResultsFile": {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-              "description": {
-                  "type": "string"
-              }
-          },
-          "required": [
-              "description"
-          ],
-          "title": "ResultsFile"
-      }
+      "createdAt": { "type": "string"}
+    },
+    "additionalProperties": false
   }
-}

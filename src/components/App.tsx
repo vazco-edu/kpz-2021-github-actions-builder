@@ -1,18 +1,17 @@
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
+import tv4 from 'tv4';
 import util from 'util';
 
 // import requireFromString from 'require-from-string';
 import useLocalStorage from '../hooks/useLocalStorage';
-import * as a from '../schema/Schema.json';
+import a from '../schema/Schema.json';
 // import  from '../schema/Schema.json';
 import Editor from './Editor';
 
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
 function App(): JSX.Element {
-  // eslint-disable-next-line no-console
-  console.log(a);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -43,11 +42,11 @@ function App(): JSX.Element {
     name: string;
   };
   //predykat
-  function validate(data: any): data is gitHubAction {
+  function validate(data: any) {
     if (typeof data === 'string') {
       return false;
     }
-    const ajv = new Ajv();
+    /*const ajv = new Ajv();
     try {
       ajv.compile(data);
     } catch (e) {
@@ -57,10 +56,22 @@ function App(): JSX.Element {
     const valid = true;
     // eslint-disable-next-line no-console
     console.log(valid);
-    return valid;
+    return valid;*/
+    // eslint-disable-next-line prettier/prettier
+    const ajv = new Ajv({ allErrors: true, strict: "log" });
+    const validate = ajv.compile(a);
+    const valid = validate(data);
+    if (!valid) {
+      // eslint-disable-next-line no-console
+      console.log(validate.errors);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('git');
+    }
+    return true;
   }
   //global variable, for storing parsed yaml in JSON  format
-  const x: unknown = parseYamltoJSON(man);
+  const x: any = parseYamltoJSON(man);
   function handleClickEvent() {
     setClick(!click);
     // eslint-disable-next-line no-console
@@ -130,6 +141,7 @@ function App(): JSX.Element {
     return tab;
   }
   const res = returnArray(x);
+  console.log(Object.entries(x));
   let i = 0;
   return (
     <>
@@ -143,7 +155,7 @@ function App(): JSX.Element {
         ) : (
           ''
         )}
-        {JSON.stringify(parseYamltoJSON(man), null, 2)}
+        <pre>{JSON.stringify(x, null, 2)}</pre>
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
