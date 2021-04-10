@@ -1,15 +1,21 @@
+/* eslint-disable no-console */
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
+import { log } from 'node:console';
 import React, { useState } from 'react';
+import util from 'util';
 
 // import requireFromString from 'require-from-string';
 import useLocalStorage from '../hooks/useLocalStorage';
-import * as a from '../schema/Schema.json';
+// import * as a from '../schema/Schema.json';
+import schema from '../schema/Schema.json';
 // import  from '../schema/Schema.json';
 import Editor from './Editor';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 function App(): JSX.Element {
+  // eslint-disable-next-line no-console
+  console.log(schema);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -36,18 +42,28 @@ function App(): JSX.Element {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return doc;
   }
-
+  // type gitHubAction = {
+  //   name: string;
+  // };
+  //predykat
   function validate(data: any) {
     if (typeof data === 'string') {
-      return 0;
+      return false;
     }
-    const ajv = new Ajv();
-    const validate = ajv.compile(a);
+    // console.log(schema);
+    const ajv = new Ajv({ allErrors: true, strict: false });
+    const validate = ajv.compile(schema);
     const valid = validate(data);
-    return valid;
+    if (!valid) {
+      console.log(validate.errors);
+    } else {
+      console.log('ES');
+    }
+    console.log(valid);
+    return true;
   }
   //global variable, for storing parsed yaml in JSON  format
-  const x = parseYamltoJSON(man);
+  const x: unknown = parseYamltoJSON(man);
   function handleClickEvent() {
     setClick(!click);
     // eslint-disable-next-line no-console
@@ -55,7 +71,7 @@ function App(): JSX.Element {
     if (click) {
       if (validate(x)) {
         // eslint-disable-next-line no-console
-        console.log('valid');
+        console.log('valid', schema);
       } else {
         // eslint-disable-next-line no-console
         console.log('not valid');
@@ -92,7 +108,6 @@ function App(): JSX.Element {
   if (validate(x)) {
     showObject(x);
   }
-  /*<<<<<<< Updated upstream
   const tab: string[] = [];
   function returnArray(obj: any) {
     // eslint-disable-next-line guard-for-in
@@ -119,36 +134,19 @@ function App(): JSX.Element {
   }
   const res = returnArray(x);
   let i = 0;
-=======*/
-  function retArray(obj: any) {
-    const tab: string[] = [];
-    let element: any;
-    // eslint-disable-next-line guard-for-in
-    for (element in obj) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
-      console.log(element, obj[element]);
-      if (element === 'jobs') {
-        // eslint-disable-next-line no-console
-        // eslint-disable-next-line guard-for-in, @typescript-eslint/no-unsafe-member-access
-        for (const myJobs in obj[element]) {
-          // eslint-disable-next-line no-console, @typescript-eslint/no-unsafe-member-access
-          // console.log(myJobs);
-          tab.push(myJobs);
-        }
-        // console.log(typeof element);
-      }
-    }
-    // eslint-disable-next-line no-console
-    console.log(tab);
-  }
-  retArray(x);
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {click && validate(x) ? JSON.stringify(x) : ''}
+        {click && validate(x) ? <pre>{JSON.stringify(x, null, 2)}</pre> : ''}
+        {click && validate(x) ? (
+          <pre>{util.inspect(x, { depth: null })}</pre>
+        ) : (
+          ''
+        )}
+        {JSON.stringify(parseYamltoJSON(man), null, 2)}
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
