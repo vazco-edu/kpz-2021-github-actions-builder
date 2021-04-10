@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import Ajv from 'ajv';
+import betterAjvErrors from 'better-ajv-errors';
 import jsyaml from 'js-yaml';
 import { log } from 'node:console';
 import React, { useState } from 'react';
@@ -26,7 +27,7 @@ import Editor from './Editor';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
 function App(): JSX.Element {
   // eslint-disable-next-line no-console
-  console.log(schema);
+  // console.log(schema);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -133,18 +134,27 @@ function App(): JSX.Element {
   const x: any = parseYamltoJSON(man);
 =======
     // console.log(schema);
-    const ajv = new Ajv({ allErrors: true, strict: false });
+    const ajv = new Ajv({
+      allErrors: true,
+      strict: false,
+    });
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
       console.log(validate.errors);
-    } else {
-      console.log('ES');
+      console.log('NO');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const s: any = validate.errors;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return s;
+      // // error = betterAjvErrors(schema, data, validate.errors);
+      // console.log(error);
     }
     console.log(valid);
-    return true;
+    return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
+<<<<<<< HEAD
   const x: unknown = parseYamltoJSON(man);
 >>>>>>> 2324fa9 (working validator (?))
   function handleClickEvent() {
@@ -174,6 +184,11 @@ function App(): JSX.Element {
       // eslint-disable-next-line no-console
       // console.log(obj);
     }
+=======
+  const x: any = parseYamltoJSON(man);
+  function handleClickEvent() {
+    setClick(!click);
+>>>>>>> aa5319c (validation errors)
   }
   function showObject(obj: any) {
     // eslint-disable-next-line no-constant-condition
@@ -260,7 +275,19 @@ function App(): JSX.Element {
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
-      <div className="checkValid"> {validate(x) ? '' : x}</div>
+      <div className="checkValid"> {validate(x) ? '' : 'N'}</div>
+      <div className="checkValid">
+        {' '}
+        {
+          /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return*/
+          validate(x) && typeof validate(x) === 'boolean'
+            ? ''
+            : `Validation error: ${validate(x).map(
+                (data: { message: any; instancePath: any }) =>
+                  `${data.message}` + ` on path: ${data.instancePath}`,
+              )}`
+        }
+      </div>
     </>
   );
 }
