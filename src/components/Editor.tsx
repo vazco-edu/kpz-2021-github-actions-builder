@@ -22,7 +22,7 @@ export default function Editor(props: any): JSX.Element {
             linewrapping: true,
             lint: true,
             mode: 'yaml',
-            indentWithTaba: false,
+            indentWithTabs: false,
             smartIndent: true,
             tabSize: 2,
             gutters: [

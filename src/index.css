@@ -4,7 +4,7 @@ body{
 }
 .text-editor{
   background-color: rgb(39,40,34);
-  height: 70vh;
+  height: 85vh;
   width: 50vw;
   display: inline-block;
   flex-direction: column;
@@ -32,12 +32,13 @@ body{
   display: inline-block;
   background: grey;
   width: 45vw;
-  height: 70vh;
+  height: 85vh;
   vertical-align: top;
   padding: 0.5rem;
   overflow: hidden;
   overflow-y: auto;
   overflow-x: auto;
+  margin-left: 2vw;
 }
 .PRESSME{
     background-color: slategray;
@@ -61,11 +62,11 @@ body{
 .checkValid{
   color:white;
   text-align: center;
-  margin-top: 50px;
-  width: 40%;
+  margin-top: auto;
+  width: 25%;
   position: absolute;
-  top: 80%;
-  left: 50%;
+  top: 91%;
+  left: 20%;
   transform: translate(-50%, -50%);
   background-color: rgb(202, 75, 75);
 }

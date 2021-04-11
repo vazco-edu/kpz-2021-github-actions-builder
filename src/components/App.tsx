@@ -1,20 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
 import { log } from 'node:console';
+import { isArray } from 'node:util';
 import React, { useState } from 'react';
 import util from 'util';
 
 // import requireFromString from 'require-from-string';
 import useLocalStorage from '../hooks/useLocalStorage';
-import a from '../schema/Schema.json';
+// import * as a from '../schema/Schema.json';
+import schema from '../schema/Schema.json';
 // import  from '../schema/Schema.json';
 import Editor from './Editor';
 
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 function App(): JSX.Element {
-  // eslint-disable-next-line no-console
-  console.log(a);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -30,14 +34,6 @@ function App(): JSX.Element {
       const error = `${e.reason} on line ${e.mark.line}`;
       return error;
     }
-    // eslint-disable-next-line no-console
-    console.log(text);
-    // eslint-disable-next-line no-console
-    console.log(doc);
-    // eslint-disable-next-line no-console
-    console.log(typeof doc);
-    // const ret = JSON.parse(doc); nie wiem czy tak, może(?)
-    // ^^^ - showing type of parsed string
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return doc;
   }
@@ -49,47 +45,28 @@ function App(): JSX.Element {
     if (typeof data === 'string') {
       return false;
     }
-    /*const ajv = new Ajv();
-    try {
-      ajv.compile(data);
-    } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
-      console.log(e);
-    }
-    const valid = true;
-    // eslint-disable-next-line no-console
-    console.log(valid);
-    return valid;*/
-    // eslint-disable-next-line prettier/prettier
-    const ajv = new Ajv({ allErrors: true, strict: false });
-    const validate = ajv.compile(a);
+    // console.log(schema);
+    const ajv = new Ajv({
+      allErrors: true,
+      strict: false,
+    });
+    const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
-      // eslint-disable-next-line no-console
       console.log(validate.errors);
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('git');
+      console.log('NO');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const s: any = validate.errors;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return s;
     }
-    return true;
+    console.log(valid);
+    return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
   const x: any = parseYamltoJSON(man);
   function handleClickEvent() {
     setClick(!click);
-    // eslint-disable-next-line no-console
-    console.log(click);
-    if (click) {
-      if (validate(x)) {
-        // eslint-disable-next-line no-console
-        console.log('valid', a);
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('not valid');
-      }
-      // eslint-disable-next-line no-console
-      //console.log(man);
-    }
   }
   function showObject(obj: any) {
     // eslint-disable-next-line no-constant-condition
@@ -115,10 +92,12 @@ function App(): JSX.Element {
         }
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   }
   if (validate(x)) {
     showObject(x);
   }
+
   const tab: string[] = [];
   function returnArray(obj: any) {
     // eslint-disable-next-line guard-for-in
@@ -143,14 +122,50 @@ function App(): JSX.Element {
     }
     return tab;
   }
-  let i = 0;
-  console.log(Object.entries(x));
-  // eslint-disable-next-line prefer-const
-  for (let y of x) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    console.log(y.x_desc);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const res = returnArray(x);
+  const nextVersion = function (obj: any): any[] {
+    const arr = [];
+    // eslint-disable-next-line guard-for-in
+    for (const key in obj) {
+      if (
+        typeof obj[key] !== 'object' ||
+        (Array.isArray(obj[key]) === true && typeof obj[key][0] !== 'object')
+      ) {
+        arr.push(`${key}: ${obj[key]}`);
+      }
+      if (typeof obj[key] === 'object') {
+        const ins = nextVersion(obj[key]);
+        arr.push(key);
+        arr.push(ins);
+      }
+    }
+    return arr;
+  };
+  console.log(nextVersion(x));
+  function improvedIteration(obj: any) {
+    const arr = [];
+    // eslint-disable-next-line guard-for-in
+    for (const element in obj) {
+      if (
+        typeof obj[element] !== 'object' ||
+        Array.isArray(obj[element]) === true
+      ) {
+        arr.push(`${element}: ${obj[element]}`);
+      } else {
+        arr.push(`${element}: ${JSON.stringify(obj[element])}`);
+      }
+    }
+    return arr;
+    // eslint-disable-next-line prefer-const
+    /*let res = [];
+    while (arr.length) {
+      res.push(arr.shift());
+      if (res.length && )
+    }*/
   }
-  returnArray(x);
+  console.log(improvedIteration(x));
+  let i = 0;
   return (
     <>
       <div className="text-editor">
@@ -163,11 +178,11 @@ function App(): JSX.Element {
         ) : (
           ''
         )}
-        <pre>{JSON.stringify(x, null, 2)}</pre>
+        {JSON.stringify(parseYamltoJSON(man), null, 2)}
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            tab.map(data => (
+            res.map(data => (
               <li key={i++}>{data}</li>
             ))
           }
@@ -177,6 +192,26 @@ function App(): JSX.Element {
         KONWERTUJ
       </button>
       <div className="checkValid"> {validate(x) ? '' : x}</div>
+      <div className="checkValid">
+        {' '}
+        {
+          /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any*/
+          typeof validate(x) === 'boolean'
+            ? ''
+            : `Validation error: ${validate(x).map(
+                (data: { message: any; instancePath: any }, index: number) => {
+                  const len = validate(x).length;
+                  if (index === length) {
+                    const ret =
+                      `${validate(x)[len - 1].message}` +
+                      ` on path: ${validate(x)[len - 1].instancePath}`;
+                    return ret;
+                  }
+                  return '';
+                },
+              )}`
+        }
+      </div>
     </>
   );
 }

@@ -1,4 +1,5 @@
-{ "$schema": "http://json-schema.org/draft-07/schema",
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
   "$comment": "https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions",
   "definitions": {
     "architecture": {
@@ -1326,7 +1327,6 @@
           "required": [
             "runs-on"
           ],
-          "required": ["id", "name","connType"],
           "additionalProperties": false
         }
       },
@@ -1340,4 +1340,3 @@
   ],
   "additionalProperties": false
 }
-
