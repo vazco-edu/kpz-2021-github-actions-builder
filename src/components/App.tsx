@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
+import { log } from 'node:console';
 import React, { useState } from 'react';
-import tv4 from 'tv4';
 import util from 'util';
 
 // import requireFromString from 'require-from-string';
@@ -12,6 +13,8 @@ import Editor from './Editor';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
 function App(): JSX.Element {
+  // eslint-disable-next-line no-console
+  console.log(a);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
@@ -38,9 +41,9 @@ function App(): JSX.Element {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return doc;
   }
-  type gitHubAction = {
-    name: string;
-  };
+  // type gitHubAction = {
+  //   name: string;
+  // };
   //predykat
   function validate(data: any) {
     if (typeof data === 'string') {
@@ -58,7 +61,7 @@ function App(): JSX.Element {
     console.log(valid);
     return valid;*/
     // eslint-disable-next-line prettier/prettier
-    const ajv = new Ajv({ allErrors: true, strict: "log" });
+    const ajv = new Ajv({ allErrors: true, strict: false });
     const validate = ajv.compile(a);
     const valid = validate(data);
     if (!valid) {
@@ -140,9 +143,14 @@ function App(): JSX.Element {
     }
     return tab;
   }
-  const res = returnArray(x);
-  console.log(Object.entries(x));
   let i = 0;
+  console.log(Object.entries(x));
+  // eslint-disable-next-line prefer-const
+  for (let y of x) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log(y.x_desc);
+  }
+  returnArray(x);
   return (
     <>
       <div className="text-editor">
@@ -159,7 +167,7 @@ function App(): JSX.Element {
         <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            res.map(data => (
+            tab.map(data => (
               <li key={i++}>{data}</li>
             ))
           }
