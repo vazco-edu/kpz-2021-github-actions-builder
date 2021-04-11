@@ -214,6 +214,7 @@ function App(): JSX.Element {
         }
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   }
   if (validate(x)) {
     showObject(x);
@@ -242,6 +243,7 @@ function App(): JSX.Element {
     }
     return tab;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const res = returnArray(x);
   console.log(Object.entries(x));
   let i = 0;
@@ -275,16 +277,24 @@ function App(): JSX.Element {
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
-      <div className="checkValid"> {validate(x) ? '' : 'N'}</div>
+      <div className="checkValid"> {validate(x) ? '' : x}</div>
       <div className="checkValid">
         {' '}
         {
-          /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return*/
-          validate(x) && typeof validate(x) === 'boolean'
+          /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any*/
+          typeof validate(x) === 'boolean'
             ? ''
             : `Validation error: ${validate(x).map(
-                (data: { message: any; instancePath: any }) =>
-                  `${data.message}` + ` on path: ${data.instancePath}`,
+                (data: { message: any; instancePath: any }, index: number) => {
+                  const len = validate(x).length;
+                  if (index === length) {
+                    const ret =
+                      `${validate(x)[len - 1].message}` +
+                      ` on path: ${validate(x)[len - 1].instancePath}`;
+                    return ret;
+                  }
+                  return '';
+                },
               )}`
         }
       </div>
