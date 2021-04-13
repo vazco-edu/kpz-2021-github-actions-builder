@@ -245,7 +245,30 @@ function App(): JSX.Element {
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const res = returnArray(x);
+<<<<<<< HEAD
   console.log(Object.entries(x));
+=======
+  const nextVersion = function (obj: any): any[] {
+    const arr = [];
+    // eslint-disable-next-line guard-for-in
+    for (const key in obj) {
+      if (
+        typeof obj[key] !== 'object' ||
+        (Array.isArray(obj[key]) === true && typeof obj[key][0] !== 'object')
+      ) {
+        arr.push(key);
+        arr.push(obj[key]);
+      }
+      if (typeof obj[key] === 'object') {
+        const ins = nextVersion(obj[key]);
+        arr.push(key);
+        arr.push(ins);
+      }
+    }
+    return arr;
+  };
+  console.log(nextVersion(x));
+>>>>>>> 6ff24f6 (added inline errors)
   let i = 0;
   return (
     <>

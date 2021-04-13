@@ -31,13 +31,22 @@ body{
 .result{
   display: inline-block;
   background: grey;
+<<<<<<< HEAD
   width: 45vw;
   height: 70vh;
+=======
+  width: 42vw;
+  height: 85vh;
+>>>>>>> 6ff24f6 (added inline errors)
   vertical-align: top;
   padding: 0.5rem;
   overflow: hidden;
   overflow-y: auto;
   overflow-x: auto;
+<<<<<<< HEAD
+=======
+  margin-left: 3vw;
+>>>>>>> 6ff24f6 (added inline errors)
 }
 .PRESSME{
     background-color: slategray;
