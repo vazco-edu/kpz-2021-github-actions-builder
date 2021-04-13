@@ -31,14 +31,14 @@ body{
 .result{
   display: inline-block;
   background: grey;
-  width: 45vw;
+  width: 42vw;
   height: 85vh;
   vertical-align: top;
   padding: 0.5rem;
   overflow: hidden;
   overflow-y: auto;
   overflow-x: auto;
-  margin-left: 2vw;
+  margin-left: 3vw;
 }
 .PRESSME{
     background-color: slategray;

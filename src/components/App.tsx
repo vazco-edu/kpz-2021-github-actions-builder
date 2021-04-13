@@ -132,7 +132,8 @@ function App(): JSX.Element {
         typeof obj[key] !== 'object' ||
         (Array.isArray(obj[key]) === true && typeof obj[key][0] !== 'object')
       ) {
-        arr.push(`${key}: ${obj[key]}`);
+        arr.push(key);
+        arr.push(obj[key]);
       }
       if (typeof obj[key] === 'object') {
         const ins = nextVersion(obj[key]);
@@ -143,28 +144,6 @@ function App(): JSX.Element {
     return arr;
   };
   console.log(nextVersion(x));
-  function improvedIteration(obj: any) {
-    const arr = [];
-    // eslint-disable-next-line guard-for-in
-    for (const element in obj) {
-      if (
-        typeof obj[element] !== 'object' ||
-        Array.isArray(obj[element]) === true
-      ) {
-        arr.push(`${element}: ${obj[element]}`);
-      } else {
-        arr.push(`${element}: ${JSON.stringify(obj[element])}`);
-      }
-    }
-    return arr;
-    // eslint-disable-next-line prefer-const
-    /*let res = [];
-    while (arr.length) {
-      res.push(arr.shift());
-      if (res.length && )
-    }*/
-  }
-  console.log(improvedIteration(x));
   let i = 0;
   return (
     <>
