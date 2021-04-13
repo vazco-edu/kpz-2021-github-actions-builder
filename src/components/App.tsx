@@ -143,7 +143,6 @@ function App(): JSX.Element {
     }
     return arr;
   };
-  console.log(nextVersion(x));
   let i = 0;
   return (
     <>
@@ -170,9 +169,7 @@ function App(): JSX.Element {
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
-      <div className="checkValid"> {validate(x) ? '' : x}</div>
       <div className="checkValid">
-        {' '}
         {
           /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any*/
           typeof validate(x) === 'boolean'
