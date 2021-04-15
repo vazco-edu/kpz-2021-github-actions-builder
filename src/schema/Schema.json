@@ -1384,12 +1384,16 @@
           },
           "required": [
             "runs-on"
+<<<<<<< HEAD
 >>>>>>> 2324fa9 (working validator (?))
+=======
+>>>>>>> 6d36f31 (errors inline, normalizing input)
           ],
           "required": ["id", "name","connType"],
           "additionalProperties": false
         }
       },
+<<<<<<< HEAD
 <<<<<<< HEAD
       "feeds": {
         "title": "feeds",
@@ -1405,6 +1409,8 @@
     "additionalProperties": false
   }
 =======
+=======
+>>>>>>> 6d36f31 (errors inline, normalizing input)
       "minProperties": 1,
       "additionalProperties": false
     }

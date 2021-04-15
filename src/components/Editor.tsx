@@ -5,8 +5,11 @@ import 'codemirror/theme/material.css';
 import 'codemirror/mode/yaml/yaml';
 import { Controlled } from 'react-codemirror2';
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
 =======
+=======
+>>>>>>> 6d36f31 (errors inline, normalizing input)
 import 'codemirror/addon/lint/yaml-lint';
 import 'codemirror/addon/lint/lint.css';
 import 'codemirror/addon/lint/lint';
@@ -40,12 +43,17 @@ export default function Editor(props: any): JSX.Element {
             linewrapping: true,
             lint: true,
 <<<<<<< HEAD
+<<<<<<< HEAD
             mode: 'yaml',
             indentWithTaba: false,
 =======
             mode: 'text/x-yaml',
             indentWithTabs: false,
 >>>>>>> 06cc739 (added autocomplete)
+=======
+            mode: 'text/x-yaml',
+            indentWithTabs: false,
+>>>>>>> 6d36f31 (errors inline, normalizing input)
             smartIndent: true,
             tabSize: 2,
             lintGutter: true,
