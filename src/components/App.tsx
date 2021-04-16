@@ -10,16 +10,13 @@ import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 
+import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
-const ajv = new Ajv({
-  allErrors: true,
-  strict: false,
-});
 function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
@@ -60,7 +57,6 @@ function App(): JSX.Element {
   function handleClickEvent() {
     setClick(!click);
   }
-
   if (typeof workflow === 'object') {
     normalize(workflow);
   } else {
