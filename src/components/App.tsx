@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-regexp-exec */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -5,6 +7,7 @@
 /* eslint-disable no-console */
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
+import { deepEqual } from 'node:assert';
 import { log } from 'node:console';
 import { isArray } from 'node:util';
 import React, { useState } from 'react';
@@ -16,7 +19,6 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 // import  from '../schema/Schema.json';
 import Editor from './Editor';
-
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
@@ -60,11 +62,11 @@ function App(): JSX.Element {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return s;
     }
-    console.log(valid);
+    console.log('Walidacja przebiegła: ', valid);
     return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
-  const x: any = parseYamltoJSON(man);
+  let workflow: any = parseYamltoJSON(man);
   function handleClickEvent() {
     setClick(!click);
   }
@@ -94,10 +96,6 @@ function App(): JSX.Element {
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   }
-  if (validate(x)) {
-    showObject(x);
-  }
-
   const tab: string[] = [];
   function returnArray(obj: any) {
     // eslint-disable-next-line guard-for-in
@@ -123,7 +121,6 @@ function App(): JSX.Element {
     return tab;
   }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const res = returnArray(x);
   const nextVersion = function (obj: any): any[] {
     const arr = [];
     // eslint-disable-next-line guard-for-in
@@ -143,44 +140,181 @@ function App(): JSX.Element {
     }
     return arr;
   };
-  let i = 0;
+  function toArray(input: string | string[]): string[] {
+    if (Array.isArray(input)) {
+      return input;
+    }
+    return [input];
+  }
+  function normalize(workflow: any) {
+    console.log(workflow.on);
+    if (typeof workflow.on === 'string') {
+      workflow.on = {
+        [workflow.on]: {},
+      };
+    } else if (Array.isArray(workflow.on)) {
+      workflow.on = workflow.on.reduce(
+        (o: { [x: string]: Record<string, never> }, z: string | number) => {
+          o[z] = {};
+          return o;
+        },
+        {},
+      );
+    }
+    console.log(workflow.on);
+    if (!workflow.jobs) {
+      workflow.jobs = {};
+    }
+    for (const jId of Object.keys(workflow.jobs).filter(x => x !== 'JD')) {
+      console.log('Job before normalization: ', workflow.jobs[jId]);
+      normalizeJob(workflow.jobs[jId]);
+      console.log('Job after normalization: ', workflow.jobs[jId]);
+    }
+  }
+  function normalizeJob(job: any) {
+    // Strategy
+    if (job.strategy?.matrix) {
+      // job.strategy.matrix = normalizeMatrix(job.strategy.matrix);
+      console.log('Im normalizing matrix', job.strategy.matrix);
+      normalizeMatrix(job.strategy.matrix);
+    }
+    // Steps
+    if (!Array.isArray(job.steps)) {
+      console.log('STEPS WERE NOT AN ARRAY');
+      job.steps = [];
+    }
+    console.log('Steps in job: ', job, ' \nsteps: ', job.steps);
+    job.steps = job.steps.filter((x: any) => typeof x === 'object');
+    for (const step of job.steps) {
+      if (step && 'uses' in step && typeof step.uses === 'string') {
+        console.log('Uses in job: ', job, step.uses);
+      }
+    }
+    // Needs ## if not array -> toArray ##
+    job.needs = job.needs && toArray(job.needs);
+    // timeout ## if not set -> set to 60 minutes ##
+    job['timeout-minutes'] = job['timeout-minutes'] || 60;
+  }
+  function normalizeMatrix(matrix: {
+    [key: string]: (string | number | boolean)[];
+  }) {
+    if (typeof matrix === 'string') {
+      console.log('matrix is a string');
+      return matrix;
+    }
+    const matrixKeys = Object.keys(matrix);
+    // inputKey - string, value can be string, number or bool
+    const matrixValues: {
+      [inputKey: string]: (string | number | boolean)[];
+    } = {};
+    for (const matrixKey of matrixKeys) {
+      // Assigning values of matrix passed to function to previously created empty object with properly assigned types
+      matrixValues[matrixKey] = matrix[matrixKey];
+      console.log(
+        `Matrix value for key: ${matrixKey}`,
+        matrixValues[matrixKey],
+      );
+    }
+    //        ### experimental ###
+    //        ### crossing i.e. every os with every browser ###
+    const inv = crossing(matrixValues);
+    console.log(inv);
+    return inv;
+  }
+  function crossing(inputs: any) {
+    let result = [];
+    for (const inputKey of Object.keys(inputs)) {
+      if (result.length === 0) {
+        result.push(
+          ...inputs[inputKey].map((x: any) => ({
+            [inputKey]: x,
+          })),
+        );
+      } else {
+        const newResult: any[] = [];
+        for (const inputValue of inputs[inputKey]) {
+          for (const r of result) {
+            newResult.push({ ...r, [inputKey]: inputValue });
+          }
+        }
+        result = newResult;
+      }
+    }
+    return result;
+  }
+  if (typeof workflow === 'object') {
+    normalize(workflow);
+  } else {
+    workflow = undefined;
+  }
+  // console.log(nextVersion(x));
+  function improvedIteration(obj: any) {
+    const arr = [];
+    // eslint-disable-next-line guard-for-in
+    for (const element in obj) {
+      if (
+        typeof obj[element] !== 'object' ||
+        Array.isArray(obj[element]) === true
+      ) {
+        arr.push(`${element}: ${obj[element]}`);
+      } else {
+        arr.push(`${element}: ${JSON.stringify(obj[element])}`);
+      }
+    }
+    return arr;
+    // eslint-disable-next-line prefer-const
+    /*let res = [];
+    while (arr.length) {
+      res.push(arr.shift());
+      if (res.length && )
+    }*/
+  }
+  // console.log(improvedIteration(x));
+  // let i = 0;
+  const isValid = validate(workflow);
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {click && validate(x) ? <pre>{JSON.stringify(x, null, 2)}</pre> : ''}
-        {click && validate(x) ? (
-          <pre>{util.inspect(x, { depth: null })}</pre>
+        {/* {click && validate(workflow) ? (
+          <pre>{JSON.stringify(workflow, null, 2)}</pre>
         ) : (
           ''
         )}
-        {JSON.stringify(parseYamltoJSON(man), null, 2)}
-        <ol>
+        {click && validate(workflow) ? (
+          <pre>{util.inspect(workflow, { depth: null })}</pre>
+        ) : (
+          ''
+        )} */}
+        {/* {JSON.stringify(parseYamltoJSON(man), null, 2)} */}
+        {/* <ol>
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             res.map(data => (
               <li key={i++}>{data}</li>
             ))
           }
-        </ol>
+        </ol> */}
       </div>
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
+      <div className="checkValid"> {isValid ? '' : workflow}</div>
       <div className="checkValid">
+        {' '}
         {
           /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any*/
-          typeof validate(x) === 'boolean'
+          typeof isValid === 'boolean'
             ? ''
-            : `Validation error: ${validate(x).map(
+            : `Validation error: ${validate(workflow).map(
                 (data: { message: any; instancePath: any }, index: number) => {
-                  const len = validate(x).length;
+                  const len = validate(workflow).length;
                   if (index === length) {
                     const ret =
-                      `${validate(x)[len - 1].message}` +
-                      ` on path: ${validate(x)[len - 1].instancePath}`;
+                      `${validate(workflow)[len - 1].message}` +
+                      ` on path: ${validate(workflow)[len - 1].instancePath}`;
                     return ret;
                   }
                   return '';
