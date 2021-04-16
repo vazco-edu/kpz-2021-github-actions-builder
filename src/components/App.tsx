@@ -5,61 +5,50 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
-import { deepEqual } from 'node:assert';
-import { log } from 'node:console';
-import { isArray } from 'node:util';
 import React, { useState } from 'react';
-import util from 'util';
 
-// import requireFromString from 'require-from-string';
+import dispError from '../additionalFunctions/displayError';
 import useLocalStorage from '../hooks/useLocalStorage';
-// import * as a from '../schema/Schema.json';
 import schema from '../schema/Schema.json';
-// import  from '../schema/Schema.json';
 import Editor from './Editor';
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+
+const ajv = new Ajv({
+  allErrors: true,
+  strict: false,
+});
 function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
-  //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
   const man = yaml;
   function parseYamltoJSON(text: string) {
     let doc;
     // Parsing string to JSON
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     try {
       doc = jsyaml.load(text);
     } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
       const error = `${e.reason} on line ${e.mark.line}`;
       return error;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return doc;
   }
   // type gitHubAction = {
   //   name: string;
   // };
   //predykat
+  // Check, whether provided json is valid against json Schema (if correct returning boolean, if not returning object of errors)
   function validate(data: any) {
     if (typeof data === 'string') {
       return false;
     }
-    // console.log(schema);
-    const ajv = new Ajv({
-      allErrors: true,
-      strict: false,
-    });
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
       console.log(validate.errors);
       console.log('NO');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const s: any = validate.errors;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return s;
     }
     console.log('Walidacja przebiegła: ', valid);
@@ -70,57 +59,6 @@ function App(): JSX.Element {
   function handleClickEvent() {
     setClick(!click);
   }
-  function showObject(obj: any) {
-    // eslint-disable-next-line no-constant-condition
-    if (true) {
-      // eslint-disable-next-line guard-for-in
-      for (const properties in obj) {
-        // eslint-disable-next-line no-console, @typescript-eslint/no-unsafe-member-access
-        console.log(properties, obj[properties]);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (typeof obj[properties] === 'object') {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            Array.isArray(obj[properties]) === true &&
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            typeof obj[properties][0] !== 'object'
-          ) {
-            //if said object is an array skip to the next iteration
-            continue;
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          showObject(obj[properties]);
-        }
-      }
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  }
-  const tab: string[] = [];
-  function returnArray(obj: any) {
-    // eslint-disable-next-line guard-for-in
-    for (const element in obj) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, no-console
-      console.log(element, obj[element]);
-      if (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        (typeof obj[element] !== 'object' ||
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          Array.isArray(obj[element]) === true) &&
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        typeof obj[element][0] !== 'object'
-      ) {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-        tab.push(`${element}: ${obj[element]}`);
-      } else {
-        tab.push(`${element}:`);
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        returnArray(obj[element]);
-      }
-    }
-    return tab;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const nextVersion = function (obj: any): any[] {
     const arr = [];
     // eslint-disable-next-line guard-for-in
@@ -217,11 +155,11 @@ function App(): JSX.Element {
     }
     //        ### experimental ###
     //        ### crossing i.e. every os with every browser ###
-    const inv = crossing(matrixValues);
+    const inv = cartesianProduct(matrixValues);
     console.log(inv);
     return inv;
   }
-  function crossing(inputs: any) {
+  function cartesianProduct(inputs: any) {
     let result = [];
     for (const inputKey of Object.keys(inputs)) {
       if (result.length === 0) {
@@ -247,31 +185,8 @@ function App(): JSX.Element {
   } else {
     workflow = undefined;
   }
-  // console.log(nextVersion(x));
-  function improvedIteration(obj: any) {
-    const arr = [];
-    // eslint-disable-next-line guard-for-in
-    for (const element in obj) {
-      if (
-        typeof obj[element] !== 'object' ||
-        Array.isArray(obj[element]) === true
-      ) {
-        arr.push(`${element}: ${obj[element]}`);
-      } else {
-        arr.push(`${element}: ${JSON.stringify(obj[element])}`);
-      }
-    }
-    return arr;
-    // eslint-disable-next-line prefer-const
-    /*let res = [];
-    while (arr.length) {
-      res.push(arr.shift());
-      if (res.length && )
-    }*/
-  }
-  // console.log(improvedIteration(x));
-  // let i = 0;
-  const isValid = validate(workflow);
+  // Storing a boolean or an error object
+  const storeValidationResult = validate(workflow);
   return (
     <>
       <div className="text-editor">
@@ -291,7 +206,6 @@ function App(): JSX.Element {
         {/* {JSON.stringify(parseYamltoJSON(man), null, 2)} */}
         {/* <ol>
           {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             res.map(data => (
               <li key={i++}>{data}</li>
             ))
@@ -301,27 +215,7 @@ function App(): JSX.Element {
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
-      <div className="checkValid"> {isValid ? '' : workflow}</div>
-      <div className="checkValid">
-        {' '}
-        {
-          /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any*/
-          typeof isValid === 'boolean'
-            ? ''
-            : `Validation error: ${validate(workflow).map(
-                (data: { message: any; instancePath: any }, index: number) => {
-                  const len = validate(workflow).length;
-                  if (index === length) {
-                    const ret =
-                      `${validate(workflow)[len - 1].message}` +
-                      ` on path: ${validate(workflow)[len - 1].instancePath}`;
-                    return ret;
-                  }
-                  return '';
-                },
-              )}`
-        }
-      </div>
+      <div className="checkValid"> {dispError(storeValidationResult)}</div>
     </>
   );
 }
