@@ -8,9 +8,11 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 >>>>>>> 6d36f31 (errors inline, normalizing input)
 /* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import Ajv from 'ajv';
 import betterAjvErrors from 'better-ajv-errors';
 import jsyaml from 'js-yaml';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { log } from 'node:console';
 =======
@@ -45,25 +47,34 @@ import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
+=======
+import React, { useState } from 'react';
+
+import dispError from '../additionalFunctions/displayError';
+import useLocalStorage from '../hooks/useLocalStorage';
+import schema from '../schema/Schema.json';
+import Editor from './Editor';
+
+const ajv = new Ajv({
+  allErrors: true,
+  strict: false,
+});
+>>>>>>> f0c15db (cleaned code, optimized)
 function App(): JSX.Element {
   // eslint-disable-next-line no-console
   // console.log(schema);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
-  //tutaj prypisanie do zmiennej !!!!!!!!!!!!!
   const man = yaml;
   function parseYamltoJSON(text: string) {
     let doc;
     // Parsing string to JSON
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     try {
       doc = jsyaml.load(text);
     } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
       const error = `${e.reason} on line ${e.mark.line}`;
       return error;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return doc;
   }
 <<<<<<< HEAD
@@ -75,7 +86,11 @@ function App(): JSX.Element {
   //   name: string;
   // };
   //predykat
+<<<<<<< HEAD
 >>>>>>> 2324fa9 (working validator (?))
+=======
+  // Check, whether provided json is valid against json Schema (if correct returning boolean, if not returning object of errors)
+>>>>>>> f0c15db (cleaned code, optimized)
   function validate(data: any) {
 =======
   type gitHubAction = {
@@ -92,6 +107,7 @@ function App(): JSX.Element {
     if (typeof data === 'string') {
       return false;
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
     const ajv = new Ajv();
 <<<<<<< HEAD
@@ -151,6 +167,8 @@ function App(): JSX.Element {
       allErrors: true,
       strict: false,
     });
+=======
+>>>>>>> f0c15db (cleaned code, optimized)
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
@@ -174,9 +192,7 @@ function App(): JSX.Element {
 >>>>>>> 6d36f31 (errors inline, normalizing input)
       console.log(validate.errors);
       console.log('NO');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const s: any = validate.errors;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return s;
 <<<<<<< HEAD
       // // error = betterAjvErrors(schema, data, validate.errors);
@@ -232,6 +248,7 @@ function App(): JSX.Element {
     setClick(!click);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
   }
+<<<<<<< HEAD
   function showObject(obj: any) {
     // eslint-disable-next-line no-constant-condition
     if (true) {
@@ -295,6 +312,8 @@ function App(): JSX.Element {
 =======
   // const res = returnArray(x);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
+=======
+>>>>>>> f0c15db (cleaned code, optimized)
   const nextVersion = function (obj: any): any[] {
     const arr = [];
     // eslint-disable-next-line guard-for-in
@@ -407,11 +426,11 @@ function App(): JSX.Element {
     }
     //        ### experimental ###
     //        ### crossing i.e. every os with every browser ###
-    const inv = crossing(matrixValues);
+    const inv = cartesianProduct(matrixValues);
     console.log(inv);
     return inv;
   }
-  function crossing(inputs: any) {
+  function cartesianProduct(inputs: any) {
     let result = [];
     for (const inputKey of Object.keys(inputs)) {
       if (result.length === 0) {
@@ -437,6 +456,7 @@ function App(): JSX.Element {
   } else {
     workflow = undefined;
   }
+<<<<<<< HEAD
   // console.log(nextVersion(x));
   function improvedIteration(obj: any) {
     const arr = [];
@@ -463,6 +483,10 @@ function App(): JSX.Element {
   // let i = 0;
   const isValid = validate(workflow);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
+=======
+  // Storing a boolean or an error object
+  const storeValidationResult = validate(workflow);
+>>>>>>> f0c15db (cleaned code, optimized)
   return (
     <>
       <div className="text-editor">
@@ -491,7 +515,6 @@ function App(): JSX.Element {
         {/* <ol>
 >>>>>>> 6d36f31 (errors inline, normalizing input)
           {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             res.map(data => (
               <li key={i++}>{data}</li>
             ))
@@ -502,6 +525,7 @@ function App(): JSX.Element {
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
       </button>
+<<<<<<< HEAD
 <<<<<<< HEAD
       <div className="checkValid">
         {
@@ -538,6 +562,9 @@ function App(): JSX.Element {
               )}`
         }
       </div>
+=======
+      <div className="checkValid"> {dispError(storeValidationResult)}</div>
+>>>>>>> f0c15db (cleaned code, optimized)
     </>
   );
 }
