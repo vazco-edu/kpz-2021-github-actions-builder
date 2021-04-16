@@ -56,6 +56,7 @@ function App(): JSX.Element {
   function handleClickEvent() {
     setClick(!click);
   }
+
   if (typeof workflow === 'object') {
     normalize(workflow);
   } else {
