@@ -13,6 +13,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c37a684 (jkd)
 import Ajv from 'ajv';
 import betterAjvErrors from 'better-ajv-errors';
 =======
@@ -25,6 +28,7 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 =======
 >>>>>>> 1dbb889 (asdasdasd)
 import jsyaml from 'js-yaml';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 import { log } from 'node:console';
@@ -72,13 +76,25 @@ import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
 <<<<<<< HEAD
+=======
+import React, { useState } from 'react';
+
+import dispError from '../additionalFunctions/displayError';
+import useLocalStorage from '../hooks/useLocalStorage';
+import schema from '../schema/Schema.json';
+import Editor from './Editor';
+
+>>>>>>> c37a684 (jkd)
 const ajv = new Ajv({
   allErrors: true,
   strict: false,
 });
+<<<<<<< HEAD
 >>>>>>> f0c15db (cleaned code, optimized)
 =======
 >>>>>>> 43074be (ajv to new file)
+=======
+>>>>>>> c37a684 (jkd)
 function App(): JSX.Element {
   // eslint-disable-next-line no-console
   // console.log(schema);
@@ -196,15 +212,11 @@ function App(): JSX.Element {
   //   name: string;
   // };
   //predykat
+  // Check, whether provided json is valid against json Schema (if correct returning boolean, if not returning object of errors)
   function validate(data: any) {
     if (typeof data === 'string') {
       return false;
     }
-    // console.log(schema);
-    const ajv = new Ajv({
-      allErrors: true,
-      strict: false,
-    });
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
@@ -267,6 +279,7 @@ function App(): JSX.Element {
     setClick(!click);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
   function showObject(obj: any) {
     // eslint-disable-next-line no-constant-condition
@@ -334,6 +347,8 @@ function App(): JSX.Element {
 >>>>>>> 6d36f31 (errors inline, normalizing input)
 =======
 >>>>>>> f0c15db (cleaned code, optimized)
+=======
+>>>>>>> c37a684 (jkd)
   const nextVersion = function (obj: any): any[] {
     const arr = [];
     // eslint-disable-next-line guard-for-in
@@ -343,11 +358,16 @@ function App(): JSX.Element {
         (Array.isArray(obj[key]) === true && typeof obj[key][0] !== 'object')
       ) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         arr.push(key);
         arr.push(obj[key]);
 =======
         arr.push(`${key}: ${obj[key]}`);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
+=======
+        arr.push(key);
+        arr.push(obj[key]);
+>>>>>>> c37a684 (jkd)
       }
       if (typeof obj[key] === 'object') {
         const ins = nextVersion(obj[key]);
@@ -392,14 +412,12 @@ function App(): JSX.Element {
     if (!workflow.jobs) {
       workflow.jobs = {};
     }
-
     for (const jId of Object.keys(workflow.jobs).filter(x => x !== 'JD')) {
       console.log('Job before normalization: ', workflow.jobs[jId]);
       normalizeJob(workflow.jobs[jId]);
       console.log('Job after normalization: ', workflow.jobs[jId]);
     }
   }
-
   function normalizeJob(job: any) {
     // Strategy
     if (job.strategy?.matrix) {
@@ -421,12 +439,14 @@ function App(): JSX.Element {
     }
     // Needs ## if not array -> toArray ##
     job.needs = job.needs && toArray(job.needs);
-
     // timeout ## if not set -> set to 60 minutes ##
     job['timeout-minutes'] = job['timeout-minutes'] || 60;
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> c37a684 (jkd)
   function normalizeMatrix(matrix: {
     [key: string]: (string | number | boolean)[];
   }) {
@@ -497,6 +517,7 @@ function App(): JSX.Element {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   // console.log(nextVersion(x));
   function improvedIteration(obj: any) {
     const arr = [];
@@ -539,6 +560,10 @@ function App(): JSX.Element {
 >>>>>>> ca43750 (bigJD)
   //          ## DIAGRAMS ##
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
+=======
+  // Storing a boolean or an error object
+  const storeValidationResult = validate(workflow);
+>>>>>>> c37a684 (jkd)
   return (
     <>
       <div className="text-editor">
@@ -582,6 +607,7 @@ function App(): JSX.Element {
       </button>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       <div className="checkValid">
         {
           /* eslint-disable @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any*/
@@ -620,6 +646,9 @@ function App(): JSX.Element {
 =======
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
 >>>>>>> f0c15db (cleaned code, optimized)
+=======
+      <div className="checkValid"> {dispError(storeValidationResult)}</div>
+>>>>>>> c37a684 (jkd)
     </>
   );
 }

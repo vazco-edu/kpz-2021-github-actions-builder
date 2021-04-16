@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
+<<<<<<< HEAD
 export default function displayError(
   result: boolean | Record<string, any>,
 ): string {
+=======
+export default function displayError(result: any) {
+>>>>>>> c37a684 (jkd)
   if (typeof result === 'boolean') {
     return '';
   }
