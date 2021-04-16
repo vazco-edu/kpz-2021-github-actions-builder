@@ -10,10 +10,13 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Ajv from 'ajv';
 import betterAjvErrors from 'better-ajv-errors';
 =======
 >>>>>>> 47d4b70 (changed stuff)
+=======
+>>>>>>> 5f35168 (adding types)
 import jsyaml from 'js-yaml';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -360,6 +363,7 @@ function App(): JSX.Element {
     }
     return [input];
   }
+<<<<<<< HEAD
   function normalize(workflow: any) {
     console.log(workflow.on);
     if (typeof workflow.on === 'string') {
@@ -466,6 +470,9 @@ function App(): JSX.Element {
 >>>>>>> a734a9d (normalization separated)
 =======
 >>>>>>> 43074be (ajv to new file)
+=======
+
+>>>>>>> 5f35168 (adding types)
   if (typeof workflow === 'object') {
     normalize(workflow);
   } else {
