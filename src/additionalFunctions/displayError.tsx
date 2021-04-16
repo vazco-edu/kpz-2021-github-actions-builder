@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
-export default function displayError(result: any) {
+export default function displayError(result: any): string {
   if (typeof result === 'boolean') {
     return '';
   }
