@@ -70,7 +70,10 @@ import React, { useState } from 'react';
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
+<<<<<<< HEAD
 import createDiagram from '../diagrams/createDiagrams';
+=======
+>>>>>>> cffd6e5 (normalization separated)
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -336,6 +339,7 @@ function App(): JSX.Element {
     }
     return tab;
   }
+<<<<<<< HEAD
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 <<<<<<< HEAD
   const res = returnArray(x);
@@ -502,6 +506,9 @@ function App(): JSX.Element {
 =======
 
 >>>>>>> 5f35168 (adding types)
+=======
+
+>>>>>>> cffd6e5 (normalization separated)
   if (typeof workflow === 'object') {
 =======
   let normalizedObject: any;

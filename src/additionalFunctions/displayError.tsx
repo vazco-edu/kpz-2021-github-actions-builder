@@ -2,12 +2,16 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default function displayError(
   result: boolean | Record<string, any>,
 ): string {
 =======
 export default function displayError(result: any) {
 >>>>>>> c37a684 (jkd)
+=======
+export default function displayError(result: any): string {
+>>>>>>> cffd6e5 (normalization separated)
   if (typeof result === 'boolean') {
     return '';
   }
