@@ -50,17 +50,21 @@ import Editor from './Editor';
 =======
 import React, { useState } from 'react';
 
+import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
+<<<<<<< HEAD
 const ajv = new Ajv({
   allErrors: true,
   strict: false,
 });
 >>>>>>> f0c15db (cleaned code, optimized)
+=======
+>>>>>>> 43074be (ajv to new file)
 function App(): JSX.Element {
   // eslint-disable-next-line no-console
   // console.log(schema);
@@ -405,6 +409,7 @@ function App(): JSX.Element {
     // timeout ## if not set -> set to 60 minutes ##
     job['timeout-minutes'] = job['timeout-minutes'] || 60;
   }
+<<<<<<< HEAD
 
   function normalizeMatrix(matrix: {
     [key: string]: (string | number | boolean)[];
@@ -456,6 +461,8 @@ function App(): JSX.Element {
 =======
 
 >>>>>>> a734a9d (normalization separated)
+=======
+>>>>>>> 43074be (ajv to new file)
   if (typeof workflow === 'object') {
     normalize(workflow);
   } else {
