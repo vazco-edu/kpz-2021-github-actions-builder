@@ -1,8 +1,10 @@
 import jsyaml from 'js-yaml';
 import React from 'react';
+import { Controlled } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/yaml/yaml';
+<<<<<<< HEAD
 import { Controlled } from 'react-codemirror2';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -10,6 +12,8 @@ import { Controlled } from 'react-codemirror2';
 =======
 =======
 >>>>>>> 6d36f31 (errors inline, normalizing input)
+=======
+>>>>>>> 47d4b70 (changed stuff)
 import 'codemirror/addon/lint/yaml-lint';
 import 'codemirror/addon/lint/lint.css';
 import 'codemirror/addon/lint/lint';

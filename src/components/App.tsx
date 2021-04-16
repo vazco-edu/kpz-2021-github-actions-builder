@@ -9,8 +9,11 @@
 >>>>>>> 6d36f31 (errors inline, normalizing input)
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+<<<<<<< HEAD
 import Ajv from 'ajv';
 import betterAjvErrors from 'better-ajv-errors';
+=======
+>>>>>>> 47d4b70 (changed stuff)
 import jsyaml from 'js-yaml';
 <<<<<<< HEAD
 <<<<<<< HEAD
