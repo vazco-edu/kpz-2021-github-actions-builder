@@ -51,6 +51,7 @@ import Editor from './Editor';
 import React, { useState } from 'react';
 
 import dispError from '../additionalFunctions/displayError';
+import { normalize } from '../additionalFunctions/normalization';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -275,6 +276,7 @@ function App(): JSX.Element {
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   }
+<<<<<<< HEAD
   // if (validate(x)) {
   //   showObject(x);
   // }
@@ -451,6 +453,9 @@ function App(): JSX.Element {
     }
     return result;
   }
+=======
+
+>>>>>>> a734a9d (normalization separated)
   if (typeof workflow === 'object') {
     normalize(workflow);
   } else {
