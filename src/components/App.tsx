@@ -6,7 +6,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 
@@ -57,6 +56,7 @@ function App(): JSX.Element {
   function handleClickEvent() {
     setClick(!click);
   }
+
   if (typeof workflow === 'object') {
     normalize(workflow);
   } else {

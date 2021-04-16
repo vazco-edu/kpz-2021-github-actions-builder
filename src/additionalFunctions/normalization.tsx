@@ -3,6 +3,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+import { Workflow, Job, StrategyMatrix, MatrixValue } from '../schema/Schema';
+
+interface keyable {
+  [key: string]: any;
+}
+
+interface arrKeyable {
+  [key: string]: any[];
+}
+
 function toArray(input: string | string[]): string[] {
   if (Array.isArray(input)) {
     return input;
@@ -10,32 +21,29 @@ function toArray(input: string | string[]): string[] {
   return [input];
 }
 
-export function normalize(workflow: any) {
+export function normalize(workflow: Workflow): keyable | void {
   console.log(workflow.on);
   if (typeof workflow.on === 'string') {
     workflow.on = {
       [workflow.on]: {},
     };
   } else if (Array.isArray(workflow.on)) {
-    workflow.on = workflow.on.reduce(
-      (o: { [x: string]: Record<string, never> }, z: string | number) => {
-        o[z] = {};
-        return o;
-      },
-      {},
-    );
+    workflow.on = workflow.on.reduce((o: keyable, z) => {
+      o[z] = {};
+      return o;
+    }, {});
   }
   console.log(workflow.on);
   if (!workflow.jobs) {
     workflow.jobs = {};
   }
-  for (const jId of Object.keys(workflow.jobs).filter(x => x !== 'JD')) {
+  for (const jId of Object.keys(workflow.jobs).filter(x => x !== 'key')) {
     console.log('Job before normalization: ', workflow.jobs[jId]);
     normalizeJob(workflow.jobs[jId]);
     console.log('Job after normalization: ', workflow.jobs[jId]);
   }
 }
-function normalizeJob(job: any) {
+function normalizeJob(job: Job) {
   // Strategy
   if (job.strategy?.matrix) {
     // job.strategy.matrix = normalizeMatrix(job.strategy.matrix);
@@ -48,7 +56,7 @@ function normalizeJob(job: any) {
     job.steps = [];
   }
   console.log('Steps in job: ', job, ' \nsteps: ', job.steps);
-  job.steps = job.steps.filter((x: any) => typeof x === 'object');
+  job.steps = job.steps.filter(x => typeof x === 'object');
   for (const step of job.steps) {
     if (step && 'uses' in step && typeof step.uses === 'string') {
       console.log('Uses in job: ', job, step.uses);
@@ -59,9 +67,7 @@ function normalizeJob(job: any) {
   // timeout ## if not set -> set to 60 minutes ##
   job['timeout-minutes'] = job['timeout-minutes'] || 60;
 }
-function normalizeMatrix(matrix: {
-  [key: string]: (string | number | boolean)[];
-}): any[] {
+function normalizeMatrix(matrix: arrKeyable | StrategyMatrix): any[] | string {
   if (typeof matrix === 'string') {
     console.log('matrix is a string');
     return matrix;
@@ -69,7 +75,7 @@ function normalizeMatrix(matrix: {
   const matrixKeys = Object.keys(matrix);
   // inputKey - string, value can be string, number or bool
   const matrixValues: {
-    [inputKey: string]: (string | number | boolean)[];
+    [inputKey: string]: (string | number | boolean)[] | MatrixValue;
   } = {};
   for (const matrixKey of matrixKeys) {
     // Assigning values of matrix passed to function to previously created empty object with properly assigned types
@@ -82,17 +88,17 @@ function normalizeMatrix(matrix: {
   console.log(inv);
   return inv;
 }
-function cartesianProduct(inputs: any) {
+function cartesianProduct(inputs: keyable) {
   let result = [];
   for (const inputKey of Object.keys(inputs)) {
     if (result.length === 0) {
       result.push(
-        ...inputs[inputKey].map((x: any) => ({
+        ...inputs[inputKey].map((x: keyable) => ({
           [inputKey]: x,
         })),
       );
     } else {
-      const newResult: any[] = [];
+      const newResult: arrKeyable[] = [];
       for (const inputValue of inputs[inputKey]) {
         for (const r of result) {
           newResult.push({ ...r, [inputKey]: inputValue });
