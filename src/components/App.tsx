@@ -58,7 +58,10 @@ function App(): JSX.Element {
   }
 
   if (typeof workflow === 'object') {
-    normalize(workflow);
+    //creating a seperate object
+    const normalizedObject = normalize(workflow);
+    console.log(normalizedObject);
+    console.log(workflow);
   } else {
     workflow = undefined;
   }
