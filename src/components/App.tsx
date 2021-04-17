@@ -11,12 +11,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Ajv from 'ajv';
 import betterAjvErrors from 'better-ajv-errors';
 =======
 >>>>>>> 47d4b70 (changed stuff)
 =======
 >>>>>>> 5f35168 (adding types)
+=======
+import { CanvasWidget } from '@projectstorm/react-canvas-core';
+>>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
 import jsyaml from 'js-yaml';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -59,6 +63,7 @@ import React, { useState } from 'react';
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
+import createDiagram from '../diagrams/createDiagrams';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -364,6 +369,7 @@ function App(): JSX.Element {
     return [input];
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
   function normalize(workflow: any) {
     console.log(workflow.on);
     if (typeof workflow.on === 'string') {
@@ -474,11 +480,16 @@ function App(): JSX.Element {
 
 >>>>>>> 5f35168 (adding types)
   if (typeof workflow === 'object') {
+=======
+  let normalizedObject: any;
+  try {
+    normalizedObject = normalize(workflow);
+  } catch {
+    console.log('xD');
+  }
+  if (typeof workflow !== 'object') {
+>>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
     //creating a seperate object
-    const normalizedObject = normalize(workflow);
-    console.log(normalizedObject);
-    console.log(workflow);
-  } else {
     workflow = undefined;
   }
 <<<<<<< HEAD
@@ -511,13 +522,23 @@ function App(): JSX.Element {
 =======
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
+<<<<<<< HEAD
 >>>>>>> f0c15db (cleaned code, optimized)
+=======
+
+  //          ## DIAGRAMS ##
+>>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
+        {normalizedObject && !dispError(storeValidationResult) ? (
+          <CanvasWidget engine={createDiagram(workflow, normalizedObject)} />
+        ) : (
+          ''
+        )}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
         ) : (

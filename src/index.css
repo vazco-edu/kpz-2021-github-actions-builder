@@ -11,9 +11,6 @@ body{
   padding: 0.5rem;
   
 }
-.result{
-  color: white;
-}
 .container{
   height: 100%;
 }
@@ -30,12 +27,15 @@ body{
 }
 .result{
   display: inline-block;
+<<<<<<< HEAD
   background: grey;
 <<<<<<< HEAD
 <<<<<<< HEAD
   width: 45vw;
   height: 70vh;
 =======
+=======
+>>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
   width: 42vw;
   height: 85vh;
 >>>>>>> 6ff24f6 (added inline errors)
@@ -87,4 +87,7 @@ body{
   transform: translate(-50%, -50%);
   background-color: rgb(202, 75, 75);
 }
-
+.css-18f0176{
+  height: 100%;
+  color: grey;
+}
