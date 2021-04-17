@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
-export default function displayError(result: any): string {
+export default function displayError(
+  result: boolean | Record<string, any>,
+): string {
   if (typeof result === 'boolean') {
     return '';
   }

@@ -474,7 +474,10 @@ function App(): JSX.Element {
 
 >>>>>>> 5f35168 (adding types)
   if (typeof workflow === 'object') {
-    normalize(workflow);
+    //creating a seperate object
+    const normalizedObject = normalize(workflow);
+    console.log(normalizedObject);
+    console.log(workflow);
   } else {
     workflow = undefined;
   }

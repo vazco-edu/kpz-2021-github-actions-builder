@@ -21,27 +21,34 @@ function toArray(input: string | string[]): string[] {
   return [input];
 }
 
+const objResult: Record<string, any> = {};
+
 export function normalize(workflow: Workflow): keyable | void {
   console.log(workflow.on);
   if (typeof workflow.on === 'string') {
     workflow.on = {
       [workflow.on]: {},
     };
+    objResult.on = workflow.on;
   } else if (Array.isArray(workflow.on)) {
-    workflow.on = workflow.on.reduce((o: keyable, z) => {
+    objResult.on = workflow.on.reduce((o: keyable, z) => {
       o[z] = {};
       return o;
     }, {});
   }
   console.log(workflow.on);
+  console.log(objResult.on);
   if (!workflow.jobs) {
     workflow.jobs = {};
   }
+  objResult.jobs = {};
   for (const jId of Object.keys(workflow.jobs).filter(x => x !== 'key')) {
-    console.log('Job before normalization: ', workflow.jobs[jId]);
-    normalizeJob(workflow.jobs[jId]);
-    console.log('Job after normalization: ', workflow.jobs[jId]);
+    objResult.jobs[jId] = workflow.jobs[jId];
+    console.log('Job2 before normalization: ', objResult.jobs[jId]);
+    normalizeJob(objResult.jobs[jId]);
+    console.log('Job2 after normalization: ', objResult.jobs[jId]);
   }
+  return objResult;
 }
 function normalizeJob(job: Job) {
   // Strategy
