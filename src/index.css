@@ -11,9 +11,6 @@ body{
   padding: 0.5rem;
   
 }
-.result{
-  color: white;
-}
 .container{
   height: 100%;
 }
@@ -30,7 +27,6 @@ body{
 }
 .result{
   display: inline-block;
-  background: grey;
   width: 42vw;
   height: 85vh;
   vertical-align: top;
@@ -70,4 +66,7 @@ body{
   transform: translate(-50%, -50%);
   background-color: rgb(202, 75, 75);
 }
-
+.css-18f0176{
+  height: 100%;
+  color: grey;
+}

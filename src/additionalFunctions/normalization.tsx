@@ -23,7 +23,7 @@ function toArray(input: string | string[]): string[] {
 
 const objResult: Record<string, any> = {};
 
-export function normalize(workflow: Workflow): keyable | void {
+export function normalize(workflow: Workflow): keyable {
   console.log(workflow.on);
   if (typeof workflow.on === 'string') {
     workflow.on = {

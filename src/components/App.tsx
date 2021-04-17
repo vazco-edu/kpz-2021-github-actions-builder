@@ -6,12 +6,14 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
+import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
+import createDiagram from '../diagrams/createDiagrams';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -56,23 +58,31 @@ function App(): JSX.Element {
   function handleClickEvent() {
     setClick(!click);
   }
-
-  if (typeof workflow === 'object') {
+  let normalizedObject: any;
+  try {
+    normalizedObject = normalize(workflow);
+  } catch {
+    console.log('xD');
+  }
+  if (typeof workflow !== 'object') {
     //creating a seperate object
-    const normalizedObject = normalize(workflow);
-    console.log(normalizedObject);
-    console.log(workflow);
-  } else {
     workflow = undefined;
   }
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
+
+  //          ## DIAGRAMS ##
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
+        {normalizedObject && !dispError(storeValidationResult) ? (
+          <CanvasWidget engine={createDiagram(workflow, normalizedObject)} />
+        ) : (
+          ''
+        )}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
         ) : (

@@ -35,7 +35,7 @@ export default function Editor(props: any): JSX.Element {
             linewrapping: true,
             lint: true,
             mode: 'text/x-yaml',
-            indentWithTabs: false,
+            indentWithTabs: true,
             smartIndent: true,
             tabSize: 2,
             lintGutter: true,
