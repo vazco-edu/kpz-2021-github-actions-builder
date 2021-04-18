@@ -46,7 +46,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         color: 'rgb(100,100,100)',
       }),
     );
-    nodes[z].setPosition(300, (z + 1) * 100);
+    nodes[z].setPosition(300, (z + 1) * 200);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
       nodes[z].addInPort(
         `Needs: ${
