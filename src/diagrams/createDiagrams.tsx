@@ -24,14 +24,14 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     color: 'rgb(100,100,100)',
   });
 
-  node1.setPosition(100, 100);
+  node1.setPosition(69, 69);
   const port1 = node1.addOutPort(`On: ${Object.keys(normalized['on'])} `);
 
   const node2 = new DefaultNodeModel({
     name: 'Jobs',
     color: 'rgb(100,100,100)',
   });
-  node2.setPosition(100, 200);
+  node2.setPosition(49, 350);
   const port2 = node2.addInPort(`${Object.keys(normalized['jobs'])[0]}`);
   for (let i = 3; i < Object.keys(normalized['jobs']).length + 2; ++i) {
     node2.addInPort(`${Object.keys(normalized['jobs'])[i - 2]}`);
@@ -55,6 +55,11 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         `Needs: ${
           normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs
         }`,
+      );
+    }
+    if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if) {
+      nodes[z].addInPort(
+        `If: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
       );
     }
     nodes[z].addInPort(
