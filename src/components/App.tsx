@@ -493,6 +493,7 @@ function App(): JSX.Element {
     workflow = undefined;
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
   // console.log(nextVersion(x));
   function improvedIteration(obj: any) {
     const arr = [];
@@ -520,6 +521,9 @@ function App(): JSX.Element {
   const isValid = validate(workflow);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
 =======
+=======
+  console.log(normalizedObject);
+>>>>>>> d4cc792 (added graphs)
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
 <<<<<<< HEAD
