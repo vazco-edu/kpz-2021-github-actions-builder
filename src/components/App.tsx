@@ -68,6 +68,7 @@ function App(): JSX.Element {
     //creating a seperate object
     workflow = undefined;
   }
+  console.log(normalizedObject);
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
 
