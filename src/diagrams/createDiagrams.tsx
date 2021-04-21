@@ -231,6 +231,11 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   } else {
     port = node.addOutPort(`On: ${ttt} `);
     for (const properties in tt) {
+<<<<<<< HEAD
+=======
+      console.log(tt[properties]);
+      console.log(tt[properties]);
+>>>>>>> c4828f6 (unwo)
       if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
         // eslint-disable-next-line no-prototype-builtins
         if (preventDuplicate.length === 0) {
