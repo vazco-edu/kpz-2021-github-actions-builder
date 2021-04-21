@@ -12,6 +12,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Ajv from 'ajv';
 import betterAjvErrors from 'better-ajv-errors';
 =======
@@ -21,6 +22,8 @@ import betterAjvErrors from 'better-ajv-errors';
 =======
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
+=======
+>>>>>>> 1dbb889 (asdasdasd)
 import jsyaml from 'js-yaml';
 <<<<<<< HEAD
 <<<<<<< HEAD
