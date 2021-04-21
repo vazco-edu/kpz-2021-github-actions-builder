@@ -412,6 +412,7 @@ export type Configuration =
  * branch changes. For a list of available events, see
  * https://help.github.com/en/github/automating-your-workflow-with-github-actions/events-that-trigger-workflows.
  */
+
 export type OnUnion = Event[] | OnClass | Event;
 
 export enum Event {
