@@ -215,6 +215,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                 continue;
               } else {
                 node.addOutPort(tt[properties]['branches'][j]);
+                console.log('JD');
               }
             }
           }
