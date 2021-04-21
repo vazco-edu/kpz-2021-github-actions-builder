@@ -6,7 +6,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 

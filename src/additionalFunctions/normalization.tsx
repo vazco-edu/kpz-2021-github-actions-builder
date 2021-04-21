@@ -24,7 +24,6 @@ function toArray(input: string | string[]): string[] {
 const objResult: Record<string, any> = {};
 
 export function normalize(workflow: Workflow): keyable {
-  console.log(workflow.on);
   if (typeof workflow.on === 'object' && !Array.isArray(workflow.on)) {
     objResult.on = workflow.on;
   } else if (typeof workflow.on === 'string') {
@@ -38,39 +37,26 @@ export function normalize(workflow: Workflow): keyable {
       return o;
     }, {});
   }
-  console.log(workflow.on);
-  console.log(objResult.on);
   if (!workflow.jobs) {
     workflow.jobs = {};
   }
   objResult.jobs = {};
   for (const jId of Object.keys(workflow.jobs).filter(x => x !== 'key')) {
     objResult.jobs[jId] = workflow.jobs[jId];
-    console.log('Job2 before normalization: ', objResult.jobs[jId]);
     normalizeJob(objResult.jobs[jId]);
-    console.log('Job2 after normalization: ', objResult.jobs[jId]);
   }
   return objResult;
 }
 function normalizeJob(job: Job) {
   // Strategy
   if (job.strategy?.matrix) {
-    // job.strategy.matrix = normalizeMatrix(job.strategy.matrix);
-    console.log('Im normalizing matrix', job.strategy.matrix);
     normalizeMatrix(job.strategy.matrix);
   }
   // Steps
   if (!Array.isArray(job.steps)) {
-    console.log('STEPS WERE NOT AN ARRAY');
     job.steps = [];
   }
-  console.log('Steps in job: ', job, ' \nsteps: ', job.steps);
   job.steps = job.steps.filter(x => typeof x === 'object');
-  for (const step of job.steps) {
-    if (step && 'uses' in step && typeof step.uses === 'string') {
-      console.log('Uses in job: ', job, step.uses);
-    }
-  }
   // Needs ## if not array -> toArray ##
   job.needs = job.needs && toArray(job.needs);
   // timeout ## if not set -> set to 60 minutes ##
@@ -78,7 +64,6 @@ function normalizeJob(job: Job) {
 }
 function normalizeMatrix(matrix: arrKeyable | StrategyMatrix): any[] | string {
   if (typeof matrix === 'string') {
-    console.log('matrix is a string');
     return matrix;
   }
   const matrixKeys = Object.keys(matrix);
@@ -89,12 +74,10 @@ function normalizeMatrix(matrix: arrKeyable | StrategyMatrix): any[] | string {
   for (const matrixKey of matrixKeys) {
     // Assigning values of matrix passed to function to previously created empty object with properly assigned types
     matrixValues[matrixKey] = matrix[matrixKey];
-    console.log(`Matrix value for key: ${matrixKey}`, matrixValues[matrixKey]);
   }
   //        ### experimental ###
   //        ### crossing i.e. every os with every browser ###
   const inv = cartesianProduct(matrixValues);
-  console.log(inv);
   return inv;
 }
 function cartesianProduct(inputs: keyable) {

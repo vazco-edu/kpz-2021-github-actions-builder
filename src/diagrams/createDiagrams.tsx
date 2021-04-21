@@ -40,13 +40,6 @@ function connectNodes(
     new DefaultPortModel(false, `${nodeFrom.name}-to-${count}`, 'IN'),
   );
   return portOut.link(portTo);
-
-  // ################# UNCOMMENT THIS LINE FOR PATH FINDING #############################
-  //return portOut.link(
-  // portTo,
-  //engine.getLinkFactories().getFactory(PathFindingLinkFactory.NAME),
-  //);
-  // #####################################################################################
 }
 
 class DemoWidget extends React.Component<
@@ -190,27 +183,13 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   }
   const link = port1.link<DefaultLinkModel>(port2);
   const links: DefaultLinkModel[] = [];
-  const s = nodes[0];
-  console.log(s);
-  console.log(port2);
-  // const links = nodesFrom.map((node, index) => {
-  //   return connectNodes(node, nodes[index], engine);
-  // });
   for (let c = 0; c < portsOut.length; c++) {
     links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
   }
-  // links[0] = port1.link<DefaultLinkModel>(nodes[1]);
-  // links[0] = portsOut[0].link<DefaultLinkModel>(nodes[0]);
-  // console.log(portsOut);
-  // console.log(portsIn);
   const model = new DiagramModel();
-  model.addAll(node1, node2, ...nodes, ...links);
+  model.addAll(node1, node2, ...nodes, link, ...links);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
-  // model.setLocked();
   engine.setModel(model);
-  console.log(nodes);
-  // model.setLocked(true);
-  // return engine;
   return <DemoWidget model={model} engine={engine} />;
 }
 
@@ -221,22 +200,18 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   let port: DefaultPortModel;
   if (typeof tt !== 'object' || Array.isArray(tt)) {
     port = node.addOutPort(`On: ${ttt} `);
-    console.log('ttt is not obj');
   } else {
     port = node.addOutPort(`On: ${ttt} `);
     for (const properties in tt) {
-      console.log(tt[properties]);
-      if (tt[properties] !== null) {
+      if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
         // eslint-disable-next-line no-prototype-builtins
         if (preventDuplicate.length === 0) {
           node.addOutPort(`Branches: ${tt[properties]['branches']}`);
           preventDuplicate.push(tt[properties]['branches']);
         } else {
-          console.log('HERE');
           for (let i = 0; i < preventDuplicate.length; ++i) {
             for (let j = 0; j < tt[properties]['branches'].length; ++j) {
               if (preventDuplicate[i][i] === tt[properties]['branches'][j]) {
-                console.log(preventDuplicate[i]);
                 continue;
               } else {
                 node.addOutPort(tt[properties]['branches'][j]);
@@ -246,8 +221,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
         }
       }
     }
-    console.log(tt);
-    console.log('TO OBIEKT');
     return [port, node];
   }
   return port;
