@@ -28,6 +28,7 @@ body{
 .result{
   display: inline-block;
 <<<<<<< HEAD
+<<<<<<< HEAD
   background: grey;
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -40,6 +41,8 @@ body{
   height: 85vh;
 >>>>>>> 6ff24f6 (added inline errors)
 =======
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
   width: 42vw;
   height: 85vh;
 >>>>>>> 6d36f31 (errors inline, normalizing input)

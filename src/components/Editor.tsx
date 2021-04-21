@@ -5,6 +5,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/yaml/yaml';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Controlled } from 'react-codemirror2';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -14,6 +15,8 @@ import { Controlled } from 'react-codemirror2';
 >>>>>>> 6d36f31 (errors inline, normalizing input)
 =======
 >>>>>>> 47d4b70 (changed stuff)
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 import 'codemirror/addon/lint/yaml-lint';
 import 'codemirror/addon/lint/lint.css';
 import 'codemirror/addon/lint/lint';
@@ -52,6 +55,7 @@ export default function Editor(props: any): JSX.Element {
             indentWithTaba: false,
 =======
             mode: 'text/x-yaml',
+<<<<<<< HEAD
             indentWithTabs: false,
 >>>>>>> 06cc739 (added autocomplete)
 =======
@@ -66,6 +70,9 @@ export default function Editor(props: any): JSX.Element {
 =======
             indentWithTabs: false,
 >>>>>>> 3553cda (workin)
+=======
+            indentWithTabs: true,
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
             smartIndent: true,
             tabSize: 2,
             lintGutter: true,

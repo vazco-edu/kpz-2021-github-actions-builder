@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 import * as chevrotain from 'chevrotain';
 
 // Tokens for most common expressions

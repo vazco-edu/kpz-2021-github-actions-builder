@@ -9,12 +9,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { keyframes } from '@emotion/react';
 =======
 >>>>>>> 3553cda (workin)
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 >>>>>>> ca43750 (bigJD)
+=======
+import { keyframes } from '@emotion/react';
+import { CanvasWidget } from '@projectstorm/react-canvas-core';
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 import createEngine, {
   DefaultLinkModel,
   DefaultNodeModel,
@@ -28,7 +33,10 @@ import createEngine, {
 } from '@projectstorm/react-diagrams';
 import React from 'react';
 
+<<<<<<< HEAD
 import { helperPortCreation } from '../additionalFunctions/diagramFunctions/helperPortCreation';
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 import { DemoCanvasWidget } from '../diagrams/CanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from '../diagrams/WorkspaceWidget';
 let count = 0;
@@ -48,6 +56,7 @@ function connectNodes(
   );
   return portOut.link(portTo);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   // ################# UNCOMMENT THIS LINE FOR PATH FINDING #############################
   // return portOut.link(
@@ -57,6 +66,8 @@ function connectNodes(
   // #####################################################################################
 =======
 >>>>>>> 1dbb889 (asdasdasd)
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 }
 
 class DemoWidget extends React.Component<
@@ -98,11 +109,15 @@ class DemoWidget extends React.Component<
 
   render() {
     return (
+<<<<<<< HEAD
       <DemoWorkspaceWidget
         buttons={
           <DemoButton onClick={this.autoDistribute}>Re-distribute</DemoButton>
         }
       >
+=======
+      <DemoWorkspaceWidget>
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
         <DemoCanvasWidget>
           <CanvasWidget engine={this.props.engine} />
         </DemoCanvasWidget>
@@ -111,15 +126,22 @@ class DemoWidget extends React.Component<
   }
 }
 
+<<<<<<< HEAD
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 // eslint-disable-next-line complexity
 export default function createDiagrams(notNormalized: any, normalized: any) {
   const engine = createEngine();
   const node1 = new DefaultNodeModel({
+=======
+export default function createDiagrams(notNormalized: any, normalized: any) {
+  const engine = createEngine();
+  let node1 = new DefaultNodeModel({
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
     name: `${notNormalized.name}`,
     color: 'rgb(128,0,128)',
   });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   node1.setPosition(69, 69);
 <<<<<<< HEAD
@@ -176,6 +198,32 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
   const nodes: DefaultNodeModel[] = [];
+=======
+  node1.setPosition(69, 69);
+  let port1: DefaultPortModel;
+  const helper = helperPortCreation(normalized, node1);
+  // eslint-disable-next-line prefer-const
+  if (!Array.isArray(helper)) {
+    port1 = helper;
+  } else {
+    [port1, node1] = helper;
+  }
+  const node2 = new DefaultNodeModel({
+    name: 'Jobs',
+    color: 'rgb(0,200,100)',
+  });
+  node2.setPosition(49, 350);
+  const port2 = node2.addInPort(`${Object.keys(normalized['jobs'])[0]}`);
+  for (let i = 3; i < Object.keys(normalized['jobs']).length + 2; ++i) {
+    node2.addInPort(`${Object.keys(normalized['jobs'])[i - 2]}`);
+  }
+  const portsOut: DefaultPortModel[] = [];
+  const portsIn: DefaultPortModel[] = [];
+  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
+    portsOut.push(node2.addOutPort((j + 1).toString()));
+  }
+  const nodes: any[] = [];
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
   for (let z = 0; z < Object.keys(normalized['jobs']).length; ++z) {
     nodes.push(
       new DefaultNodeModel({
@@ -183,14 +231,24 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         color: 'rgb(204,204,9)',
       }),
     );
+<<<<<<< HEAD
     //nodes[z].setPosition(300, (z + 1) * 175);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
       nodes[z].addInPort(
         `${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs}`,
+=======
+    nodes[z].setPosition(300, (z + 1) * 175);
+    if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
+      nodes[z].addInPort(
+        `Needs: ${
+          normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs
+        }`,
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
       );
     }
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if) {
       nodes[z].addInPort(
+<<<<<<< HEAD
         `if: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
       );
     }
@@ -200,6 +258,16 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       }`,
     );
     //preventing additional output, that we dont want
+=======
+        `If: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
+      );
+    }
+    nodes[z].addInPort(
+      `Runs-on: ${
+        normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['runs-on']
+      }`,
+    );
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
     let x = 0;
     for (
       let h = 0;
@@ -221,8 +289,11 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
               }`,
             ),
           );
+<<<<<<< HEAD
           // out port, just in case said job is needed by another job
           portsOutWithNeeds.push(nodes[z].addOutPort(''));
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
           x++;
           continue;
         }
@@ -239,11 +310,15 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   // link.addLabel('Hello react!');
   //const link = port1.link<DefaultLinkModel>(port2);
 =======
   const link = port1.link<DefaultLinkModel>(port2);
 >>>>>>> ca43750 (bigJD)
+=======
+  const link = port1.link<DefaultLinkModel>(port2);
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
   const links: DefaultLinkModel[] = [];
   for (let c = 0; c < portsOut.length; c++) {
     links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
@@ -255,7 +330,10 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   return <DemoWidget model={model} engine={engine} />;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 
 function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   const ttt = Object.keys(normal['on']);
@@ -268,10 +346,13 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
     port = node.addOutPort(`On: ${ttt} `);
     for (const properties in tt) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       console.log(tt[properties]);
       console.log(tt[properties]);
 >>>>>>> c4828f6 (unwo)
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
       if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
         // eslint-disable-next-line no-prototype-builtins
         if (preventDuplicate.length === 0) {
@@ -286,6 +367,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                 node.addOutPort(tt[properties]['branches'][j]);
               }
             }
+<<<<<<< HEAD
 =======
   console.log(nodes[0]);
   console.log(nodes[1]);
@@ -338,3 +420,13 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   return <DemoWidget model={model} engine={engine} />;
 }
 >>>>>>> 1dbb889 (asdasdasd)
+=======
+          }
+        }
+      }
+    }
+    return [port, node];
+  }
+  return port;
+}
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)

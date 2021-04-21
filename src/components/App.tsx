@@ -14,6 +14,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c37a684 (jkd)
 import Ajv from 'ajv';
@@ -27,6 +28,8 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
 =======
 >>>>>>> 1dbb889 (asdasdasd)
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 import jsyaml from 'js-yaml';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -44,6 +47,7 @@ import tv4 from 'tv4';
 >>>>>>> 2324fa9 (working validator (?))
 import util from 'util';
 
+<<<<<<< HEAD
 import useLocalStorage from '../hooks/useLocalStorage';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -74,10 +78,17 @@ import { normalize } from '../additionalFunctions/normalization';
 import createDiagram from '../diagrams/createDiagrams';
 =======
 >>>>>>> cffd6e5 (normalization separated)
+=======
+import { ajv } from '../additionalFunctions/createAjvObject';
+import dispError from '../additionalFunctions/displayError';
+import { normalize } from '../additionalFunctions/normalization';
+import createDiagram from '../diagrams/createDiagrams';
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 import React, { useState } from 'react';
@@ -98,6 +109,8 @@ const ajv = new Ajv({
 >>>>>>> 43074be (ajv to new file)
 =======
 >>>>>>> c37a684 (jkd)
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 function App(): JSX.Element {
   // eslint-disable-next-line no-console
   // console.log(schema);
@@ -498,6 +511,7 @@ function App(): JSX.Element {
     }
     return result;
   }
+<<<<<<< HEAD
 =======
 
 >>>>>>> a734a9d (normalization separated)
@@ -511,6 +525,8 @@ function App(): JSX.Element {
 >>>>>>> cffd6e5 (normalization separated)
   if (typeof workflow === 'object') {
 =======
+=======
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
   let normalizedObject: any;
   try {
     normalizedObject = normalize(workflow);
@@ -518,6 +534,7 @@ function App(): JSX.Element {
     console.log('xD');
   }
   if (typeof workflow !== 'object') {
+<<<<<<< HEAD
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
     //creating a seperate object
     workflow = undefined;
@@ -571,6 +588,16 @@ function App(): JSX.Element {
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
 >>>>>>> c37a684 (jkd)
+=======
+    //creating a seperate object
+    workflow = undefined;
+  }
+  console.log(normalizedObject);
+  // Storing a boolean or an error object
+  const storeValidationResult = validate(workflow);
+  console.log(workflow);
+  //          ## DIAGRAMS ##
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
   return (
     <>
       <div className="text-editor">

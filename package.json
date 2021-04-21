@@ -33,10 +33,14 @@
     "react-scripts": "4.0.3",
     "require-from-string": "^2.0.2",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "tv4": "^1.3.0",
 =======
     "resize-observer-polyfill": "^1.5.1",
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
+=======
+    "resize-observer-polyfill": "^1.5.1",
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
     "web-vitals": "^1.1.1"
   },
   "scripts": {

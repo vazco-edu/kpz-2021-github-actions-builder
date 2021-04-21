@@ -48,12 +48,19 @@ export const DemoButton = styled.button`
 export class DemoWorkspaceWidget extends React.Component<DemoWorkspaceWidgetProps> {
   render() {
     return (
+<<<<<<< HEAD
       <>
         <S.Container>
           <S.Toolbar>{this.props.buttons}</S.Toolbar>
           <S.Content>{this.props.children}</S.Content>
         </S.Container>
       </>
+=======
+      <S.Container>
+        <S.Toolbar>{this.props.buttons}</S.Toolbar>
+        <S.Content>{this.props.children}</S.Content>
+      </S.Container>
+>>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
     );
   }
 }
