@@ -527,9 +527,13 @@ function App(): JSX.Element {
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f0c15db (cleaned code, optimized)
 =======
 
+=======
+  console.log(workflow);
+>>>>>>> ca43750 (bigJD)
   //          ## DIAGRAMS ##
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
   return (
@@ -538,11 +542,9 @@ function App(): JSX.Element {
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {normalizedObject && !dispError(storeValidationResult) ? (
-          <CanvasWidget engine={createDiagram(workflow, normalizedObject)} />
-        ) : (
-          ''
-        )}
+        {normalizedObject && !dispError(storeValidationResult)
+          ? createDiagram(workflow, normalizedObject)
+          : ''}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
         ) : (
