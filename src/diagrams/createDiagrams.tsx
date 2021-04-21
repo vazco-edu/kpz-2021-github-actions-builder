@@ -204,7 +204,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   // console.log(portsOut);
   // console.log(portsIn);
   const model = new DiagramModel();
-  model.addAll(node1, node2, ...nodes, ...links);
+  model.addAll(node1, node2, ...nodes, link, ...links);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
   // model.setLocked();
   engine.setModel(model);
@@ -226,7 +226,8 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
     port = node.addOutPort(`On: ${ttt} `);
     for (const properties in tt) {
       console.log(tt[properties]);
-      if (tt[properties] !== null) {
+      console.log(tt[properties]);
+      if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
         // eslint-disable-next-line no-prototype-builtins
         if (preventDuplicate.length === 0) {
           node.addOutPort(`Branches: ${tt[properties]['branches']}`);
