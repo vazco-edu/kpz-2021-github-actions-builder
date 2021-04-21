@@ -1,9 +1,9 @@
 import jsyaml from 'js-yaml';
 import React from 'react';
+import { Controlled } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/yaml/yaml';
-import { Controlled } from 'react-codemirror2';
 import 'codemirror/addon/lint/yaml-lint';
 import 'codemirror/addon/lint/lint.css';
 import 'codemirror/addon/lint/lint';
@@ -35,7 +35,7 @@ export default function Editor(props: any): JSX.Element {
             linewrapping: true,
             lint: true,
             mode: 'text/x-yaml',
-            indentWithTabs: false,
+            indentWithTabs: true,
             smartIndent: true,
             tabSize: 2,
             lintGutter: true,

@@ -1,22 +1,5 @@
-/* eslint-disable no-empty */
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-empty-interface */
-// To parse this data:
-//
-//   import { Convert, Coordinate } from "./file";
-//
-//   const coordinate = Convert.toCoordinate(json);
-//
-// These functions will throw an error if the JSON doesn't
-// match the expected interface, even if the JSON is valid.
-
-export interface CoordinateClass {
+export interface Workflow {
   /**
    * A map of default settings that will apply to all jobs in the workflow.
    */
@@ -24,7 +7,7 @@ export interface CoordinateClass {
   /**
    * A map of environment variables that are available to all jobs and steps in the workflow.
    */
-  env?: { [key: string]: boolean | number | string };
+  env?: { [key: string]: Env };
   /**
    * A workflow run is made up of one or more jobs. Jobs run in parallel by default. To run
    * jobs sequentially, you can define dependencies on other jobs using the
@@ -48,11 +31,13 @@ export interface CoordinateClass {
    * branch changes. For a list of available events, see
    * https://help.github.com/en/github/automating-your-workflow-with-github-actions/events-that-trigger-workflows.
    */
-  on: Event[] | OnClass | Event;
+  on: OnUnion;
 }
 
 /**
  * A map of default settings that will apply to all jobs in the workflow.
+ *
+ * A map of default settings that will apply to all steps in the job.
  */
 export interface Defaults {
   run?: Run;
@@ -63,6 +48,8 @@ export interface Run {
   'working-directory'?: string;
 }
 
+export type Env = boolean | number | string;
+
 /**
  * A workflow run is made up of one or more jobs. Jobs run in parallel by default. To run
  * jobs sequentially, you can define dependencies on other jobs using the
@@ -72,7 +59,361 @@ export interface Run {
  * limits. For more information, see
  * https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#usage-limits.
  */
-export interface Jobs {}
+export type Jobs = Record<JobID, Job>;
+
+/**
+ * Each job must have an id to associate with the job. The key job_id is a string and its
+ * value is a map of the job's configuration data. You must replace <job_id> with a string
+ * that is unique to the jobs object. The <job_id> must start with a letter or _ and contain
+ * only alphanumeric characters, -, or _.
+ */
+export type JobID = string;
+
+/**
+ * Each job must have an id to associate with the job. The key job_id is a string and its
+ * value is a map of the job's configuration data. You must replace <job_id> with a string
+ * that is unique to the jobs object. The <job_id> must start with a letter or _ and contain
+ * only alphanumeric characters, -, or _.
+ */
+export interface Job {
+  /**
+   * A container to run any steps in a job that don't already specify a container. If you have
+   * steps that use both script and container actions, the container actions will run as
+   * sibling containers on the same network with the same volume mounts.
+   * If you do not set a container, all steps will run directly on the host specified by
+   * runs-on unless a step refers to an action configured to run in a container.
+   */
+  container?: ContainerUnion;
+  /**
+   * Prevents a workflow run from failing when a job fails. Set to true to allow a workflow
+   * run to pass when this job fails.
+   */
+  'continue-on-error'?: ContinueOnError;
+  /**
+   * A map of default settings that will apply to all steps in the job.
+   */
+  defaults?: Defaults;
+  /**
+   * A map of environment variables that are available to all steps in the job.
+   */
+  env?: { [key: string]: Env };
+  /**
+   * The environment that the job references.
+   */
+  environment?: EnvironmentUnion;
+  /**
+   * You can use the if conditional to prevent a job from running unless a condition is met.
+   * You can use any supported context and expression to create a conditional.
+   * Expressions in an if conditional do not require the ${{ }} syntax. For more information,
+   * see https://help.github.com/en/articles/contexts-and-expression-syntax-for-github-actions.
+   */
+  if?: string;
+  /**
+   * The name of the job displayed on GitHub.
+   */
+  name?: string;
+  /**
+   * Identifies any jobs that must complete successfully before this job will run. It can be a
+   * string or array of strings. If a job fails, all jobs that need it are skipped unless the
+   * jobs use a conditional statement that causes the job to continue.
+   */
+  needs?: Needs;
+  /**
+   * A map of outputs for a job. Job outputs are available to all downstream jobs that depend
+   * on this job.
+   */
+  outputs?: { [key: string]: string };
+  /**
+   * The type of machine to run the job on. The machine can be either a GitHub-hosted runner,
+   * or a self-hosted runner.
+   */
+  'runs-on': RunsOn;
+  /**
+   * Additional containers to host services for a job in a workflow. These are useful for
+   * creating databases or cache services like redis. The runner on the virtual machine will
+   * automatically create a network and manage the life cycle of the service containers.
+   * When you use a service container for a job or your step uses container actions, you don't
+   * need to set port information to access the service. Docker automatically exposes all
+   * ports between containers on the same network.
+   * When both the job and the action run in a container, you can directly reference the
+   * container by its hostname. The hostname is automatically mapped to the service name.
+   * When a step does not use a container action, you must access the service using localhost
+   * and bind the ports.
+   */
+  services?: { [key: string]: Container };
+  /**
+   * A job contains a sequence of tasks called steps. Steps can run commands, run setup tasks,
+   * or run an action in your repository, a public repository, or an action published in a
+   * Docker registry. Not all steps run actions, but all actions run as a step. Each step runs
+   * in its own process in the virtual environment and has access to the workspace and
+   * filesystem. Because steps run in their own process, changes to environment variables are
+   * not preserved between steps. GitHub provides built-in steps to set up and complete a job.
+   */
+  steps?: Step[];
+  /**
+   * A strategy creates a build matrix for your jobs. You can define different variations of
+   * an environment to run each job in.
+   */
+  strategy?: Strategy;
+  /**
+   * The maximum number of minutes to let a workflow run before GitHub automatically cancels
+   * it. Default: 360
+   */
+  'timeout-minutes'?: number;
+}
+
+/**
+ * A container to run any steps in a job that don't already specify a container. If you have
+ * steps that use both script and container actions, the container actions will run as
+ * sibling containers on the same network with the same volume mounts.
+ * If you do not set a container, all steps will run directly on the host specified by
+ * runs-on unless a step refers to an action configured to run in a container.
+ */
+export type ContainerUnion = Container | string;
+
+export interface Container {
+  /**
+   * If the image's container registry requires authentication to pull the image, you can use
+   * credentials to set a map of the username and password. The credentials are the same
+   * values that you would provide to the `docker login` command.
+   */
+  credentials?: Credentials;
+  /**
+   * Sets an array of environment variables in the container.
+   */
+  env?: { [key: string]: Env };
+  /**
+   * The Docker image to use as the container to run the action. The value can be the Docker
+   * Hub image name or a registry name.
+   */
+  image: string;
+  /**
+   * Additional Docker container resource options. For a list of options, see
+   * https://docs.docker.com/engine/reference/commandline/create/#options.
+   */
+  options?: string;
+  /**
+   * Sets an array of ports to expose on the container.
+   */
+  ports?: Port[];
+  /**
+   * Sets an array of volumes for the container to use. You can use volumes to share data
+   * between services or other steps in a job. You can specify named Docker volumes, anonymous
+   * Docker volumes, or bind mounts on the host.
+   * To specify a volume, you specify the source and destination path:
+   * <source>:<destinationPath>
+   * The <source> is a volume name or an absolute path on the host machine, and
+   * <destinationPath> is an absolute path in the container.
+   */
+  volumes?: string[];
+}
+
+/**
+ * If the image's container registry requires authentication to pull the image, you can use
+ * credentials to set a map of the username and password. The credentials are the same
+ * values that you would provide to the `docker login` command.
+ */
+export interface Credentials {
+  password?: string;
+  username?: string;
+}
+
+export type Port = number | string;
+
+export type ContinueOnError = boolean | string;
+
+/**
+ * The environment that the job references.
+ */
+export type EnvironmentUnion = Environment | string;
+
+/**
+ * The environment that the job references
+ */
+export interface Environment {
+  /**
+   * The name of the environment configured in the repo.
+   */
+  name: string;
+  /**
+   * A deployment URL
+   */
+  url?: string;
+}
+
+/**
+ * Identifies any jobs that must complete successfully before this job will run. It can be a
+ * string or array of strings. If a job fails, all jobs that need it are skipped unless the
+ * jobs use a conditional statement that causes the job to continue.
+ */
+export type Needs = string[] | string;
+
+/**
+ * The type of machine to run the job on. The machine can be either a GitHub-hosted runner,
+ * or a self-hosted runner.
+ */
+export type RunsOn = any[] | string;
+
+export interface Step {
+  /**
+   * Prevents a job from failing when a step fails. Set to true to allow a job to pass when
+   * this step fails.
+   */
+  'continue-on-error'?: ContinueOnError;
+  /**
+   * Sets environment variables for steps to use in the virtual environment. You can also set
+   * environment variables for the entire workflow or a job.
+   */
+  env?: { [key: string]: Env };
+  /**
+   * A unique identifier for the step. You can use the id to reference the step in contexts.
+   * For more information, see
+   * https://help.github.com/en/articles/contexts-and-expression-syntax-for-github-actions.
+   */
+  id?: string;
+  /**
+   * You can use the if conditional to prevent a step from running unless a condition is met.
+   * You can use any supported context and expression to create a conditional.
+   * Expressions in an if conditional do not require the ${{ }} syntax. For more information,
+   * see https://help.github.com/en/articles/contexts-and-expression-syntax-for-github-actions.
+   */
+  if?: string;
+  /**
+   * A name for your step to display on GitHub.
+   */
+  name?: string;
+  /**
+   * Runs command-line programs using the operating system's shell. If you do not provide a
+   * name, the step name will default to the text specified in the run command.
+   * Commands run using non-login shells by default. You can choose a different shell and
+   * customize the shell used to run commands. For more information, see
+   * https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#using-a-specific-shell.
+   * Each run keyword represents a new process and shell in the virtual environment. When you
+   * provide multi-line commands, each line runs in the same shell.
+   */
+  run?: string;
+  shell?: string;
+  /**
+   * The maximum number of minutes to run the step before killing the process.
+   */
+  'timeout-minutes'?: number;
+  /**
+   * Selects an action to run as part of a step in your job. An action is a reusable unit of
+   * code. You can use an action defined in the same repository as the workflow, a public
+   * repository, or in a published Docker container image (https://hub.docker.com/).
+   * We strongly recommend that you include the version of the action you are using by
+   * specifying a Git ref, SHA, or Docker tag number. If you don't specify a version, it could
+   * break your workflows or cause unexpected behavior when the action owner publishes an
+   * update.
+   * - Using the commit SHA of a released action version is the safest for stability and
+   * security.
+   * - Using the specific major action version allows you to receive critical fixes and
+   * security patches while still maintaining compatibility. It also assures that your
+   * workflow should still work.
+   * - Using the master branch of an action may be convenient, but if someone releases a new
+   * major version with a breaking change, your workflow could break.
+   * Some actions require inputs that you must set using the with keyword. Review the action's
+   * README file to determine the inputs required.
+   * Actions are either JavaScript files or Docker containers. If the action you're using is a
+   * Docker container you must run the job in a Linux virtual environment. For more details,
+   * see https://help.github.com/en/articles/virtual-environments-for-github-actions.
+   */
+  uses?: string;
+  /**
+   * A map of the input parameters defined by the action. Each input parameter is a key/value
+   * pair. Input parameters are set as environment variables. The variable is prefixed with
+   * INPUT_ and converted to upper case.
+   */
+  with?: With;
+  'working-directory'?: string;
+}
+
+/**
+ * A map of the input parameters defined by the action. Each input parameter is a key/value
+ * pair. Input parameters are set as environment variables. The variable is prefixed with
+ * INPUT_ and converted to upper case.
+ *
+ * A map of environment variables that are available to all jobs and steps in the workflow.
+ *
+ * Sets an array of environment variables in the container.
+ *
+ * A map of environment variables that are available to all steps in the job.
+ *
+ * Sets environment variables for steps to use in the virtual environment. You can also set
+ * environment variables for the entire workflow or a job.
+ */
+export interface With {
+  args?: string;
+  entrypoint?: string;
+}
+
+/**
+ * A strategy creates a build matrix for your jobs. You can define different variations of
+ * an environment to run each job in.
+ */
+export interface Strategy {
+  /**
+   * When set to true, GitHub cancels all in-progress jobs if any matrix job fails. Default:
+   * true
+   */
+  'fail-fast'?: boolean;
+  /**
+   * A build matrix is a set of different configurations of the virtual environment. For
+   * example you might run a job against more than one supported version of a language,
+   * operating system, or tool. Each configuration is a copy of the job that runs and reports
+   * a status.
+   * You can specify a matrix by supplying an array for the configuration options. For
+   * example, if the GitHub virtual environment supports Node.js versions 6, 8, and 10 you
+   * could specify an array of those versions in the matrix.
+   * When you define a matrix of operating systems, you must set the required runs-on keyword
+   * to the operating system of the current job, rather than hard-coding the operating system
+   * name. To access the operating system name, you can use the matrix.os context parameter to
+   * set runs-on. For more information, see
+   * https://help.github.com/en/articles/contexts-and-expression-syntax-for-github-actions.
+   */
+  matrix: StrategyMatrix;
+  /**
+   * The maximum number of jobs that can run simultaneously when using a matrix job strategy.
+   * By default, GitHub will maximize the number of jobs run in parallel depending on the
+   * available runners on GitHub-hosted virtual machines.
+   */
+  'max-parallel'?: number;
+}
+
+/**
+ * A build matrix is a set of different configurations of the virtual environment. For
+ * example you might run a job against more than one supported version of a language,
+ * operating system, or tool. Each configuration is a copy of the job that runs and reports
+ * a status.
+ * You can specify a matrix by supplying an array for the configuration options. For
+ * example, if the GitHub virtual environment supports Node.js versions 6, 8, and 10 you
+ * could specify an array of those versions in the matrix.
+ * When you define a matrix of operating systems, you must set the required runs-on keyword
+ * to the operating system of the current job, rather than hard-coding the operating system
+ * name. To access the operating system name, you can use the matrix.os context parameter to
+ * set runs-on. For more information, see
+ * https://help.github.com/en/articles/contexts-and-expression-syntax-for-github-actions.
+ */
+export type StrategyMatrix = { [key: string]: MatrixValue } | string;
+
+export type MatrixValue = Configuration[] | string;
+
+export type Configuration =
+  | Configuration[]
+  | boolean
+  | number
+  | { [key: string]: Configuration }
+  | string;
+
+/**
+ * The name of the GitHub event that triggers the workflow. You can provide a single event
+ * string, array of events, array of event types, or an event configuration map that
+ * schedules a workflow or restricts the execution of a workflow to specific files, tags, or
+ * branch changes. For a list of available events, see
+ * https://help.github.com/en/github/automating-your-workflow-with-github-actions/events-that-trigger-workflows.
+ */
+
+export type OnUnion = Event[] | OnClass | Event;
 
 export enum Event {
   CheckRun = 'check_run',
@@ -316,9 +657,7 @@ export interface OnClass {
    * confirm what time it will run. To help you get started, there is also a list of crontab
    * guru examples (https://crontab.guru/examples.html).
    */
-  schedule?: Array<
-    any[] | boolean | ScheduleClass | number | number | null | string
-  >;
+  schedule?: ScheduleElement[];
   /**
    * Runs your workflow anytime the status of a Git commit changes, which triggers the status
    * event. For information about the REST API, see
@@ -336,14 +675,7 @@ export interface OnClass {
    * event. You will then see a 'Run workflow' button on the Actions tab, enabling you to
    * easily trigger a run.
    */
-  workflow_dispatch?:
-    | any[]
-    | boolean
-    | number
-    | number
-    | null
-    | WorkflowDispatchObject
-    | string;
+  workflow_dispatch?: WorkflowDispatchUnion;
   /**
    * This event occurs when a workflow run is requested or completed, and allows you to
    * execute a workflow based on the finished result of another workflow. For example, if your
@@ -419,9 +751,32 @@ export interface EventObject1 {
   types?: any[];
 }
 
+export type ScheduleElement =
+  | any[]
+  | boolean
+  | ScheduleClass
+  | number
+  | number
+  | null
+  | string;
+
 export interface ScheduleClass {
   cron?: string;
 }
+
+/**
+ * You can now create workflows that are manually triggered with the new workflow_dispatch
+ * event. You will then see a 'Run workflow' button on the Actions tab, enabling you to
+ * easily trigger a run.
+ */
+export type WorkflowDispatchUnion =
+  | any[]
+  | boolean
+  | number
+  | number
+  | null
+  | WorkflowDispatchObject
+  | string;
 
 export interface WorkflowDispatchObject {
   /**
@@ -443,466 +798,3 @@ export interface EventObject2 {
   types?: any[];
   workflows?: string[];
 }
-
-// Converts JSON strings to/from your types
-// and asserts the results of JSON.parse at runtime
-export class Convert {
-  public static toCoordinate(
-    json: string,
-  ): any[] | boolean | CoordinateClass | number | number | null | string {
-    return cast(
-      JSON.parse(json),
-      u(a('any'), true, r('CoordinateClass'), 3.14, 0, null, ''),
-    );
-  }
-
-  public static coordinateToJson(
-    value: any[] | boolean | CoordinateClass | number | number | null | string,
-  ): string {
-    return JSON.stringify(
-      uncast(value, u(a('any'), true, r('CoordinateClass'), 3.14, 0, null, '')),
-      null,
-      2,
-    );
-  }
-}
-
-function invalidValue(typ: any, val: any, key: any = ''): never {
-  if (key) {
-    throw Error(
-      `Invalid value for key "${key}". Expected type ${JSON.stringify(
-        typ,
-      )} but got ${JSON.stringify(val)}`,
-    );
-  }
-  throw Error(
-    `Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`,
-  );
-}
-
-function jsonToJSProps(typ: any): any {
-  if (typ.jsonToJS === undefined) {
-    const map: any = {};
-    typ.props.forEach((p: any) => (map[p.json] = { key: p.js, typ: p.typ }));
-    typ.jsonToJS = map;
-  }
-  return typ.jsonToJS;
-}
-
-function jsToJSONProps(typ: any): any {
-  if (typ.jsToJSON === undefined) {
-    const map: any = {};
-    typ.props.forEach((p: any) => (map[p.js] = { key: p.json, typ: p.typ }));
-    typ.jsToJSON = map;
-  }
-  return typ.jsToJSON;
-}
-
-function transform(val: any, typ: any, getProps: any, key: any = ''): any {
-  function transformPrimitive(typ: string, val: any): any {
-    if (typeof typ === typeof val) {
-      return val;
-    }
-    return invalidValue(typ, val, key);
-  }
-
-  function transformUnion(typs: any[], val: any): any {
-    // val must validate against one typ in typs
-    const l = typs.length;
-    for (let i = 0; i < l; i++) {
-      const typ = typs[i];
-      try {
-        return transform(val, typ, getProps);
-      } catch (_) {}
-    }
-    return invalidValue(typs, val);
-  }
-
-  function transformEnum(cases: string[], val: any): any {
-    if (cases.indexOf(val) !== -1) {
-      return val;
-    }
-    return invalidValue(cases, val);
-  }
-
-  function transformArray(typ: any, val: any): any {
-    // val must be an array with no invalid elements
-    if (!Array.isArray(val)) {
-      return invalidValue('array', val);
-    }
-    return val.map(el => transform(el, typ, getProps));
-  }
-
-  function transformDate(val: any): any {
-    if (val === null) {
-      return null;
-    }
-    const d = new Date(val);
-    if (isNaN(d.valueOf())) {
-      return invalidValue('Date', val);
-    }
-    return d;
-  }
-
-  function transformObject(
-    props: { [k: string]: any },
-    additional: any,
-    val: any,
-  ): any {
-    if (val === null || typeof val !== 'object' || Array.isArray(val)) {
-      return invalidValue('object', val);
-    }
-    const result: any = {};
-    Object.getOwnPropertyNames(props).forEach(key => {
-      const prop = props[key];
-      const v = Object.prototype.hasOwnProperty.call(val, key)
-        ? val[key]
-        : undefined;
-      result[prop.key] = transform(v, prop.typ, getProps, prop.key);
-    });
-    Object.getOwnPropertyNames(val).forEach(key => {
-      if (!Object.prototype.hasOwnProperty.call(props, key)) {
-        result[key] = transform(val[key], additional, getProps, key);
-      }
-    });
-    return result;
-  }
-
-  if (typ === 'any') {
-    return val;
-  }
-  if (typ === null) {
-    if (val === null) {
-      return val;
-    }
-    return invalidValue(typ, val);
-  }
-  if (typ === false) {
-    return invalidValue(typ, val);
-  }
-  while (typeof typ === 'object' && typ.ref !== undefined) {
-    typ = typeMap[typ.ref];
-  }
-  if (Array.isArray(typ)) {
-    return transformEnum(typ, val);
-  }
-  if (typeof typ === 'object') {
-    return typ.hasOwnProperty('unionMembers')
-      ? transformUnion(typ.unionMembers, val)
-      : typ.hasOwnProperty('arrayItems')
-      ? transformArray(typ.arrayItems, val)
-      : typ.hasOwnProperty('props')
-      ? transformObject(getProps(typ), typ.additional, val)
-      : invalidValue(typ, val);
-  }
-  // Numbers can be parsed by Date but shouldn't be.
-  if (typ === Date && typeof val !== 'number') {
-    return transformDate(val);
-  }
-  return transformPrimitive(typ, val);
-}
-
-function cast<T>(val: any, typ: any): T {
-  return transform(val, typ, jsonToJSProps);
-}
-
-function uncast<T>(val: T, typ: any): any {
-  return transform(val, typ, jsToJSONProps);
-}
-
-function a(typ: any) {
-  return { arrayItems: typ };
-}
-
-function u(...typs: any[]) {
-  return { unionMembers: typs };
-}
-
-function o(props: any[], additional: any) {
-  return { props, additional };
-}
-
-function m(additional: any) {
-  return { props: [], additional };
-}
-
-function r(name: string) {
-  return { ref: name };
-}
-
-const typeMap: any = {
-  CoordinateClass: o(
-    [
-      { json: 'defaults', js: 'defaults', typ: u(undefined, r('Defaults')) },
-      { json: 'env', js: 'env', typ: u(undefined, m(u(true, 3.14, ''))) },
-      { json: 'jobs', js: 'jobs', typ: r('Jobs') },
-      { json: 'name', js: 'name', typ: u(undefined, '') },
-      { json: 'on', js: 'on', typ: u(a(r('Event')), r('OnClass'), r('Event')) },
-    ],
-    false,
-  ),
-  Defaults: o([{ json: 'run', js: 'run', typ: u(undefined, r('Run')) }], false),
-  Run: o(
-    [
-      { json: 'shell', js: 'shell', typ: u(undefined, '') },
-      {
-        json: 'working-directory',
-        js: 'working-directory',
-        typ: u(undefined, ''),
-      },
-    ],
-    false,
-  ),
-  Jobs: o([], false),
-  OnClass: o(
-    [
-      {
-        json: 'check_run',
-        js: 'check_run',
-        typ: u(undefined, u(null, r('PurpleEventObject'))),
-      },
-      {
-        json: 'check_suite',
-        js: 'check_suite',
-        typ: u(undefined, u(null, r('FluffyEventObject'))),
-      },
-      { json: 'create', js: 'create', typ: u(undefined, u(m('any'), null)) },
-      { json: 'delete', js: 'delete', typ: u(undefined, u(m('any'), null)) },
-      {
-        json: 'deployment',
-        js: 'deployment',
-        typ: u(undefined, u(m('any'), null)),
-      },
-      {
-        json: 'deployment_status',
-        js: 'deployment_status',
-        typ: u(undefined, u(m('any'), null)),
-      },
-      { json: 'fork', js: 'fork', typ: u(undefined, u(m('any'), null)) },
-      { json: 'gollum', js: 'gollum', typ: u(undefined, u(m('any'), null)) },
-      {
-        json: 'issue_comment',
-        js: 'issue_comment',
-        typ: u(undefined, u(null, r('TentacledEventObject'))),
-      },
-      {
-        json: 'issues',
-        js: 'issues',
-        typ: u(undefined, u(null, r('StickyEventObject'))),
-      },
-      {
-        json: 'label',
-        js: 'label',
-        typ: u(undefined, u(null, r('IndigoEventObject'))),
-      },
-      {
-        json: 'member',
-        js: 'member',
-        typ: u(undefined, u(null, r('IndecentEventObject'))),
-      },
-      {
-        json: 'milestone',
-        js: 'milestone',
-        typ: u(undefined, u(null, r('HilariousEventObject'))),
-      },
-      {
-        json: 'page_build',
-        js: 'page_build',
-        typ: u(undefined, u(m('any'), null)),
-      },
-      {
-        json: 'project',
-        js: 'project',
-        typ: u(undefined, u(null, r('AmbitiousEventObject'))),
-      },
-      {
-        json: 'project_card',
-        js: 'project_card',
-        typ: u(undefined, u(null, r('CunningEventObject'))),
-      },
-      {
-        json: 'project_column',
-        js: 'project_column',
-        typ: u(undefined, u(null, r('MagentaEventObject'))),
-      },
-      { json: 'public', js: 'public', typ: u(undefined, u(m('any'), null)) },
-      {
-        json: 'pull_request',
-        js: 'pull_request',
-        typ: u(undefined, u(r('PurpleRef'), null)),
-      },
-      {
-        json: 'pull_request_review',
-        js: 'pull_request_review',
-        typ: u(undefined, u(null, r('FriskyEventObject'))),
-      },
-      {
-        json: 'pull_request_review_comment',
-        js: 'pull_request_review_comment',
-        typ: u(undefined, u(null, r('MischievousEventObject'))),
-      },
-      {
-        json: 'pull_request_target',
-        js: 'pull_request_target',
-        typ: u(undefined, u(r('FluffyRef'), null)),
-      },
-      {
-        json: 'push',
-        js: 'push',
-        typ: u(undefined, u(r('TentacledRef'), null)),
-      },
-      {
-        json: 'registry_package',
-        js: 'registry_package',
-        typ: u(undefined, u(null, r('BraggadociousEventObject'))),
-      },
-      {
-        json: 'release',
-        js: 'release',
-        typ: u(undefined, u(null, r('EventObject1'))),
-      },
-      {
-        json: 'repository_dispatch',
-        js: 'repository_dispatch',
-        typ: u(undefined, u(m('any'), null)),
-      },
-      {
-        json: 'schedule',
-        js: 'schedule',
-        typ: u(
-          undefined,
-          a(u(a('any'), true, r('ScheduleClass'), 3.14, 0, null, '')),
-        ),
-      },
-      { json: 'status', js: 'status', typ: u(undefined, u(m('any'), null)) },
-      { json: 'watch', js: 'watch', typ: u(undefined, u(m('any'), null)) },
-      {
-        json: 'workflow_dispatch',
-        js: 'workflow_dispatch',
-        typ: u(
-          undefined,
-          u(a('any'), true, 3.14, 0, null, r('WorkflowDispatchObject'), ''),
-        ),
-      },
-      {
-        json: 'workflow_run',
-        js: 'workflow_run',
-        typ: u(undefined, u(null, r('EventObject2'))),
-      },
-    ],
-    false,
-  ),
-  PurpleEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  FluffyEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  TentacledEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  StickyEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  IndigoEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  IndecentEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  HilariousEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  AmbitiousEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  CunningEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  MagentaEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  PurpleRef: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    false,
-  ),
-  FriskyEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  MischievousEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  FluffyRef: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    false,
-  ),
-  TentacledRef: o([], false),
-  BraggadociousEventObject: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  EventObject1: o(
-    [{ json: 'types', js: 'types', typ: u(undefined, a('any')) }],
-    'any',
-  ),
-  ScheduleClass: o(
-    [{ json: 'cron', js: 'cron', typ: u(undefined, '') }],
-    false,
-  ),
-  WorkflowDispatchObject: o(
-    [{ json: 'inputs', js: 'inputs', typ: u(undefined, r('Inputs')) }],
-    'any',
-  ),
-  Inputs: o([], false),
-  EventObject2: o(
-    [
-      { json: 'types', js: 'types', typ: u(undefined, a('any')) },
-      { json: 'workflows', js: 'workflows', typ: u(undefined, a('')) },
-    ],
-    'any',
-  ),
-  Event: [
-    'check_run',
-    'check_suite',
-    'create',
-    'delete',
-    'deployment',
-    'deployment_status',
-    'fork',
-    'gollum',
-    'issue_comment',
-    'issues',
-    'label',
-    'member',
-    'milestone',
-    'page_build',
-    'project',
-    'project_card',
-    'project_column',
-    'public',
-    'pull_request',
-    'pull_request_review',
-    'pull_request_review_comment',
-    'pull_request_target',
-    'push',
-    'registry_package',
-    'release',
-    'repository_dispatch',
-    'status',
-    'watch',
-    'workflow_dispatch',
-    'workflow_run',
-  ],
-};

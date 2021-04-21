@@ -6,20 +6,17 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-import Ajv from 'ajv';
 import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 
+import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
+import createDiagram from '../diagrams/createDiagrams';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
-const ajv = new Ajv({
-  allErrors: true,
-  strict: false,
-});
 function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
@@ -60,20 +57,30 @@ function App(): JSX.Element {
   function handleClickEvent() {
     setClick(!click);
   }
-
-  if (typeof workflow === 'object') {
-    normalize(workflow);
-  } else {
+  let normalizedObject: any;
+  try {
+    normalizedObject = normalize(workflow);
+  } catch {
+    console.log('xD');
+  }
+  if (typeof workflow !== 'object') {
+    //creating a seperate object
     workflow = undefined;
   }
+  console.log(normalizedObject);
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
+  console.log(workflow);
+  //          ## DIAGRAMS ##
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
+        {normalizedObject && !dispError(storeValidationResult)
+          ? createDiagram(workflow, normalizedObject)
+          : ''}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
         ) : (
