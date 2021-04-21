@@ -7,7 +7,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-import { keyframes } from '@emotion/react';
 import createEngine, {
   DefaultLinkModel,
   DefaultNodeModel,
@@ -25,7 +24,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   });
 
   node1.setPosition(69, 69);
-  const port1 = node1.addOutPort(`On: ${Object.keys(normalized['on'])} `);
+  //const port1 = node1.addOutPort(`On: ${Object.keys(normalized['on'])} `);
 
   const node2 = new DefaultNodeModel({
     name: 'Jobs',
@@ -103,7 +102,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     }
   }
   // link.addLabel('Hello react!');
-  const link = port1.link<DefaultLinkModel>(port2);
+  //const link = port1.link<DefaultLinkModel>(port2);
   const links: DefaultLinkModel[] = [];
   const s = nodes[0];
   console.log(s);
@@ -116,7 +115,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   console.log(portsOut);
   console.log(portsIn);
   const model = new DiagramModel();
-  model.addAll(node1, node2, ...nodes, link, ...links);
+  model.addAll(node1, node2, ...nodes, ...links);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
   model.setLocked();
   engine.setModel(model);

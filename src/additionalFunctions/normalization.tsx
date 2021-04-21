@@ -25,7 +25,9 @@ const objResult: Record<string, any> = {};
 
 export function normalize(workflow: Workflow): keyable {
   console.log(workflow.on);
-  if (typeof workflow.on === 'string') {
+  if (typeof workflow.on === 'object' && !Array.isArray(workflow.on)) {
+    objResult.on = workflow.on;
+  } else if (typeof workflow.on === 'string') {
     workflow.on = {
       [workflow.on]: {},
     };
