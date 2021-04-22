@@ -1,10 +1,17 @@
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { Workflow, Job, StrategyMatrix, MatrixValue } from '../schema/Schema';
+import {
+  Workflow,
+  Job,
+  StrategyMatrix,
+  MatrixValue,
+  Event,
+} from '../schema/Schema';
 
 interface keyable {
   [key: string]: any;
@@ -32,7 +39,7 @@ export function normalize(workflow: Workflow): keyable {
     };
     objResult.on = workflow.on;
   } else if (Array.isArray(workflow.on)) {
-    objResult.on = workflow.on.reduce((o: keyable, z) => {
+    objResult.on = workflow.on.reduce<Partial<Record<Event, {}>>>((o, z) => {
       o[z] = {};
       return o;
     }, {});
