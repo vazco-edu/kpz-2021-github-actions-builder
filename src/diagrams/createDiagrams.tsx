@@ -7,7 +7,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-import { keyframes } from '@emotion/react';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import createEngine, {
   DefaultLinkModel,
@@ -22,6 +21,7 @@ import createEngine, {
 } from '@projectstorm/react-diagrams';
 import React from 'react';
 
+import { helperPortCreation } from '../additionalFunctions/diagramFunctions/helperPortCreation';
 import { DemoCanvasWidget } from '../diagrams/CanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from '../diagrams/WorkspaceWidget';
 let count = 0;
@@ -81,7 +81,11 @@ class DemoWidget extends React.Component<
 
   render() {
     return (
-      <DemoWorkspaceWidget>
+      <DemoWorkspaceWidget
+        buttons={
+          <DemoButton onClick={this.autoDistribute}>Re-distribute</DemoButton>
+        }
+      >
         <DemoCanvasWidget>
           <CanvasWidget engine={this.props.engine} />
         </DemoCanvasWidget>
@@ -97,7 +101,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     color: 'rgb(128,0,128)',
   });
 
-  node1.setPosition(69, 69);
+  //node1.setPosition(69, 69);
   let port1: DefaultPortModel;
   const helper = helperPortCreation(normalized, node1);
   // eslint-disable-next-line prefer-const
@@ -107,10 +111,10 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     [port1, node1] = helper;
   }
   const node2 = new DefaultNodeModel({
-    name: 'Jobs',
+    name: 'jobs',
     color: 'rgb(0,200,100)',
   });
-  node2.setPosition(49, 350);
+  //node2.setPosition(49, 350);
   const port2 = node2.addInPort(`${Object.keys(normalized['jobs'])[0]}`);
   for (let i = 3; i < Object.keys(normalized['jobs']).length + 2; ++i) {
     node2.addInPort(`${Object.keys(normalized['jobs'])[i - 2]}`);
@@ -128,17 +132,17 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         color: 'rgb(204,204,9)',
       }),
     );
-    nodes[z].setPosition(300, (z + 1) * 175);
+    //nodes[z].setPosition(300, (z + 1) * 175);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
       nodes[z].addInPort(
-        `Needs: ${
+        `needs: ${
           normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs
         }`,
       );
     }
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if) {
       nodes[z].addInPort(
-        `If: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
+        `if: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
       );
     }
     nodes[z].addInPort(
@@ -191,37 +195,4 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   // user can not alter the output (can be added to the whole model or to specific nodes only)
   engine.setModel(model);
   return <DemoWidget model={model} engine={engine} />;
-}
-
-function helperPortCreation(normal: any, node: DefaultNodeModel): any {
-  const ttt = Object.keys(normal['on']);
-  const tt = normal['on'];
-  const preventDuplicate: string[] = [];
-  let port: DefaultPortModel;
-  if (typeof tt !== 'object' || Array.isArray(tt)) {
-    port = node.addOutPort(`On: ${ttt} `);
-  } else {
-    port = node.addOutPort(`On: ${ttt} `);
-    for (const properties in tt) {
-      if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
-        // eslint-disable-next-line no-prototype-builtins
-        if (preventDuplicate.length === 0) {
-          node.addOutPort(`Branches: ${tt[properties]['branches']}`);
-          preventDuplicate.push(tt[properties]['branches']);
-        } else {
-          for (let i = 0; i < preventDuplicate.length; ++i) {
-            for (let j = 0; j < tt[properties]['branches'].length; ++j) {
-              if (preventDuplicate[i][i] === tt[properties]['branches'][j]) {
-                continue;
-              } else {
-                node.addOutPort(tt[properties]['branches'][j]);
-              }
-            }
-          }
-        }
-      }
-    }
-    return [port, node];
-  }
-  return port;
 }
