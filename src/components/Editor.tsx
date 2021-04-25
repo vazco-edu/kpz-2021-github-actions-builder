@@ -57,11 +57,15 @@ export default function Editor(props: any): JSX.Element {
 =======
             mode: 'text/x-yaml',
 <<<<<<< HEAD
+<<<<<<< HEAD
             indentWithTabs: false,
 >>>>>>> 6d36f31 (errors inline, normalizing input)
 =======
             indentWithTabs: true,
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
+=======
+            indentWithTabs: false,
+>>>>>>> 3553cda (workin)
             smartIndent: true,
             tabSize: 2,
             lintGutter: true,
