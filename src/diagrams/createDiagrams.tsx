@@ -127,12 +127,17 @@ class DemoWidget extends React.Component<
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 // eslint-disable-next-line complexity
 export default function createDiagrams(notNormalized: any, normalized: any) {
   const engine = createEngine();
   const node1 = new DefaultNodeModel({
 =======
+=======
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line complexity
+>>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
 export default function createDiagrams(notNormalized: any, normalized: any) {
   const engine = createEngine();
   let node1 = new DefaultNodeModel({
@@ -212,18 +217,46 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     name: 'Jobs',
     color: 'rgb(0,200,100)',
   });
+<<<<<<< HEAD
   node2.setPosition(49, 350);
+=======
+  console.log(normalized['jobs']);
+  //variable storing number or jobs withour parameter "needs"
+  let numWithoutNeeds = 0;
+  // array storing objects, that have parameter "needs" in format [name_of_the_job, job_object]
+  const objWithNeeds: any[] = [];
+  //node2.setPosition(49, 350);
+>>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
   const port2 = node2.addInPort(`${Object.keys(normalized['jobs'])[0]}`);
   for (let i = 3; i < Object.keys(normalized['jobs']).length + 2; ++i) {
-    node2.addInPort(`${Object.keys(normalized['jobs'])[i - 2]}`);
+    if (
+      normalized['jobs'][Object.keys(normalized['jobs'])[i - 2]]['needs'] ===
+      undefined
+    ) {
+      //without needs
+      node2.addInPort(`${Object.keys(normalized['jobs'])[i - 2]}`);
+      numWithoutNeeds++;
+    } else {
+      objWithNeeds.push(Object.keys(normalized['jobs'])[i - 2]);
+      objWithNeeds.push(
+        normalized['jobs'][Object.keys(normalized['jobs'])[i - 2]],
+      );
+    }
   }
+  console.log(node2);
   const portsOut: DefaultPortModel[] = [];
+  const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
+  // needs change - only displaying out ports of jobs that dont have needs
   for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
+<<<<<<< HEAD
   const nodes: any[] = [];
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
+=======
+  const nodes: DefaultNodeModel[] = [];
+>>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
   for (let z = 0; z < Object.keys(normalized['jobs']).length; ++z) {
     nodes.push(
       new DefaultNodeModel({
@@ -236,6 +269,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
       nodes[z].addInPort(
         `${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs}`,
+<<<<<<< HEAD
 =======
     nodes[z].setPosition(300, (z + 1) * 175);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
@@ -244,6 +278,8 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
           normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs
         }`,
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
+=======
+>>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
       );
     }
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if) {
@@ -254,6 +290,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     }
     nodes[z].addInPort(
       `runs-on: ${
+<<<<<<< HEAD
         normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['runs-on']
       }`,
     );
@@ -268,6 +305,12 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       }`,
     );
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
+=======
+        normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['runs-on']
+      }`,
+    );
+    //preventing additional output, that we dont want
+>>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
     let x = 0;
     for (
       let h = 0;
@@ -290,10 +333,15 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
             ),
           );
 <<<<<<< HEAD
+<<<<<<< HEAD
           // out port, just in case said job is needed by another job
           portsOutWithNeeds.push(nodes[z].addOutPort(''));
 =======
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
+=======
+          // out port, just in case said job is needed by another job
+          portsOutWithNeeds.push(nodes[z].addOutPort(''));
+>>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
           x++;
           continue;
         }
@@ -311,6 +359,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   // link.addLabel('Hello react!');
   //const link = port1.link<DefaultLinkModel>(port2);
 =======
@@ -319,12 +368,50 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 =======
   const link = port1.link<DefaultLinkModel>(port2);
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
+=======
+  console.log(nodes[1]);
+  console.log(portsIn);
+  const link = port1.link<DefaultLinkModel>(port2);
+  console.log(portsOutWithNeeds);
+>>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
   const links: DefaultLinkModel[] = [];
-  for (let c = 0; c < portsOut.length; c++) {
-    links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
+  const linksWithNeeds: DefaultLinkModel[] = [];
+  //array storing links of jobs with needs
+  const link2: DefaultPortModel[] = [];
+  for (let c = 0; c < portsIn.length; c++) {
+    if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
+      for (let element = 0; element < nodes.length - 1; ++element) {
+        for (
+          let need = 0;
+          need <
+          normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs
+            .length;
+          ++need
+        ) {
+          if (
+            nodes[element]['options']['name'] ===
+            nodes[element + 1]['portsIn'][0]['options']['label']
+          ) {
+            linksWithNeeds.push(
+              portsOutWithNeeds[element].link<DefaultLinkModel>(
+                portsIn[element + 1],
+              ),
+            );
+          }
+
+          console.log(
+            normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
+              need
+            ],
+          );
+        }
+      }
+    } else {
+      links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
+    }
   }
   const model = new DiagramModel();
-  model.addAll(node1, node2, ...nodes, link, ...links);
+  model.addAll(node1, node2, ...nodes, link, ...links, ...linksWithNeeds);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
   engine.setModel(model);
   return <DemoWidget model={model} engine={engine} />;
