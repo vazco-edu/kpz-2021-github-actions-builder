@@ -143,7 +143,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
+  for (let j = 0; j < numWithoutNeeds; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
   const nodes: DefaultNodeModel[] = [];
@@ -210,6 +210,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   }
   console.log(nodes[0]);
   console.log(nodes[1]);
+  console.log(nodes[2]);
   // console.log(portsIn);
   const link = port1.link<DefaultLinkModel>(port2);
   // console.log(portsOutWithNeeds);
@@ -217,33 +218,51 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const linksWithNeeds: DefaultLinkModel[] = [];
   //array storing links of jobs with needs
   const link2: DefaultPortModel[] = [];
+  let needsArr: any = [];
   for (let c = 0; c < portsIn.length; c++) {
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
-      console.log(nodes.length);
-      for (
-        let need = 0;
-        need <
-        normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs
-          .length;
-        ++need
-      ) {
-        for (let element = 1; element < portsIn.length; element++) {
-          console.log(nodes[c - 1]['options']['name']);
-          console.log(nodes[element]['portsIn'][0]['options']['label']);
-          if (
-            nodes[c - 1]['options']['name'] ===
-            nodes[element]['portsIn'][0]['options']['label']
-          ) {
-            console.log('WCHODZE');
-            linksWithNeeds.push(
-              portsOutWithNeeds[c - 1].link<DefaultLinkModel>(portsIn[element]),
-            );
+      // console.log(nodes.length);
+      // for (
+      //   let need = 0;
+      //   need <
+      //   normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs
+      //     .length;
+      //   ++need
+      // ) {
+      for (let element = 1; element < portsIn.length; element++) {
+        console.log(nodes[element]['portsIn'][0]['options']['label']);
+        console.log(element);
+        if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
+          needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
+            ',',
+          );
+          console.log('dziele');
+        }
+        // console.log(needsArr);
+        // console.log(nodes[c - 1]['options']['name']);
+        // console.log(nodes[element]['portsIn'][0]['options']['label']);
+        if (needsArr.length) {
+          console.log('JD');
+          for (let need = 0; need < needsArr.length; ++need) {
+            console.log(need);
+            console.log(nodes[c - 1]['options']['name']);
+            console.log(needsArr[need]);
+            if (nodes[c - 1]['options']['name'] === needsArr[need]) {
+              console.log('IN');
+              linksWithNeeds.push(
+                portsOutWithNeeds[c - 1].link<DefaultLinkModel>(
+                  portsIn[element],
+                ),
+              );
+            }
           }
-
-          console.log(
-            normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
-              need
-            ],
+        } else if (
+          nodes[c - 1]['options']['name'] ===
+          nodes[element]['portsIn'][0]['options']['label']
+        ) {
+          console.log('WCHODZE');
+          linksWithNeeds.push(
+            portsOutWithNeeds[c - 1].link<DefaultLinkModel>(portsIn[element]),
           );
         }
 
@@ -253,6 +272,12 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         //   ],
         // );
       }
+
+      // console.log(
+      //   normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
+      //     need
+      //   ],
+      // );
     } else {
       links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
     }
