@@ -7,7 +7,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-import { keyframes } from '@emotion/react';
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import createEngine, {
   DefaultLinkModel,
@@ -22,6 +21,7 @@ import createEngine, {
 } from '@projectstorm/react-diagrams';
 import React from 'react';
 
+import { helperPortCreation } from '../additionalFunctions/diagramFunctions/helperPortCreation';
 import { DemoCanvasWidget } from '../diagrams/CanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from '../diagrams/WorkspaceWidget';
 let count = 0;
@@ -81,7 +81,11 @@ class DemoWidget extends React.Component<
 
   render() {
     return (
-      <DemoWorkspaceWidget>
+      <DemoWorkspaceWidget
+        buttons={
+          <DemoButton onClick={this.autoDistribute}>Re-distribute</DemoButton>
+        }
+      >
         <DemoCanvasWidget>
           <CanvasWidget engine={this.props.engine} />
         </DemoCanvasWidget>
@@ -90,6 +94,8 @@ class DemoWidget extends React.Component<
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+// eslint-disable-next-line complexity
 export default function createDiagrams(notNormalized: any, normalized: any) {
   const engine = createEngine();
   let node1 = new DefaultNodeModel({
@@ -97,7 +103,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     color: 'rgb(128,0,128)',
   });
 
-  node1.setPosition(69, 69);
+  //node1.setPosition(69, 69);
   let port1: DefaultPortModel;
   const helper = helperPortCreation(normalized, node1);
   // eslint-disable-next-line prefer-const
@@ -107,20 +113,40 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     [port1, node1] = helper;
   }
   const node2 = new DefaultNodeModel({
-    name: 'Jobs',
+    name: 'jobs',
     color: 'rgb(0,200,100)',
   });
-  node2.setPosition(49, 350);
+  console.log(normalized['jobs']);
+  //variable storing number or jobs withour parameter "needs"
+  let numWithoutNeeds = 1;
+  // array storing objects, that have parameter "needs" in format [name_of_the_job, job_object]
+  const objWithNeeds: any[] = [];
+  //node2.setPosition(49, 350);
   const port2 = node2.addInPort(`${Object.keys(normalized['jobs'])[0]}`);
   for (let i = 3; i < Object.keys(normalized['jobs']).length + 2; ++i) {
-    node2.addInPort(`${Object.keys(normalized['jobs'])[i - 2]}`);
+    if (
+      normalized['jobs'][Object.keys(normalized['jobs'])[i - 2]]['needs'] ===
+      undefined
+    ) {
+      //without needs
+      node2.addInPort(`${Object.keys(normalized['jobs'])[i - 2]}`);
+      numWithoutNeeds++;
+    } else {
+      objWithNeeds.push(Object.keys(normalized['jobs'])[i - 2]);
+      objWithNeeds.push(
+        normalized['jobs'][Object.keys(normalized['jobs'])[i - 2]],
+      );
+    }
   }
+  console.log(node2);
   const portsOut: DefaultPortModel[] = [];
+  const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
+  // needs change - only displaying out ports of jobs that dont have needs
   for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
-  const nodes: any[] = [];
+  const nodes: DefaultNodeModel[] = [];
   for (let z = 0; z < Object.keys(normalized['jobs']).length; ++z) {
     nodes.push(
       new DefaultNodeModel({
@@ -128,24 +154,23 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         color: 'rgb(204,204,9)',
       }),
     );
-    nodes[z].setPosition(300, (z + 1) * 175);
+    //nodes[z].setPosition(300, (z + 1) * 175);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
       nodes[z].addInPort(
-        `Needs: ${
-          normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs
-        }`,
+        `${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs}`,
       );
     }
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if) {
       nodes[z].addInPort(
-        `If: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
+        `if: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
       );
     }
     nodes[z].addInPort(
-      `Runs-on: ${
+      `runs-on: ${
         normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['runs-on']
       }`,
     );
+    //preventing additional output, that we dont want
     let x = 0;
     for (
       let h = 0;
@@ -167,6 +192,8 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
               }`,
             ),
           );
+          // out port, just in case said job is needed by another job
+          portsOutWithNeeds.push(nodes[z].addOutPort(''));
           x++;
           continue;
         }
@@ -181,48 +208,52 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       }
     }
   }
+  console.log(nodes[0]);
+  console.log(nodes[1]);
+  // console.log(portsIn);
   const link = port1.link<DefaultLinkModel>(port2);
+  // console.log(portsOutWithNeeds);
   const links: DefaultLinkModel[] = [];
-  for (let c = 0; c < portsOut.length; c++) {
-    links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
+  const linksWithNeeds: DefaultLinkModel[] = [];
+  //array storing links of jobs with needs
+  const link2: DefaultPortModel[] = [];
+  for (let c = 0; c < portsIn.length; c++) {
+    if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
+      console.log(nodes.length);
+      for (
+        let need = 0;
+        need <
+        normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs
+          .length;
+        ++need
+      ) {
+        for (let element = 1; element < portsIn.length; element++) {
+          console.log(nodes[c - 1]['options']['name']);
+          console.log(nodes[element]['portsIn'][0]['options']['label']);
+          if (
+            nodes[c - 1]['options']['name'] ===
+            nodes[element]['portsIn'][0]['options']['label']
+          ) {
+            console.log('WCHODZE');
+            linksWithNeeds.push(
+              portsOutWithNeeds[c - 1].link<DefaultLinkModel>(portsIn[element]),
+            );
+          }
+        }
+
+        // console.log(
+        //   normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
+        //     need
+        //   ],
+        // );
+      }
+    } else {
+      links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
+    }
   }
   const model = new DiagramModel();
-  model.addAll(node1, node2, ...nodes, link, ...links);
+  model.addAll(node1, node2, ...nodes, link, ...links, ...linksWithNeeds);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
   engine.setModel(model);
   return <DemoWidget model={model} engine={engine} />;
-}
-
-function helperPortCreation(normal: any, node: DefaultNodeModel): any {
-  const ttt = Object.keys(normal['on']);
-  const tt = normal['on'];
-  const preventDuplicate: string[] = [];
-  let port: DefaultPortModel;
-  if (typeof tt !== 'object' || Array.isArray(tt)) {
-    port = node.addOutPort(`On: ${ttt} `);
-  } else {
-    port = node.addOutPort(`On: ${ttt} `);
-    for (const properties in tt) {
-      if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
-        // eslint-disable-next-line no-prototype-builtins
-        if (preventDuplicate.length === 0) {
-          node.addOutPort(`Branches: ${tt[properties]['branches']}`);
-          preventDuplicate.push(tt[properties]['branches']);
-        } else {
-          for (let i = 0; i < preventDuplicate.length; ++i) {
-            for (let j = 0; j < tt[properties]['branches'].length; ++j) {
-              if (preventDuplicate[i][i] === tt[properties]['branches'][j]) {
-                continue;
-              } else {
-                node.addOutPort(tt[properties]['branches'][j]);
-                console.log('JD');
-              }
-            }
-          }
-        }
-      }
-    }
-    return [port, node];
-  }
-  return port;
 }
