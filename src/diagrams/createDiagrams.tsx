@@ -239,6 +239,12 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
               portsOutWithNeeds[c - 1].link<DefaultLinkModel>(portsIn[element]),
             );
           }
+
+          console.log(
+            normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
+              need
+            ],
+          );
         }
 
         // console.log(
