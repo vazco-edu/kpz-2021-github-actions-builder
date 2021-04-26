@@ -117,7 +117,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     color: 'rgb(0,200,100)',
   });
   console.log(normalized['jobs']);
-  //variable storing number or jobs withour parameter "needs"
+  //variable storing number or jobs withour parameter "needs" - default value is 1, as the first job will never have parameter needs
   let numWithoutNeeds = 1;
   // array storing objects, that have parameter "needs" in format [name_of_the_job, job_object]
   const objWithNeeds: any[] = [];
@@ -143,7 +143,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < numWithoutNeeds; ++j) {
+  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
   const nodes: DefaultNodeModel[] = [];
@@ -219,8 +219,10 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   //array storing links of jobs with needs
   const link2: DefaultPortModel[] = [];
   let needsArr: any = [];
+  let k = 0;
   for (let c = 0; c < portsIn.length; c++) {
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
+      console.log('if sprawdzający needs');
       // console.log(nodes.length);
       // for (
       //   let need = 0;
@@ -239,8 +241,8 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
           console.log('dziele');
         }
         // console.log(needsArr);
-        // console.log(nodes[c - 1]['options']['name']);
-        // console.log(nodes[element]['portsIn'][0]['options']['label']);
+        console.log(nodes[c - 1]['options']['name']);
+        console.log(nodes[element]['portsIn'][0]['options']['label']);
         if (needsArr.length) {
           console.log('JD');
           for (let need = 0; need < needsArr.length; ++need) {
@@ -256,14 +258,28 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
               );
             }
           }
-        } else if (
-          nodes[c - 1]['options']['name'] ===
-          nodes[element]['portsIn'][0]['options']['label']
-        ) {
-          console.log('WCHODZE');
-          linksWithNeeds.push(
-            portsOutWithNeeds[c - 1].link<DefaultLinkModel>(portsIn[element]),
-          );
+        } else if (k < portsIn.length - 1) {
+          // loop that goes from the first node, and checks, if said node is needed by another job
+          for (let node = 0; node < portsIn.length; ++node) {
+            if (
+              nodes[node]['options']['name'] ===
+              nodes[element]['portsIn'][0]['options']['label']
+            ) {
+              console.log(linksWithNeeds[node]);
+              console.log(
+                portsOutWithNeeds[node].link<DefaultLinkModel>(
+                  portsIn[element],
+                ),
+              );
+              console.log('WCHODZE');
+              linksWithNeeds.push(
+                portsOutWithNeeds[node].link<DefaultLinkModel>(
+                  portsIn[element],
+                ),
+              );
+            }
+          }
+          k++;
         }
 
         // console.log(
