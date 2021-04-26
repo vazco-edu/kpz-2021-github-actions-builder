@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/prefer-regexp-exec */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -225,16 +226,8 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   for (let c = 0; c < portsIn.length; c++) {
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
       console.log('if sprawdzający needs');
-      // console.log(nodes.length);
-      // for (
-      //   let need = 0;
-      //   need <
-      //   normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs
-      //     .length;
-      //   ++need
-      // ) {
-      for (let element = 1; element < portsIn.length; element++) {
-        console.log(nodes[element]['portsIn'][0]['options']['label']);
+      for (let element = c; element < portsIn.length; element++) {
+        console.log(nodes[element]);
         console.log(element);
         if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
           needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
@@ -251,13 +244,30 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
             console.log(need);
             console.log(nodes[c - 1]['options']['name']);
             console.log(needsArr[need]);
-            if (nodes[c - 1]['options']['name'] === needsArr[need]) {
-              console.log('IN');
-              linksWithNeeds.push(
-                portsOutWithNeeds[c - 1].link<DefaultLinkModel>(
-                  portsIn[element],
-                ),
-              );
+            for (let n = 0; n < portsIn.length; n++) {
+              if (
+                nodes[n]['options']['name'] === needsArr[need] &&
+                s < portsIn.length - 1
+              ) {
+                s++;
+                console.log('IN');
+                console.log(portsOutWithNeeds[n]['parent']['options']);
+                console.log(portsIn[element]);
+                const val = Object.values(
+                  portsIn[element]['parent']['options'],
+                );
+                const val2 = Object.values(
+                  portsOutWithNeeds[n]['parent']['options'],
+                );
+                console.log(val[2], val2[2]);
+                if (val[2] !== val2[2]) {
+                  linksWithNeeds.push(
+                    portsOutWithNeeds[n].link<DefaultLinkModel>(
+                      portsIn[element],
+                    ),
+                  );
+                }
+              }
             }
           }
         } else if (k < portsIn.length - 1) {
