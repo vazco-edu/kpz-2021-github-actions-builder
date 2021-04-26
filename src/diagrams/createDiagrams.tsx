@@ -603,6 +603,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
           }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         } else if (
           nodes[c - 1]['options']['name'] ===
           nodes[element]['portsIn'][0]['options']['label']
@@ -617,6 +618,9 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
            else if (k < portsIn.length - 1) {
 >>>>>>> 2d27da0 (cos)
+=======
+        } else if (k < portsIn.length - numWithoutNeeds) {
+>>>>>>> 45ef4cc (nomorebugs)
           // loop that goes from the first node, and checks, if said node is needed by another job
           for (let node = 0; node < portsIn.length; ++node) {
             if (
