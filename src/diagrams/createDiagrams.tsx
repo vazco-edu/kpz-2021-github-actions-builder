@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/prefer-regexp-exec */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -143,7 +144,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < numWithoutNeeds; ++j) {
+  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
   const nodes: DefaultNodeModel[] = [];
@@ -219,12 +220,14 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   //array storing links of jobs with needs
   const link2: DefaultPortModel[] = [];
   let needsArr: any = [];
+  // value used to prevent additional links between nodes with attribute "needs"
   let k = 0;
-  // eslint-disable-next-line prefer-const
-  let s = 0;
+  // value used to prevent self-link of nodes
+  const s = 0;
   for (let c = 0; c < portsIn.length; c++) {
+    console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
-      console.log('if sprawdzający needs');
+      console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
       // console.log(nodes.length);
       // for (
       //   let need = 0;
@@ -233,34 +236,44 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       //     .length;
       //   ++need
       // ) {
-      for (let element = 1; element < portsIn.length; element++) {
-        console.log(nodes[element]['portsIn'][0]['options']['label']);
+      for (let element = c; element < portsIn.length; element++) {
+        console.log(nodes[element]);
         console.log(element);
-        if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
-          needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
+        
+          if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
+            needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
             ',',
-          );
-          console.log('dziele');
-        }
-        // console.log(needsArr);
-        console.log(nodes[c - 1]['options']['name']);
-        console.log(nodes[element]['portsIn'][0]['options']['label']);
-        if (needsArr.length) {
-          console.log('JD');
-          for (let need = 0; need < needsArr.length; ++need) {
-            console.log(need);
-            console.log(nodes[c - 1]['options']['name']);
-            console.log(needsArr[need]);
-            if (nodes[c - 1]['options']['name'] === needsArr[need]) {
-              console.log('IN');
-              linksWithNeeds.push(
-                portsOutWithNeeds[c - 1].link<DefaultLinkModel>(
-                  portsIn[element],
-                ),
+            );
+            console.log('dziele');
+            console.log(c);
+          }
+          // console.log(needsArr);
+          console.log(nodes[c - 1]['options']['name']);
+          console.log(nodes[element]);
+          if (needsArr.length) {
+            console.log('JD');
+            for (let need = 0; need < needsArr.length; ++need) {
+              console.log(need);
+              console.log(nodes[c - 1]['options']['name']);
+              console.log(needsArr[need]);
+              if (nodes[c - 1]['options']['name'] === needsArr[need] ) {
+                console.log('IN');
+                const val = Object.values(portsIn[element]['parent']['options']);
+              const val2 = Object.values(
+                portsOutWithNeeds[c - 1]['parent']['options'],
               );
+              console.log(val[2], val2[2]);
+              if (val[2] !== val2[2]) {
+                linksWithNeeds.push(
+                  portsOutWithNeeds[c - 1].link<DefaultLinkModel>(
+                    portsIn[element],
+                  ),
+                );
+              }
+              }
             }
           }
-        } else if (k < portsIn.length - 1) {
+           else if (k < portsIn.length - 1) {
           // loop that goes from the first node, and checks, if said node is needed by another job
           for (let node = 0; node < portsIn.length; ++node) {
             if (
@@ -290,7 +303,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         //   ],
         // );
       }
-
       // console.log(
       //   normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
       //     need
