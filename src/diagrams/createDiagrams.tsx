@@ -143,7 +143,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
+  for (let j = 0; j < numWithoutNeeds; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
   const nodes: DefaultNodeModel[] = [];
@@ -220,6 +220,8 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const link2: DefaultPortModel[] = [];
   let needsArr: any = [];
   let k = 0;
+  // eslint-disable-next-line prefer-const
+  let s = 0;
   for (let c = 0; c < portsIn.length; c++) {
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
       console.log('if sprawdzający needs');
