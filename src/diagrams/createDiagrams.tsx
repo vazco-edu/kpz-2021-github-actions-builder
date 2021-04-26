@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 /* eslint-disable prettier/prettier */
+=======
+/* eslint-disable no-prototype-builtins */
+>>>>>>> 97bf0ba (bugzabugiem)
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/prefer-regexp-exec */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
@@ -507,6 +511,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
 =======
       console.log('if sprawdzający needs');
+<<<<<<< HEAD
 >>>>>>> 39e9878 (fixed the second last needs bug)
 =======
       console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
@@ -519,6 +524,8 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
       //     .length;
       //   ++need
       // ) {
+=======
+>>>>>>> 97bf0ba (bugzabugiem)
       for (let element = c; element < portsIn.length; element++) {
         console.log(nodes[element]);
         console.log(element);
@@ -526,6 +533,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
           if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
             needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
             ',',
+<<<<<<< HEAD
             );
             console.log('dziele');
             console.log(c);
@@ -553,6 +561,43 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                   ),
                 );
               }
+=======
+          );
+          console.log('dziele');
+        }
+        // console.log(needsArr);
+        console.log(nodes[c - 1]['options']['name']);
+        console.log(nodes[element]['portsIn'][0]['options']['label']);
+        if (needsArr.length) {
+          console.log('JD');
+          for (let need = 0; need < needsArr.length; ++need) {
+            console.log(need);
+            console.log(nodes[c - 1]['options']['name']);
+            console.log(needsArr[need]);
+            for (let n = 0; n < portsIn.length; n++) {
+              if (
+                nodes[n]['options']['name'] === needsArr[need] &&
+                s < portsIn.length - 1
+              ) {
+                s++;
+                console.log('IN');
+                console.log(portsOutWithNeeds[n]['parent']['options']);
+                console.log(portsIn[element]);
+                const val = Object.values(
+                  portsIn[element]['parent']['options'],
+                );
+                const val2 = Object.values(
+                  portsOutWithNeeds[n]['parent']['options'],
+                );
+                console.log(val[2], val2[2]);
+                if (val[2] !== val2[2]) {
+                  linksWithNeeds.push(
+                    portsOutWithNeeds[n].link<DefaultLinkModel>(
+                      portsIn[element],
+                    ),
+                  );
+                }
+>>>>>>> 97bf0ba (bugzabugiem)
               }
             }
           }
