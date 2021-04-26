@@ -144,7 +144,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < numWithoutNeeds; ++j) {
+  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
   const nodes: DefaultNodeModel[] = [];
@@ -270,7 +270,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
               }
             }
           }
-        } else if (k < portsIn.length - 1) {
+        } else if (k < portsIn.length - numWithoutNeeds) {
           // loop that goes from the first node, and checks, if said node is needed by another job
           for (let node = 0; node < portsIn.length; ++node) {
             if (
