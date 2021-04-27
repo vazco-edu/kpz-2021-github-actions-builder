@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
+import { displayLinks } from '../additionalFunctions/linksToActions';
 import { normalize } from '../additionalFunctions/normalization';
 import createDiagram from '../diagrams/createDiagrams';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -60,13 +61,16 @@ function App(): JSX.Element {
   } catch (e) {
     console.log(e.errors);
   }
+  console.log(normalizedObject);
   if (typeof workflow !== 'object') {
     //creating a seperate object
     workflow = undefined;
   }
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
-
+  if (normalizedObject && !dispError(storeValidationResult)) {
+    displayLinks(normalizedObject);
+  }
   //          ## DIAGRAMS ##
   return (
     <>
@@ -100,6 +104,12 @@ function App(): JSX.Element {
         KONWERTUJ
       </button>
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
+      <div className="links">
+        <p>Actions used in workflow: </p>
+        {normalizedObject && !dispError(storeValidationResult)
+          ? displayLinks(normalizedObject)
+          : ''}
+      </div>
     </>
   );
 }

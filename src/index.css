@@ -68,13 +68,18 @@ body{
 }
 .css-18f0176{
   height: 100%;
-  color: green;
+}
+.links {
+  width: 50%;
+  color: white;
 }
 
-.node{
-  margin-bottom: 10px !important;
-}
-
-.css-mtwhol {
+.text {
+  color: white;
+  text-decoration: none !important;
   font-family: monospace;
+}
+
+ul {
+  list-style-type: circle;
 }

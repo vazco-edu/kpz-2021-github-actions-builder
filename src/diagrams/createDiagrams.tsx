@@ -210,11 +210,10 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const link = port1.link<DefaultLinkModel>(port2);
   const links: DefaultLinkModel[] = [];
   const linksWithNeeds: DefaultLinkModel[] = [];
-  //array storing links of jobs with needs
-  const link2: DefaultPortModel[] = [];
   let needsArr: any = [];
+  // value used to prevent additional links between nodes with attribute "needs"
   let k = 0;
-  // eslint-disable-next-line prefer-const
+  // value used to prevent self-link of nodes
   let s = 0;
   for (let c = 0; c < portsIn.length; c++) {
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
