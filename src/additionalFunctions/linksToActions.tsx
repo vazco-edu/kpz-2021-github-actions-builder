@@ -20,4 +20,28 @@ export function displayLinks(normalized: Workflow) {
     }
   }
   console.log(tableOfUses);
+  const destructuredTable: string[][] = [];
+  const re = new RegExp('@|/');
+  for (let inside = 0; inside < tableOfUses.length; ++inside) {
+    destructuredTable.push(tableOfUses[inside].split(re));
+    console.log(destructuredTable);
+    const tmp = destructuredTable[inside][1];
+    console.log(typeof tmp);
+    console.log(tmp);
+    // deconstructedTable.push(tmp.slice('@'));
+  }
+  console.log(
+    `https://github.com/${destructuredTable[0][0]}/${destructuredTable[0][1]}/releases/tag/${destructuredTable[0][2]}`,
+  );
+  const links = destructuredTable.map((x, y) => {
+    console.log(y);
+    <li>
+      <a
+        href={`https://github.com/${destructuredTable[0][0]}/${destructuredTable[0][1]}/releases/tag/${destructuredTable[0][2]}`}
+      >
+        makaron
+      </a>
+    </li>;
+  });
+  return <ul>{links}</ul>;
 }

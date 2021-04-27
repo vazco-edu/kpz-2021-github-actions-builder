@@ -104,6 +104,11 @@ function App(): JSX.Element {
         KONWERTUJ
       </button>
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
+      <div className="links">
+        {normalizedObject && !dispError(storeValidationResult)
+          ? displayLinks(normalizedObject)
+          : ''}
+      </div>
     </>
   );
 }
