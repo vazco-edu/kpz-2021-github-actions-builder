@@ -223,6 +223,7 @@ function App(): JSX.Element {
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
+<<<<<<< HEAD
 =======
   // type gitHubAction = {
   //   name: string;
@@ -239,6 +240,8 @@ function App(): JSX.Element {
 >>>>>>> 6d36f31 (errors inline, normalizing input)
       console.log(validate.errors);
       console.log('NO');
+=======
+>>>>>>> 74b007e (nomoreconsol.logs)
       const s: any = validate.errors;
       return s;
 <<<<<<< HEAD
@@ -286,7 +289,6 @@ function App(): JSX.Element {
 >>>>>>> aa5319c (validation errors)
 =======
     }
-    console.log('Walidacja przebiegła: ', valid);
     return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
@@ -530,8 +532,8 @@ function App(): JSX.Element {
   let normalizedObject: any;
   try {
     normalizedObject = normalize(workflow);
-  } catch {
-    console.log('xD');
+  } catch (e) {
+    console.log(e.errors);
   }
   if (typeof workflow !== 'object') {
 <<<<<<< HEAD
@@ -539,6 +541,7 @@ function App(): JSX.Element {
     //creating a seperate object
     workflow = undefined;
   }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -582,6 +585,11 @@ function App(): JSX.Element {
 =======
   console.log(workflow);
 >>>>>>> ca43750 (bigJD)
+=======
+  // Storing a boolean or an error object
+  const storeValidationResult = validate(workflow);
+
+>>>>>>> 74b007e (nomoreconsol.logs)
   //          ## DIAGRAMS ##
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
 =======
