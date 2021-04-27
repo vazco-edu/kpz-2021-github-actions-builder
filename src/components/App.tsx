@@ -44,12 +44,9 @@ function App(): JSX.Element {
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
-      console.log(validate.errors);
-      console.log('NO');
       const s: any = validate.errors;
       return s;
     }
-    console.log('Walidacja przebiegła: ', valid);
     return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
@@ -60,17 +57,16 @@ function App(): JSX.Element {
   let normalizedObject: any;
   try {
     normalizedObject = normalize(workflow);
-  } catch {
-    console.log('xD');
+  } catch (e) {
+    console.log(e.errors);
   }
   if (typeof workflow !== 'object') {
     //creating a seperate object
     workflow = undefined;
   }
-  console.log(normalizedObject);
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
-  console.log(workflow);
+
   //          ## DIAGRAMS ##
   return (
     <>

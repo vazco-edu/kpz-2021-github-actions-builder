@@ -117,7 +117,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     name: 'jobs',
     color: 'rgb(0,200,100)',
   });
-  console.log(normalized['jobs']);
   //variable storing number or jobs withour parameter "needs" - default value is 1, as the first job will never have parameter needs
   let numWithoutNeeds = 1;
   // array storing objects, that have parameter "needs" in format [name_of_the_job, job_object]
@@ -139,7 +138,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       );
     }
   }
-  console.log(node2);
   const portsOut: DefaultPortModel[] = [];
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
@@ -209,12 +207,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       }
     }
   }
-  console.log(nodes[0]);
-  console.log(nodes[1]);
-  console.log(nodes[2]);
-  // console.log(portsIn);
   const link = port1.link<DefaultLinkModel>(port2);
-  // console.log(portsOutWithNeeds);
   const links: DefaultLinkModel[] = [];
   const linksWithNeeds: DefaultLinkModel[] = [];
   //array storing links of jobs with needs
@@ -225,41 +218,26 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   let s = 0;
   for (let c = 0; c < portsIn.length; c++) {
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
-      console.log('if sprawdzający needs');
       for (let element = c; element < portsIn.length; element++) {
-        console.log(nodes[element]);
-        console.log(element);
         if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
           needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
             ',',
           );
-          console.log('dziele');
         }
-        // console.log(needsArr);
-        console.log(nodes[c - 1]['options']['name']);
-        console.log(nodes[element]['portsIn'][0]['options']['label']);
         if (needsArr.length) {
-          console.log('JD');
           for (let need = 0; need < needsArr.length; ++need) {
-            console.log(need);
-            console.log(nodes[c - 1]['options']['name']);
-            console.log(needsArr[need]);
             for (let n = 0; n < portsIn.length; n++) {
               if (
                 nodes[n]['options']['name'] === needsArr[need] &&
                 s < portsIn.length - 1
               ) {
                 s++;
-                console.log('IN');
-                console.log(portsOutWithNeeds[n]['parent']['options']);
-                console.log(portsIn[element]);
                 const val = Object.values(
                   portsIn[element]['parent']['options'],
                 );
                 const val2 = Object.values(
                   portsOutWithNeeds[n]['parent']['options'],
                 );
-                console.log(val[2], val2[2]);
                 if (val[2] !== val2[2]) {
                   linksWithNeeds.push(
                     portsOutWithNeeds[n].link<DefaultLinkModel>(
@@ -277,13 +255,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
               nodes[node]['options']['name'] ===
               nodes[element]['portsIn'][0]['options']['label']
             ) {
-              console.log(linksWithNeeds[node]);
-              console.log(
-                portsOutWithNeeds[node].link<DefaultLinkModel>(
-                  portsIn[element],
-                ),
-              );
-              console.log('WCHODZE');
               linksWithNeeds.push(
                 portsOutWithNeeds[node].link<DefaultLinkModel>(
                   portsIn[element],
@@ -293,19 +264,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
           }
           k++;
         }
-
-        // console.log(
-        //   normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
-        //     need
-        //   ],
-        // );
       }
-
-      // console.log(
-      //   normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs[
-      //     need
-      //   ],
-      // );
     } else {
       links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
     }
