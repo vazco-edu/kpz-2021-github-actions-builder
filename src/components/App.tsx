@@ -45,8 +45,6 @@ function App(): JSX.Element {
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
-      console.log(validate.errors);
-      console.log('NO');
       const s: any = validate.errors;
       return s;
     }
@@ -60,8 +58,8 @@ function App(): JSX.Element {
   let normalizedObject: any;
   try {
     normalizedObject = normalize(workflow);
-  } catch {
-    console.log('xD');
+  } catch (e) {
+    console.log(e.errors);
   }
   console.log(normalizedObject);
   if (typeof workflow !== 'object') {
