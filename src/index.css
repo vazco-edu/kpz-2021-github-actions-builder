@@ -98,7 +98,15 @@ body{
 .node{
   margin-bottom: 10px !important;
 }
+<<<<<<< HEAD
 
 .css-mtwhol {
   font-family: monospace;
 }
+=======
+.links {
+  width: 100%;
+  height: 200px;
+  color: white;
+}
+>>>>>>> 6630d54 (added something)

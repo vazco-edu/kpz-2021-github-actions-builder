@@ -690,7 +690,15 @@ function App(): JSX.Element {
 >>>>>>> f0c15db (cleaned code, optimized)
 =======
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
+<<<<<<< HEAD
 >>>>>>> c37a684 (jkd)
+=======
+      <div className="links">
+        {normalizedObject && !dispError(storeValidationResult)
+          ? displayLinks(normalizedObject)
+          : ''}
+      </div>
+>>>>>>> 6630d54 (added something)
     </>
   );
 }
