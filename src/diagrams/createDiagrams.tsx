@@ -478,13 +478,15 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   const link = port1.link<DefaultLinkModel>(port2);
   const links: DefaultLinkModel[] = [];
   const linksWithNeeds: DefaultLinkModel[] = [];
-  //array storing links of jobs with needs
-  const link2: DefaultPortModel[] = [];
   let needsArr: any = [];
   // value used to prevent additional links between nodes with attribute "needs"
   let k = 0;
   // value used to prevent self-link of nodes
+<<<<<<< HEAD
   const s = 0;
+=======
+  let s = 0;
+>>>>>>> f8728ba (jotde)
   for (let c = 0; c < portsIn.length; c++) {
     console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {

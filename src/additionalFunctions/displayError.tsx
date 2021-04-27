@@ -22,9 +22,5 @@ export default function displayError(
     return '';
   }
   const len = result.length - 1;
-  for (let i = 0; i < result.length; ++i) {
-    // eslint-disable-next-line no-console
-    console.log(result[i]);
-  }
   return `${result[len].message}` + ` on path: ${result[len].instancePath}`;
 }

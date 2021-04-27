@@ -5,20 +5,30 @@ import React from 'react';
 
 import { Workflow } from '../schema/Schema';
 //function that displays link to actions, that user used in his workflow
+<<<<<<< HEAD
 export function DisplayLinks(normalized: Workflow) {
+=======
+export function displayLinks(normalized: Workflow) {
+>>>>>>> f8728ba (jotde)
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
     let helper: any = {};
     helper = normalized.jobs[properties];
+<<<<<<< HEAD
     console.log(helper.steps);
     for (let item = 0; item < helper.steps.length; ++item) {
       console.log(helper.steps[item]);
       if ('uses' in helper.steps[item]) {
         console.log('mam USES');
+=======
+    for (let item = 0; item < helper.steps.length; ++item) {
+      if ('uses' in helper.steps[item]) {
+>>>>>>> f8728ba (jotde)
         tableOfUses.push(helper.steps[item].uses);
       }
     }
   }
+<<<<<<< HEAD
   console.log(tableOfUses);
   const destructuredTable: string[][] = [];
   const re = new RegExp('@|/');
@@ -42,6 +52,25 @@ export function DisplayLinks(normalized: Workflow) {
         makaron
       </a>
     </li>;
+=======
+  const destructuredTable: string[][] = [];
+  const re = new RegExp('@|/');
+  const distTable = Array.from(new Set(tableOfUses));
+  for (let inside = 0; inside < distTable.length; ++inside) {
+    destructuredTable.push(distTable[inside].split(re));
+  }
+  const links = destructuredTable.map((x, y) => {
+    return (
+      <li key={y}>
+        <a
+          className="text"
+          href={`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`}
+        >
+          {distTable[y]}
+        </a>
+      </li>
+    );
+>>>>>>> f8728ba (jotde)
   });
   return <ul>{links}</ul>;
 }

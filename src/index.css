@@ -92,17 +92,19 @@ body{
 }
 .css-18f0176{
   height: 100%;
-  color: green;
 }
-
-.node{
-  margin-bottom: 10px !important;
+.links {
+  width: 50%;
+  color: white;
 }
 <<<<<<< HEAD
 
-.css-mtwhol {
+.text {
+  color: white;
+  text-decoration: none !important;
   font-family: monospace;
 }
+<<<<<<< HEAD
 =======
 .links {
   width: 100%;
@@ -110,3 +112,9 @@ body{
   color: white;
 }
 >>>>>>> 6630d54 (added something)
+=======
+
+ul {
+  list-style-type: circle;
+}
+>>>>>>> f8728ba (jotde)

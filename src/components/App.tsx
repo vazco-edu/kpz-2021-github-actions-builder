@@ -74,9 +74,13 @@ import React, { useState } from 'react';
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { DisplayLinks } from '../additionalFunctions/linksToActions';
 >>>>>>> c97c6ab (soem)
+=======
+import { displayLinks } from '../additionalFunctions/linksToActions';
+>>>>>>> f8728ba (jotde)
 import { normalize } from '../additionalFunctions/normalization';
 <<<<<<< HEAD
 import createDiagram from '../diagrams/createDiagrams';
@@ -539,6 +543,7 @@ function App(): JSX.Element {
   } catch (e) {
     console.log(e.errors);
   }
+  console.log(normalizedObject);
   if (typeof workflow !== 'object') {
 <<<<<<< HEAD
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
@@ -593,8 +598,14 @@ function App(): JSX.Element {
 =======
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
+<<<<<<< HEAD
 
 >>>>>>> 74b007e (nomoreconsol.logs)
+=======
+  if (normalizedObject && !dispError(storeValidationResult)) {
+    displayLinks(normalizedObject);
+  }
+>>>>>>> f8728ba (jotde)
   //          ## DIAGRAMS ##
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
 =======
@@ -698,6 +709,7 @@ function App(): JSX.Element {
 =======
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> c37a684 (jkd)
 =======
       <div className="links">
@@ -706,6 +718,14 @@ function App(): JSX.Element {
           : ''}
       </div>
 >>>>>>> 6630d54 (added something)
+=======
+      <div className="links">
+        <p>Actions used in workflow: </p>
+        {normalizedObject && !dispError(storeValidationResult)
+          ? displayLinks(normalizedObject)
+          : ''}
+      </div>
+>>>>>>> f8728ba (jotde)
     </>
   );
 }
