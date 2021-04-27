@@ -4,7 +4,7 @@
 import React from 'react';
 
 import { Workflow } from '../schema/Schema';
-//function that displays link to actions, that user used in his workflow
+
 export function displayLinks(normalized: Workflow) {
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
