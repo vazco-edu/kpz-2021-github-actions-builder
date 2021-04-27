@@ -159,16 +159,16 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         `${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs}`,
       );
     }
-    if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if) {
-      nodes[z].addInPort(
-        `if: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
-      );
-    }
     nodes[z].addInPort(
       `runs-on: ${
         normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['runs-on']
       }`,
     );
+    if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if) {
+      nodes[z].addInPort(
+        `if: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
+      );
+    }
     //preventing additional output, that we dont want
     let x = 0;
     for (
@@ -181,7 +181,22 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       for (const prop in normalized['jobs'][
         `${Object.keys(normalized['jobs'])[z]}`
       ]['steps'][h]) {
+        console.log(
+          normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'],
+        );
+        if (
+          normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'][
+            'uses'
+          ]
+        ) {
+          nodes[z].addInPort(
+            normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`][
+              'steps'
+            ]['uses'],
+          );
+        }
         if (x === 0) {
+          nodes[z].addInPort('steps:');
           portsIn.push(
             nodes[z].addInPort(
               `${prop}: ${
@@ -191,12 +206,12 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
               }`,
             ),
           );
+
           // out port, just in case said job is needed by another job
           portsOutWithNeeds.push(nodes[z].addOutPort(''));
           x++;
           continue;
         }
-
         nodes[z].addInPort(
           `${prop}: ${
             normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`][
