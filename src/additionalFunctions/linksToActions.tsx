@@ -5,7 +5,7 @@ import React from 'react';
 
 import { Workflow } from '../schema/Schema';
 //function that displays link to actions, that user used in his workflow
-export function displayLinks(normalized: Workflow) {
+export function DisplayLinks(normalized: Workflow) {
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
     let helper: any = {};
@@ -34,11 +34,11 @@ export function displayLinks(normalized: Workflow) {
     `https://github.com/${destructuredTable[0][0]}/${destructuredTable[0][1]}/releases/tag/${destructuredTable[0][2]}`,
   );
   const links = destructuredTable.map((x, y) => {
-    console.log(y);
-    <li>
-      <a
-        href={`https://github.com/${destructuredTable[0][0]}/${destructuredTable[0][1]}/releases/tag/${destructuredTable[0][2]}`}
-      >
+    console.log(x);
+    console.log(destructuredTable[y]);
+    console.log(`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`);
+    <li key={y}>
+      <a href={`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`}>
         makaron
       </a>
     </li>;

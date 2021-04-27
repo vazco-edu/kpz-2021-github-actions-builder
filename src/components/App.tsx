@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
-import { displayLinks } from '../additionalFunctions/linksToActions';
+import { DisplayLinks } from '../additionalFunctions/linksToActions';
 import { normalize } from '../additionalFunctions/normalization';
 import createDiagram from '../diagrams/createDiagrams';
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -68,9 +68,6 @@ function App(): JSX.Element {
   }
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
-  if (normalizedObject && !dispError(storeValidationResult)) {
-    displayLinks(normalizedObject);
-  }
   //          ## DIAGRAMS ##
   return (
     <>
@@ -106,7 +103,7 @@ function App(): JSX.Element {
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
       <div className="links">
         {normalizedObject && !dispError(storeValidationResult)
-          ? displayLinks(normalizedObject)
+          ? DisplayLinks(normalizedObject)
           : ''}
       </div>
     </>
