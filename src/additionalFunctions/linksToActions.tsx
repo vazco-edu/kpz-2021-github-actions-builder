@@ -4,36 +4,31 @@
 import React from 'react';
 
 import { Workflow } from '../schema/Schema';
+<<<<<<< HEAD
 //function that displays link to actions, that user used in his workflow
 export function DisplayLinks(normalized: Workflow) {
+=======
+
+export function displayLinks(normalized: Workflow) {
+>>>>>>> fc0fb336f04bbdc69ee4b93cfa42fa7613dca24d
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
     let helper: any = {};
     helper = normalized.jobs[properties];
-    console.log(helper.steps);
     for (let item = 0; item < helper.steps.length; ++item) {
-      console.log(helper.steps[item]);
       if ('uses' in helper.steps[item]) {
-        console.log('mam USES');
         tableOfUses.push(helper.steps[item].uses);
       }
     }
   }
-  console.log(tableOfUses);
   const destructuredTable: string[][] = [];
   const re = new RegExp('@|/');
-  for (let inside = 0; inside < tableOfUses.length; ++inside) {
-    destructuredTable.push(tableOfUses[inside].split(re));
-    console.log(destructuredTable);
-    const tmp = destructuredTable[inside][1];
-    console.log(typeof tmp);
-    console.log(tmp);
-    // deconstructedTable.push(tmp.slice('@'));
+  const distTable = Array.from(new Set(tableOfUses));
+  for (let inside = 0; inside < distTable.length; ++inside) {
+    destructuredTable.push(distTable[inside].split(re));
   }
-  console.log(
-    `https://github.com/${destructuredTable[0][0]}/${destructuredTable[0][1]}/releases/tag/${destructuredTable[0][2]}`,
-  );
   const links = destructuredTable.map((x, y) => {
+<<<<<<< HEAD
     console.log(x);
     console.log(destructuredTable[y]);
     console.log(`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`);
@@ -42,6 +37,18 @@ export function DisplayLinks(normalized: Workflow) {
         makaron
       </a>
     </li>;
+=======
+    return (
+      <li key={y}>
+        <a
+          className="text"
+          href={`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`}
+        >
+          {distTable[y]}
+        </a>
+      </li>
+    );
+>>>>>>> fc0fb336f04bbdc69ee4b93cfa42fa7613dca24d
   });
   return <ul>{links}</ul>;
 }

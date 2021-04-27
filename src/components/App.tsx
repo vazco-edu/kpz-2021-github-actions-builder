@@ -102,6 +102,7 @@ function App(): JSX.Element {
       </button>
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
       <div className="links">
+        <p>Actions used in workflow: </p>
         {normalizedObject && !dispError(storeValidationResult)
           ? DisplayLinks(normalizedObject)
           : ''}
