@@ -73,6 +73,10 @@ import React, { useState } from 'react';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
+<<<<<<< HEAD
+=======
+import { DisplayLinks } from '../additionalFunctions/linksToActions';
+>>>>>>> c97c6ab (soem)
 import { normalize } from '../additionalFunctions/normalization';
 <<<<<<< HEAD
 import createDiagram from '../diagrams/createDiagrams';
@@ -579,6 +583,7 @@ function App(): JSX.Element {
   const storeValidationResult = validate(workflow);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f0c15db (cleaned code, optimized)
 =======
 
@@ -604,6 +609,8 @@ function App(): JSX.Element {
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
   console.log(workflow);
+=======
+>>>>>>> c97c6ab (soem)
   //          ## DIAGRAMS ##
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
   return (
@@ -695,7 +702,7 @@ function App(): JSX.Element {
 =======
       <div className="links">
         {normalizedObject && !dispError(storeValidationResult)
-          ? displayLinks(normalizedObject)
+          ? DisplayLinks(normalizedObject)
           : ''}
       </div>
 >>>>>>> 6630d54 (added something)
