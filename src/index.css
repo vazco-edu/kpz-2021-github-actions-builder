@@ -35,6 +35,7 @@ body{
   overflow-y: auto;
   overflow-x: auto;
   margin-left: 3vw;
+  background-color: white;
 }
 .PRESSME{
     background-color: slategray;
@@ -70,7 +71,7 @@ body{
   height: 100%;
 }
 .links {
-  width: 50%;
+  width: 20%;
   color: white;
 }
 
@@ -79,7 +80,16 @@ body{
   text-decoration: none !important;
   font-family: monospace;
 }
+.links{
+  margin-top: 0;
+  margin-left: 65%;
+  margin-top: 5px;
+}
 
 ul {
   list-style-type: circle;
+}
+li:hover{
+  color:rgb(202, 75, 75);
+  font-size: large;
 }

@@ -4,13 +4,8 @@
 import React from 'react';
 
 import { Workflow } from '../schema/Schema';
-<<<<<<< HEAD
-//function that displays link to actions, that user used in his workflow
-export function DisplayLinks(normalized: Workflow) {
-=======
 
 export function displayLinks(normalized: Workflow) {
->>>>>>> fc0fb336f04bbdc69ee4b93cfa42fa7613dca24d
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
     let helper: any = {};
@@ -28,27 +23,18 @@ export function displayLinks(normalized: Workflow) {
     destructuredTable.push(distTable[inside].split(re));
   }
   const links = destructuredTable.map((x, y) => {
-<<<<<<< HEAD
-    console.log(x);
-    console.log(destructuredTable[y]);
-    console.log(`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`);
-    <li key={y}>
-      <a href={`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`}>
-        makaron
-      </a>
-    </li>;
-=======
     return (
       <li key={y}>
         <a
           className="text"
           href={`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`}
+          target="_blank"
+          rel="noreferrer noopener"
         >
           {distTable[y]}
         </a>
       </li>
     );
->>>>>>> fc0fb336f04bbdc69ee4b93cfa42fa7613dca24d
   });
   return <ul>{links}</ul>;
 }
