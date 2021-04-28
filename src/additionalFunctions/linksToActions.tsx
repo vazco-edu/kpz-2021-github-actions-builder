@@ -4,12 +4,17 @@
 import React from 'react';
 
 import { Workflow } from '../schema/Schema';
+<<<<<<< HEAD
 //function that displays link to actions, that user used in his workflow
 <<<<<<< HEAD
 export function DisplayLinks(normalized: Workflow) {
 =======
 export function displayLinks(normalized: Workflow) {
 >>>>>>> f8728ba (jotde)
+=======
+
+export function displayLinks(normalized: Workflow) {
+>>>>>>> cebe2b6 (links opening in seperate window (safe))
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
     let helper: any = {};
@@ -44,6 +49,7 @@ export function displayLinks(normalized: Workflow) {
     `https://github.com/${destructuredTable[0][0]}/${destructuredTable[0][1]}/releases/tag/${destructuredTable[0][2]}`,
   );
   const links = destructuredTable.map((x, y) => {
+<<<<<<< HEAD
     console.log(x);
     console.log(destructuredTable[y]);
     console.log(`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`);
@@ -60,17 +66,24 @@ export function displayLinks(normalized: Workflow) {
     destructuredTable.push(distTable[inside].split(re));
   }
   const links = destructuredTable.map((x, y) => {
+=======
+>>>>>>> cebe2b6 (links opening in seperate window (safe))
     return (
       <li key={y}>
         <a
           className="text"
           href={`https://github.com/${x[0]}/${x[1]}/releases/tag/${x[2]}`}
+          target="_blank"
+          rel="noreferrer noopener"
         >
           {distTable[y]}
         </a>
       </li>
     );
+<<<<<<< HEAD
 >>>>>>> f8728ba (jotde)
+=======
+>>>>>>> cebe2b6 (links opening in seperate window (safe))
   });
   return <ul>{links}</ul>;
 }

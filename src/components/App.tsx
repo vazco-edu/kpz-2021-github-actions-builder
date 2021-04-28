@@ -75,12 +75,16 @@ import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { DisplayLinks } from '../additionalFunctions/linksToActions';
 >>>>>>> c97c6ab (soem)
 =======
 import { displayLinks } from '../additionalFunctions/linksToActions';
 >>>>>>> f8728ba (jotde)
+=======
+import { displayLinks } from '../additionalFunctions/linksToActions';
+>>>>>>> cebe2b6 (links opening in seperate window (safe))
 import { normalize } from '../additionalFunctions/normalization';
 <<<<<<< HEAD
 import createDiagram from '../diagrams/createDiagrams';
@@ -599,6 +603,7 @@ function App(): JSX.Element {
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 >>>>>>> 74b007e (nomoreconsol.logs)
 =======
@@ -606,6 +611,11 @@ function App(): JSX.Element {
     displayLinks(normalizedObject);
   }
 >>>>>>> f8728ba (jotde)
+=======
+  if (normalizedObject && !dispError(storeValidationResult)) {
+    displayLinks(normalizedObject);
+  }
+>>>>>>> cebe2b6 (links opening in seperate window (safe))
   //          ## DIAGRAMS ##
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
 =======
@@ -714,7 +724,7 @@ function App(): JSX.Element {
 =======
       <div className="links">
         {normalizedObject && !dispError(storeValidationResult)
-          ? DisplayLinks(normalizedObject)
+          ? displayLinks(normalizedObject)
           : ''}
       </div>
 >>>>>>> 6630d54 (added something)
