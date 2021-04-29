@@ -54,9 +54,7 @@ function App(): JSX.Element {
   //global variable, for storing parsed yaml in JSON  format
   let workflow: any = parseYamltoJSON(man);
   function handleClickEvent() {
-    if (!click) {
-      setClick(!click);
-    } else if ()
+    setClick(!click);
   }
   let normalizedObject: any;
   try {
