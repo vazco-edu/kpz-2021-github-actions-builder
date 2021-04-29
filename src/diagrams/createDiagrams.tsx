@@ -260,7 +260,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
+  for (let j = 0; j < numWithoutNeeds; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
 <<<<<<< HEAD
@@ -680,6 +680,13 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   model.addAll(node1, node2, ...nodes, link, ...links, ...linksWithNeeds);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
   engine.setModel(model);
+  link.setLocked(true);
+  for (let l = 0; l < links.length; ++l) {
+    links[l].setLocked(true);
+  }
+  for (let l = 0; l < linksWithNeeds.length; ++l) {
+    linksWithNeeds[l].setLocked(true);
+  }
   return <DemoWidget model={model} engine={engine} />;
 }
 >>>>>>> 1dbb889 (asdasdasd)

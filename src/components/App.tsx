@@ -129,6 +129,7 @@ function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   const man = yaml;
+
   function parseYamltoJSON(text: string) {
     let doc;
     // Parsing string to JSON
@@ -306,6 +307,7 @@ function App(): JSX.Element {
   //global variable, for storing parsed yaml in JSON  format
   let workflow: any = parseYamltoJSON(man);
   function handleClickEvent() {
+<<<<<<< HEAD
     setClick(!click);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
   }
@@ -503,6 +505,11 @@ function App(): JSX.Element {
     const inv = cartesianProduct(matrixValues);
     console.log(inv);
     return inv;
+=======
+    if (!click) {
+      setClick(!click);
+    } else if ()
+>>>>>>> 0bfbf90 (Working links)
   }
   function cartesianProduct(inputs: any) {
     let result = [];
@@ -616,6 +623,7 @@ function App(): JSX.Element {
     displayLinks(normalizedObject);
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> cebe2b6 (links opening in seperate window (safe))
 =======
   console.log(!true);
@@ -638,13 +646,15 @@ function App(): JSX.Element {
 >>>>>>> c97c6ab (soem)
   //          ## DIAGRAMS ##
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
+=======
+>>>>>>> 0bfbf90 (Working links)
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {normalizedObject && !dispError(storeValidationResult)
+        {normalizedObject && !dispError(storeValidationResult) && click
           ? createDiagram(workflow, normalizedObject)
           : ''}
         {/* {click && validate(workflow) ? (
@@ -734,8 +744,8 @@ function App(): JSX.Element {
 >>>>>>> 6630d54 (added something)
 =======
       <div className="links">
-        <p>Actions used in workflow: </p>
-        {normalizedObject && !dispError(storeValidationResult)
+        <span>Actions used in workflow: </span>
+        {normalizedObject && !dispError(storeValidationResult) && click
           ? displayLinks(normalizedObject)
           : ''}
       </div>

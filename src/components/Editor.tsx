@@ -2,7 +2,7 @@ import jsyaml from 'js-yaml';
 import React from 'react';
 import { Controlled } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
+import 'codemirror/theme/monokai.css';
 import 'codemirror/mode/yaml/yaml';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -82,7 +82,7 @@ export default function Editor(props: any): JSX.Element {
               'CodeMirror-foldgutter',
               'CodeMirror-lint-markers',
             ],
-            theme: 'material',
+            theme: 'monokai',
             lineNumbers: true,
             extraKeys: { 'Ctrl-Space': 'autocomplete' },
           }}
