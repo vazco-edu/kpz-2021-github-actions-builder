@@ -22,6 +22,7 @@ function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
   const man = yaml;
+
   function parseYamltoJSON(text: string) {
     let doc;
     // Parsing string to JSON
@@ -71,15 +72,18 @@ function App(): JSX.Element {
   if (normalizedObject && !dispError(storeValidationResult)) {
     displayLinks(normalizedObject);
   }
+<<<<<<< HEAD
   console.log(!true);
   //          ## DIAGRAMS ##
+=======
+>>>>>>> 011edf92e8ddfb31ab28d09003f10d48a55e04fa
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {normalizedObject && !dispError(storeValidationResult)
+        {normalizedObject && !dispError(storeValidationResult) && click
           ? createDiagram(workflow, normalizedObject)
           : ''}
         {/* {click && validate(workflow) ? (
@@ -106,8 +110,8 @@ function App(): JSX.Element {
       </button>
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
       <div className="links">
-        <p>Actions used in workflow: </p>
-        {normalizedObject && !dispError(storeValidationResult)
+        <span>Actions used in workflow: </span>
+        {normalizedObject && !dispError(storeValidationResult) && click
           ? displayLinks(normalizedObject)
           : ''}
       </div>

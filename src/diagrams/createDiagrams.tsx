@@ -30,7 +30,6 @@ let count = 0;
 function connectNodes(
   nodeFrom: { addPort: (arg0: DefaultPortModel) => any; name: any },
   nodeTo: { addPort: (arg0: DefaultPortModel) => any },
-  engine: DiagramEngine,
 ) {
   //just to get id-like structure
   count++;
@@ -49,6 +48,7 @@ class DemoWidget extends React.Component<
 > {
   // eslint-disable-next-line react/sort-comp
   engine: DagreEngine;
+  timeoutId?: any;
   constructor(props: any) {
     super(props);
     this.engine = new DagreEngine({
@@ -68,9 +68,11 @@ class DemoWidget extends React.Component<
   };
 
   componentDidMount(): void {
-    setTimeout(() => {
-      this.autoDistribute();
-    }, 0);
+    this.autoDistribute();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeoutId);
   }
 
   reroute() {
@@ -287,5 +289,12 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   model.addAll(node1, node2, ...nodes, link, ...links, ...linksWithNeeds);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
   engine.setModel(model);
+  link.setLocked(true);
+  for (let l = 0; l < links.length; ++l) {
+    links[l].setLocked(true);
+  }
+  for (let l = 0; l < linksWithNeeds.length; ++l) {
+    linksWithNeeds[l].setLocked(true);
+  }
   return <DemoWidget model={model} engine={engine} />;
 }
