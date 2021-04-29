@@ -49,7 +49,6 @@ let count = 0;
 function connectNodes(
   nodeFrom: { addPort: (arg0: DefaultPortModel) => any; name: any },
   nodeTo: { addPort: (arg0: DefaultPortModel) => any },
-  engine: DiagramEngine,
 ) {
   //just to get id-like structure
   count++;
@@ -81,6 +80,7 @@ class DemoWidget extends React.Component<
 > {
   // eslint-disable-next-line react/sort-comp
   engine: DagreEngine;
+  timeoutId?: any;
   constructor(props: any) {
     super(props);
     this.engine = new DagreEngine({
@@ -100,9 +100,11 @@ class DemoWidget extends React.Component<
   };
 
   componentDidMount(): void {
-    setTimeout(() => {
-      this.autoDistribute();
-    }, 0);
+    this.autoDistribute();
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeoutId);
   }
 
   reroute() {
@@ -260,7 +262,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < numWithoutNeeds; ++j) {
+  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
 <<<<<<< HEAD

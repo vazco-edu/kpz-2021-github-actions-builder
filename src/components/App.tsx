@@ -308,6 +308,7 @@ function App(): JSX.Element {
   let workflow: any = parseYamltoJSON(man);
   function handleClickEvent() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     setClick(!click);
 >>>>>>> 6d36f31 (errors inline, normalizing input)
   }
@@ -531,6 +532,9 @@ function App(): JSX.Element {
       }
     }
     return result;
+=======
+    setClick(!click);
+>>>>>>> 011edf9 (bugfixes)
   }
 <<<<<<< HEAD
 =======
