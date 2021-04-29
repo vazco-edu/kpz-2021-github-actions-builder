@@ -615,7 +615,11 @@ function App(): JSX.Element {
   if (normalizedObject && !dispError(storeValidationResult)) {
     displayLinks(normalizedObject);
   }
+<<<<<<< HEAD
 >>>>>>> cebe2b6 (links opening in seperate window (safe))
+=======
+  console.log(!true);
+>>>>>>> f1687c5 (somelasa)
   //          ## DIAGRAMS ##
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
 =======
