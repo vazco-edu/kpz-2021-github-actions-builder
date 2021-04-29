@@ -71,6 +71,7 @@ function App(): JSX.Element {
   if (normalizedObject && !dispError(storeValidationResult)) {
     displayLinks(normalizedObject);
   }
+  console.log(!true);
   //          ## DIAGRAMS ##
   return (
     <>
