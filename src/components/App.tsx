@@ -628,6 +628,7 @@ function App(): JSX.Element {
   }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> cebe2b6 (links opening in seperate window (safe))
 =======
   console.log(!true);
@@ -652,6 +653,8 @@ function App(): JSX.Element {
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 =======
 >>>>>>> 0bfbf90 (Working links)
+=======
+>>>>>>> ccafb6d (zmiana)
   return (
     <>
       <div className="text-editor">
