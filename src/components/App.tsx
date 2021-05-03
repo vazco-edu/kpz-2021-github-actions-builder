@@ -72,11 +72,6 @@ function App(): JSX.Element {
   if (normalizedObject && !dispError(storeValidationResult)) {
     displayLinks(normalizedObject);
   }
-<<<<<<< HEAD
-  console.log(!true);
-  //          ## DIAGRAMS ##
-=======
->>>>>>> 011edf92e8ddfb31ab28d09003f10d48a55e04fa
   return (
     <>
       <div className="text-editor">
