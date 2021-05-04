@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-empty-interface, camelcase */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface Workflow {
   /**
    * A map of default settings that will apply to all jobs in the workflow.

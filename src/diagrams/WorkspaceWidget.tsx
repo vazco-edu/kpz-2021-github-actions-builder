@@ -4,7 +4,10 @@ import styled from '@emotion/styled';
 import * as React from 'react';
 
 export interface DemoWorkspaceWidgetProps {
-  buttons?: any;
+  buttons?: React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  >;
 }
 
 namespace S {

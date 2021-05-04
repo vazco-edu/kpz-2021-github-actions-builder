@@ -72,6 +72,7 @@ import Editor from './Editor';
 import React, { useState } from 'react';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
+import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
 import dispError from '../additionalFunctions/displayError';
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -86,6 +87,7 @@ import { displayLinks } from '../additionalFunctions/linksToActions';
 import { displayLinks } from '../additionalFunctions/linksToActions';
 >>>>>>> cebe2b6 (links opening in seperate window (safe))
 import { normalize } from '../additionalFunctions/normalization';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import createDiagram from '../diagrams/createDiagrams';
 =======
@@ -106,10 +108,13 @@ import Editor from './Editor';
 import React, { useState } from 'react';
 
 import dispError from '../additionalFunctions/displayError';
+=======
+>>>>>>> 5d30c48 (minor improvements)
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
+<<<<<<< HEAD
 >>>>>>> c37a684 (jkd)
 const ajv = new Ajv({
   allErrors: true,
@@ -123,6 +128,10 @@ const ajv = new Ajv({
 >>>>>>> c37a684 (jkd)
 =======
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
+=======
+export let workflow: any;
+export let normalizedObject: any;
+>>>>>>> 5d30c48 (minor improvements)
 function App(): JSX.Element {
   // eslint-disable-next-line no-console
   // console.log(schema);
@@ -305,7 +314,7 @@ function App(): JSX.Element {
     return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
-  let workflow: any = parseYamltoJSON(man);
+  workflow = parseYamltoJSON(man);
   function handleClickEvent() {
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -537,6 +546,7 @@ function App(): JSX.Element {
 >>>>>>> 011edf9 (bugfixes)
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> a734a9d (normalization separated)
@@ -553,6 +563,8 @@ function App(): JSX.Element {
 =======
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
   let normalizedObject: any;
+=======
+>>>>>>> 5d30c48 (minor improvements)
   try {
     normalizedObject = normalize(workflow);
   } catch (e) {
@@ -662,7 +674,7 @@ function App(): JSX.Element {
       </div>
       <div className="result">
         {normalizedObject && !dispError(storeValidationResult) && click
-          ? createDiagram(workflow, normalizedObject)
+          ? debouncedDiagrams()
           : ''}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
@@ -760,5 +772,4 @@ function App(): JSX.Element {
     </>
   );
 }
-
 export default App;

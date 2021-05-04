@@ -17,8 +17,9 @@ export function displayLinks(normalized: Workflow) {
 >>>>>>> cebe2b6 (links opening in seperate window (safe))
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
-    let helper: any = {};
+    let helper: Record<string, any> = {};
     helper = normalized.jobs[properties];
+<<<<<<< HEAD
 <<<<<<< HEAD
     console.log(helper.steps);
     for (let item = 0; item < helper.steps.length; ++item) {
@@ -26,6 +27,9 @@ export function displayLinks(normalized: Workflow) {
       if ('uses' in helper.steps[item]) {
         console.log('mam USES');
 =======
+=======
+    console.log(helper);
+>>>>>>> 5d30c48 (minor improvements)
     for (let item = 0; item < helper.steps.length; ++item) {
       if ('uses' in helper.steps[item]) {
 >>>>>>> f8728ba (jotde)
