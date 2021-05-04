@@ -97,6 +97,7 @@ import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
 import createDiagram from '../diagrams/createDiagrams';
+<<<<<<< HEAD
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
@@ -110,6 +111,8 @@ import React, { useState } from 'react';
 import dispError from '../additionalFunctions/displayError';
 =======
 >>>>>>> 5d30c48 (minor improvements)
+=======
+>>>>>>> fdf6151 (reverted some changes, in order to keep our app functional)
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -674,7 +677,7 @@ function App(): JSX.Element {
       </div>
       <div className="result">
         {normalizedObject && !dispError(storeValidationResult) && click
-          ? debouncedDiagrams()
+          ? createDiagram(workflow, normalizedObject)
           : ''}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
