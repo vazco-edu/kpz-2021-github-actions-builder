@@ -25,22 +25,6 @@ import React from 'react';
 import { helperPortCreation } from '../additionalFunctions/diagramFunctions/helperPortCreation';
 import { DemoCanvasWidget } from '../diagrams/CanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from '../diagrams/WorkspaceWidget';
-let count = 0;
-
-function connectNodes(
-  nodeFrom: { addPort: (arg0: DefaultPortModel) => any; name: any },
-  nodeTo: { addPort: (arg0: DefaultPortModel) => any },
-) {
-  //just to get id-like structure
-  count++;
-  const portOut = nodeFrom.addPort(
-    new DefaultPortModel(true, `${nodeFrom.name}-out-${count}`, 'Out'),
-  );
-  const portTo = nodeTo.addPort(
-    new DefaultPortModel(false, `${nodeFrom.name}-to-${count}`, 'IN'),
-  );
-  return portOut.link(portTo);
-}
 
 class DemoWidget extends React.Component<
   { model: DiagramModel; engine: DiagramEngine },
@@ -97,7 +81,6 @@ class DemoWidget extends React.Component<
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 // eslint-disable-next-line complexity
 export default function createDiagrams(notNormalized: any, normalized: any) {
   const engine = createEngine();
@@ -144,7 +127,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // needs change - only displaying out ports of jobs that dont have needs
-  for (let j = 0; j < Object.keys(normalized['jobs']).length; ++j) {
+  for (let j = 0; j < numWithoutNeeds; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
   const nodes: DefaultNodeModel[] = [];
@@ -241,6 +224,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
           );
         }
         if (needsArr.length) {
+          console.log(needsArr);
           for (let need = 0; need < needsArr.length; ++need) {
             for (let n = 0; n < portsIn.length; n++) {
               if (
@@ -255,6 +239,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
                   portsOutWithNeeds[n]['parent']['options'],
                 );
                 if (val[2] !== val2[2]) {
+                  console.log(val[2], val2[2]);
                   linksWithNeeds.push(
                     portsOutWithNeeds[n].link<DefaultLinkModel>(
                       portsIn[element],
@@ -282,7 +267,12 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         }
       }
     } else {
-      links.push(portsOut[c].link<DefaultLinkModel>(portsIn[c]));
+      const portsOut2: DefaultPortModel[] = [];
+      portsOut2.push(portsOut[c]);
+      console.log(portsOut2);
+      if (portsOut2[0]) {
+        links.push(portsOut2[0].link<DefaultLinkModel>(portsIn[c]));
+      }
     }
   }
   const model = new DiagramModel();

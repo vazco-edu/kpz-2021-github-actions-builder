@@ -8,8 +8,9 @@ import { Workflow } from '../schema/Schema';
 export function displayLinks(normalized: Workflow) {
   const tableOfUses: string[] = [];
   for (const properties in normalized.jobs) {
-    let helper: any = {};
+    let helper: Record<string, any> = {};
     helper = normalized.jobs[properties];
+    console.log(helper);
     for (let item = 0; item < helper.steps.length; ++item) {
       if ('uses' in helper.steps[item]) {
         tableOfUses.push(helper.steps[item].uses);

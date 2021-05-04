@@ -10,14 +10,16 @@ import jsyaml from 'js-yaml';
 import React, { useState } from 'react';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
+import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
 import dispError from '../additionalFunctions/displayError';
 import { displayLinks } from '../additionalFunctions/linksToActions';
 import { normalize } from '../additionalFunctions/normalization';
-import createDiagram from '../diagrams/createDiagrams';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
 
+export let workflow: any;
+export let normalizedObject: any;
 function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
@@ -52,11 +54,10 @@ function App(): JSX.Element {
     return valid;
   }
   //global variable, for storing parsed yaml in JSON  format
-  let workflow: any = parseYamltoJSON(man);
+  workflow = parseYamltoJSON(man);
   function handleClickEvent() {
     setClick(!click);
   }
-  let normalizedObject: any;
   try {
     normalizedObject = normalize(workflow);
   } catch (e) {
@@ -79,7 +80,7 @@ function App(): JSX.Element {
       </div>
       <div className="result">
         {normalizedObject && !dispError(storeValidationResult) && click
-          ? createDiagram(workflow, normalizedObject)
+          ? debouncedDiagrams()
           : ''}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
@@ -113,5 +114,4 @@ function App(): JSX.Element {
     </>
   );
 }
-
 export default App;
