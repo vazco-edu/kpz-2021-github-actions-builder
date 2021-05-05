@@ -722,11 +722,15 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
             console.log('HERE');
             for (let need = 0; need < needsArr.length; ++need) {
               for (let n = 0; n < portsIn.length; n++) {
+                console.log(nodes[n]['options']['name']);
+                console.log(needsArr[need]);
+                console.log('i am in double for');
                 if (
                   nodes[n]['options']['name'] === needsArr[need] &&
                   s < portsIn.length - 1
                 ) {
                   s++;
+                  console.log('SAME');
                   const val = Object.values(
                     portsIn[element]['parent']['options'],
 >>>>>>> 16fc321 (fixed conditional needs)
@@ -734,6 +738,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                   const val2 = Object.values(
                     portsOutWithNeeds[n]['parent']['options'],
                   );
+                  //ATTENITON1!!!!!11!!!!!!
                   if (val[2] !== val2[2]) {
                     console.log(val[2], val2[2]);
                     linksWithNeeds.push(
@@ -741,6 +746,11 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                         portsIn[element],
                       ),
                     );
+                  } else {
+                    console.log(val[2], val2[2]);
+                    console.log(portsIn);
+                    console.log(portsOutWithNeeds);
+                    console.log('NIE ZGADZA SIE');
                   }
                 }
 >>>>>>> 97bf0ba (bugzabugiem)
@@ -783,12 +793,16 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
           } else if (k < portsIn.length - numWithoutNeeds) {
             console.log('ONLY ONE NEEDS');
             console.log(nodes[element]['options']['name']);
+            console.log(nodes);
+            console.log(element);
             // loop that goes from the first node, and checks, if said node is needed by another job
             for (let node = 0; node < portsIn.length; ++node) {
               if (
                 nodes[node]['options']['name'] ===
                 nodes[element]['portsIn'][0]['options']['label']
               ) {
+                console.log(node);
+                console.log('JASKIER');
                 linksWithNeeds.push(
                   portsOutWithNeeds[node].link<DefaultLinkModel>(
                     portsIn[element],
