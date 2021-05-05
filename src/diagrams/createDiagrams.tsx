@@ -145,6 +145,7 @@ class DemoWidget extends React.Component<
 // eslint-disable-next-line complexity
 export default function createDiagrams(notNormalized: any, normalized: any) {
   const engine = createEngine();
+<<<<<<< HEAD
   const node1 = new DefaultNodeModel({
 =======
 =======
@@ -159,6 +160,20 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     name: `${notNormalized.name}`,
     color: 'rgb(128,0,128)',
   });
+=======
+  let node1: DefaultNodeModel;
+  if (notNormalized) {
+    node1 = new DefaultNodeModel({
+      name: `${notNormalized.name}`,
+      color: 'rgb(128,0,128)',
+    });
+  } else {
+    node1 = new DefaultNodeModel({
+      name: ``,
+      color: 'rgb(128,0,128)',
+    });
+  }
+>>>>>>> 7de6b50 (fixed undefined name error)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
