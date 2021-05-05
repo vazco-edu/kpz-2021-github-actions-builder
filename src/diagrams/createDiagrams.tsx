@@ -586,7 +586,11 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
   //variable needed to correctly link nodes, that don't have needs
   let noNeeds = 0;
+<<<<<<< HEAD
 >>>>>>> a8725eb (fixed undefined in else statement)
+=======
+  let singleNeeds = 0;
+>>>>>>> 531f151 (fixed double links)
   for (let c = 0; c < portsIn.length; c++) {
     console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
@@ -716,6 +720,9 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
             needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
               ',',
             );
+          } else {
+            singleNeeds++;
+            console.log(singleNeeds);
           }
           if (needsArr.length) {
             console.log(needsArr);
@@ -740,7 +747,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                   );
                   //ATTENITON1!!!!!11!!!!!!
                   if (val[2] !== val2[2]) {
-                    console.log(val[2], val2[2]);
                     linksWithNeeds.push(
                       portsOutWithNeeds[n].link<DefaultLinkModel>(
                         portsIn[element],
@@ -756,6 +762,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 >>>>>>> 97bf0ba (bugzabugiem)
               }
             }
+<<<<<<< HEAD
 <<<<<<< HEAD
           }
 <<<<<<< HEAD
@@ -791,6 +798,9 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
               );
 =======
           } else if (k < portsIn.length - numWithoutNeeds) {
+=======
+          } else if (k < singleNeeds / 2) {
+>>>>>>> 531f151 (fixed double links)
             console.log('ONLY ONE NEEDS');
             console.log(nodes[element]['options']['name']);
             console.log(nodes);
