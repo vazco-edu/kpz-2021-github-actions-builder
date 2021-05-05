@@ -676,7 +676,9 @@ function App(): JSX.Element {
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {normalizedObject && !dispError(storeValidationResult) && click
+        {normalizedObject !== undefined &&
+        !dispError(storeValidationResult) &&
+        click
           ? createDiagram(workflow, normalizedObject)
           : ''}
         {/* {click && validate(workflow) ? (

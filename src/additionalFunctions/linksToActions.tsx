@@ -21,6 +21,7 @@ export function displayLinks(normalized: Workflow) {
     helper = normalized.jobs[properties];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log(helper.steps);
     for (let item = 0; item < helper.steps.length; ++item) {
       console.log(helper.steps[item]);
@@ -30,6 +31,8 @@ export function displayLinks(normalized: Workflow) {
 =======
     console.log(helper);
 >>>>>>> 5d30c48 (minor improvements)
+=======
+>>>>>>> 16fc321 (fixed conditional needs)
     for (let item = 0; item < helper.steps.length; ++item) {
       if ('uses' in helper.steps[item]) {
 >>>>>>> f8728ba (jotde)

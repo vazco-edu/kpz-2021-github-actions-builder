@@ -153,6 +153,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 >>>>>>> 6e146b0 (added needs (not working for multiple of the same jobs)
 export default function createDiagrams(notNormalized: any, normalized: any) {
   const engine = createEngine();
+<<<<<<< HEAD
   let node1 = new DefaultNodeModel({
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
     name: `${notNormalized.name}`,
@@ -218,9 +219,22 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const nodes: DefaultNodeModel[] = [];
 =======
   node1.setPosition(69, 69);
+=======
+  let node1: DefaultNodeModel;
+  if (notNormalized !== undefined) {
+    node1 = new DefaultNodeModel({
+      name: `${notNormalized.name}`,
+      color: 'rgb(128,0,128)',
+    });
+  } else {
+    node1 = new DefaultNodeModel({
+      color: 'rgb(128,0,128)',
+    });
+  }
+
+>>>>>>> 16fc321 (fixed conditional needs)
   let port1: DefaultPortModel;
   const helper = helperPortCreation(normalized, node1);
-  // eslint-disable-next-line prefer-const
   if (!Array.isArray(helper)) {
     port1 = helper;
   } else {
@@ -267,7 +281,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const portsOut: DefaultPortModel[] = [];
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
-  // needs change - only displaying out ports of jobs that dont have needs
   for (let j = 0; j < numWithoutNeeds; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
@@ -285,7 +298,10 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       }),
     );
 <<<<<<< HEAD
+<<<<<<< HEAD
     //nodes[z].setPosition(300, (z + 1) * 175);
+=======
+>>>>>>> 16fc321 (fixed conditional needs)
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
       nodes[z].addInPort(
         `${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs}`,
@@ -353,17 +369,19 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         console.log(
           normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'],
         );
-        if (
-          normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'][
-            'uses'
-          ]
-        ) {
-          nodes[z].addInPort(
-            normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`][
-              'steps'
-            ]['uses'],
-          );
-        }
+        // SEEMS TO NOT WORKING NOT SURE THO
+        // if (
+        //   normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'][
+        //     'uses'
+        //   ]
+        // ) {
+        //   console.log('JESTEM');
+        //   nodes[z].addInPort(
+        //     normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`][
+        //       'steps'
+        //     ]['uses'],
+        //   );
+        // }
         if (x === 0) {
           nodes[z].addInPort('steps:');
           portsIn.push(
@@ -520,7 +538,11 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   const s = 0;
 =======
   let s = 0;
+<<<<<<< HEAD
 >>>>>>> f8728ba (jotde)
+=======
+  let xd = 0;
+>>>>>>> 16fc321 (fixed conditional needs)
   for (let c = 0; c < portsIn.length; c++) {
     console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
@@ -575,6 +597,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
             needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
 =======
       for (let element = c; element < portsIn.length; element++) {
+<<<<<<< HEAD
         if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
           needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
 >>>>>>> 74b007e (nomoreconsol.logs)
@@ -631,11 +654,47 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                     portsOutWithNeeds[n].link<DefaultLinkModel>(
                       portsIn[element],
                     ),
+=======
+        if (
+          normalized['jobs'][`${Object.keys(normalized['jobs'])[element]}`]
+            .needs
+        ) {
+          console.log(nodes[element]['options']['name']);
+          console.log(nodes[element]['portsIn'][0]['options']['label']);
+          if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
+            needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
+              ',',
+            );
+          }
+          if (needsArr.length) {
+            console.log(needsArr);
+            for (let need = 0; need < needsArr.length; ++need) {
+              for (let n = 0; n < portsIn.length; n++) {
+                if (
+                  nodes[n]['options']['name'] === needsArr[need] &&
+                  s < portsIn.length - 1
+                ) {
+                  s++;
+                  const val = Object.values(
+                    portsIn[element]['parent']['options'],
+>>>>>>> 16fc321 (fixed conditional needs)
                   );
+                  const val2 = Object.values(
+                    portsOutWithNeeds[n]['parent']['options'],
+                  );
+                  if (val[2] !== val2[2]) {
+                    console.log(val[2], val2[2]);
+                    linksWithNeeds.push(
+                      portsOutWithNeeds[n].link<DefaultLinkModel>(
+                        portsIn[element],
+                      ),
+                    );
+                  }
                 }
 >>>>>>> 97bf0ba (bugzabugiem)
               }
             }
+<<<<<<< HEAD
           }
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -668,10 +727,29 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                   portsIn[element],
                 ),
               );
+=======
+          } else if (k < portsIn.length - numWithoutNeeds) {
+            // loop that goes from the first node, and checks, if said node is needed by another job
+            for (let node = 0; node < portsIn.length; ++node) {
+              if (
+                nodes[node]['options']['name'] ===
+                nodes[element]['portsIn'][0]['options']['label']
+              ) {
+                linksWithNeeds.push(
+                  portsOutWithNeeds[node].link<DefaultLinkModel>(
+                    portsIn[element],
+                  ),
+                );
+              }
+>>>>>>> 16fc321 (fixed conditional needs)
             }
+            k++;
           }
+<<<<<<< HEAD
           k++;
 >>>>>>> 39e9878 (fixed the second last needs bug)
+=======
+>>>>>>> 16fc321 (fixed conditional needs)
         }
       }
 <<<<<<< HEAD
@@ -684,10 +762,10 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 >>>>>>> 74b007e (nomoreconsol.logs)
     } else {
       const portsOut2: DefaultPortModel[] = [];
-      portsOut2.push(portsOut[c]);
-      console.log(portsOut2);
-      if (portsOut2[0]) {
-        links.push(portsOut2[0].link<DefaultLinkModel>(portsIn[c]));
+      portsOut2.push(portsOut[xd]);
+      links.push(portsOut2[0].link<DefaultLinkModel>(portsIn[c]));
+      if (xd < numWithoutNeeds) {
+        xd++;
       }
     }
   }
