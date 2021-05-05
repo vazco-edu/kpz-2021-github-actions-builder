@@ -707,15 +707,19 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
           normalized['jobs'][`${Object.keys(normalized['jobs'])[element]}`]
             .needs
         ) {
-          console.log(nodes[element]['options']['name']);
-          console.log(nodes[element]['portsIn'][0]['options']['label']);
           if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
+            console.log(nodes[element]['options']['name']);
+            console.log(nodes[element]['portsIn'][0]['options']['label']);
+            console.log('jestem');
+            console.log(element);
+            console.log(c);
             needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
               ',',
             );
           }
           if (needsArr.length) {
             console.log(needsArr);
+            console.log('HERE');
             for (let need = 0; need < needsArr.length; ++need) {
               for (let n = 0; n < portsIn.length; n++) {
                 if (
@@ -777,6 +781,8 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
               );
 =======
           } else if (k < portsIn.length - numWithoutNeeds) {
+            console.log('ONLY ONE NEEDS');
+            console.log(nodes[element]['options']['name']);
             // loop that goes from the first node, and checks, if said node is needed by another job
             for (let node = 0; node < portsIn.length; ++node) {
               if (
@@ -799,6 +805,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
 >>>>>>> 16fc321 (fixed conditional needs)
         }
+        needsArr = [];
       }
 <<<<<<< HEAD
       // console.log(
