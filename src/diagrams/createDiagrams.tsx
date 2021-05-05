@@ -293,9 +293,14 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
       );
     }
   }
+  console.log(objWithNeeds);
   const portsOut: DefaultPortModel[] = [];
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
+<<<<<<< HEAD
+=======
+  // displaying number of ports
+>>>>>>> a8725eb (fixed undefined in else statement)
   for (let j = 0; j < numWithoutNeeds; ++j) {
     portsOut.push(node2.addOutPort((j + 1).toString()));
   }
@@ -314,9 +319,12 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     );
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     //nodes[z].setPosition(300, (z + 1) * 175);
 =======
 >>>>>>> 16fc321 (fixed conditional needs)
+=======
+>>>>>>> a8725eb (fixed undefined in else statement)
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs) {
       nodes[z].addInPort(
         `${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].needs}`,
@@ -384,6 +392,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         console.log(
           normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'],
         );
+<<<<<<< HEAD
         // SEEMS TO NOT WORKING NOT SURE THO
         // if (
         //   normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'][
@@ -397,6 +406,20 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         //     ]['uses'],
         //   );
         // }
+=======
+        //for now not needed
+        /* if (
+          normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`]['steps'][
+            'uses'
+          ]
+        ) {
+          nodes[z].addInPort(
+            normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`][
+              'steps'
+            ]['uses'],
+          );
+        }*/
+>>>>>>> a8725eb (fixed undefined in else statement)
         if (x === 0) {
           nodes[z].addInPort('steps:');
           portsIn.push(
@@ -545,6 +568,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   const link = port1.link<DefaultLinkModel>(port2);
   const links: DefaultLinkModel[] = [];
   const linksWithNeeds: DefaultLinkModel[] = [];
+  //storing node, that need more than 1 node (split on ',' sign)
   let needsArr: any = [];
   // value used to prevent additional links between nodes with attribute "needs"
   let k = 0;
@@ -554,10 +578,15 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
   let s = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f8728ba (jotde)
 =======
   let xd = 0;
 >>>>>>> 16fc321 (fixed conditional needs)
+=======
+  //variable needed to correctly link nodes, that don't have needs
+  let noNeeds = 0;
+>>>>>>> a8725eb (fixed undefined in else statement)
   for (let c = 0; c < portsIn.length; c++) {
     console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
@@ -613,6 +642,10 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
       for (let element = c; element < portsIn.length; element++) {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        console.log(nodes[element]['portsIn'][0]['options']['label']);
+>>>>>>> a8725eb (fixed undefined in else statement)
         if (nodes[element]['portsIn'][0]['options']['label']?.includes(',')) {
           needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
 >>>>>>> 74b007e (nomoreconsol.logs)
@@ -777,10 +810,18 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 >>>>>>> 74b007e (nomoreconsol.logs)
     } else {
       const portsOut2: DefaultPortModel[] = [];
+<<<<<<< HEAD
       portsOut2.push(portsOut[xd]);
       links.push(portsOut2[0].link<DefaultLinkModel>(portsIn[c]));
       if (xd < numWithoutNeeds) {
         xd++;
+=======
+      portsOut2.push(portsOut[noNeeds]);
+      links.push(portsOut2[0].link<DefaultLinkModel>(portsIn[c]));
+      // incrementing to the number of jobs without needs
+      if (noNeeds < numWithoutNeeds) {
+        noNeeds++;
+>>>>>>> a8725eb (fixed undefined in else statement)
       }
     }
   }
