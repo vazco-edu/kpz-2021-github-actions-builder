@@ -590,7 +590,13 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 >>>>>>> a8725eb (fixed undefined in else statement)
 =======
   let singleNeeds = 0;
+<<<<<<< HEAD
 >>>>>>> 531f151 (fixed double links)
+=======
+  const allLinksArr: string[][] = [];
+  const allLinksWithoutArr: string[][] = [];
+  const preventAdditionalLinks: string[] = [];
+>>>>>>> 0affa08 (one workflow working)
   for (let c = 0; c < portsIn.length; c++) {
     console.log(normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs);
     if (normalized['jobs'][`${Object.keys(normalized['jobs'])[c]}`].needs) {
@@ -717,6 +723,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
             console.log('jestem');
             console.log(element);
             console.log(c);
+            console.log(portsOutWithNeeds);
             needsArr = nodes[element]['portsIn'][0]['options']['label']?.split(
               ',',
             );
@@ -732,10 +739,10 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                 console.log(nodes[n]['options']['name']);
                 console.log(needsArr[need]);
                 console.log('i am in double for');
-                if (
-                  nodes[n]['options']['name'] === needsArr[need] &&
-                  s < portsIn.length - 1
-                ) {
+                if (nodes[n]['options']['name'] === needsArr[need]) {
+                  // kuuurwa.push(
+                  //   `${nodes[n]['options']['name']}, ${needsArr[need]}`,
+                  // );
                   s++;
                   console.log('SAME');
                   const val = Object.values(
@@ -746,22 +753,47 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                     portsOutWithNeeds[n]['parent']['options'],
                   );
                   //ATTENITON1!!!!!11!!!!!!
-                  if (val[2] !== val2[2]) {
+                  // if (val[2] !== val2[2]) {
+                  console.log(
+                    `${nodes[n]['options']['id']}, ${nodes[n]['options']['name']}, ${needsArr[need]}`,
+                  );
+                  if (
+                    !preventAdditionalLinks.includes(
+                      `${need}, ${nodes[n]['options']['id']}, ${nodes[n]['options']['name']}, ${needsArr[need]}, ${val2[2]}`,
+                    )
+                  ) {
+                    console.log('IN');
+                    preventAdditionalLinks.push(
+                      `${need}, ${nodes[n]['options']['id']}, ${nodes[n]['options']['name']}, ${needsArr[need]}, ${val2[2]}`,
+                    );
+                    console.log('links: ', preventAdditionalLinks);
                     linksWithNeeds.push(
                       portsOutWithNeeds[n].link<DefaultLinkModel>(
                         portsIn[element],
                       ),
                     );
                   } else {
-                    console.log(val[2], val2[2]);
-                    console.log(portsIn);
-                    console.log(portsOutWithNeeds);
-                    console.log('NIE ZGADZA SIE');
+                    console.log('nie wchodze');
+                    console.log(
+                      `${nodes[n]['options']['id']}, ${nodes[n]['options']['name']}, ${needsArr[need]}`,
+                    );
+                    console.log(preventAdditionalLinks);
                   }
+                  allLinksArr.push([
+                    `Source job: ${nodes[n]['options']['name']}`,
+                    `Destination needs in ${nodes[element]['options']['name']}: ${needsArr[need]}`,
+                  ]);
+                  // } else {
+                  //   console.log(val[2], val2[2]);
+                  //   console.log(portsIn);
+                  //   console.log(portsOutWithNeeds);
+                  //   console.log('NIE ZGADZA SIE');
+                  // }
                 }
 >>>>>>> 97bf0ba (bugzabugiem)
               }
             }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           }
@@ -801,10 +833,16 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
           } else if (k < singleNeeds / 2) {
 >>>>>>> 531f151 (fixed double links)
+=======
+          } else if (k < Math.ceil(singleNeeds / 2)) {
+>>>>>>> 0affa08 (one workflow working)
             console.log('ONLY ONE NEEDS');
             console.log(nodes[element]['options']['name']);
             console.log(nodes);
             console.log(element);
+            console.log(nodes[element]);
+            console.log(k);
+            console.log(portsIn);
             // loop that goes from the first node, and checks, if said node is needed by another job
             for (let node = 0; node < portsIn.length; ++node) {
               if (
@@ -818,6 +856,10 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
                     portsIn[element],
                   ),
                 );
+                allLinksWithoutArr.push([
+                  `Source job: ${nodes[node]['options']['name']}`,
+                  `Destination needs in ${nodes[element]['options']['name']}: ${nodes[element]['portsIn'][0]['options']['label']}`,
+                ]);
               }
 >>>>>>> 16fc321 (fixed conditional needs)
             }
@@ -856,6 +898,8 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
       }
     }
   }
+  console.log(allLinksArr);
+  console.log(allLinksWithoutArr);
   const model = new DiagramModel();
   model.addAll(node1, node2, ...nodes, link, ...links, ...linksWithNeeds);
   // user can not alter the output (can be added to the whole model or to specific nodes only)
