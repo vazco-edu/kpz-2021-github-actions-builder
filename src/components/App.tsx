@@ -89,6 +89,7 @@ import { displayLinks } from '../additionalFunctions/linksToActions';
 import { normalize } from '../additionalFunctions/normalization';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import createDiagram from '../diagrams/createDiagrams';
 =======
 >>>>>>> cffd6e5 (normalization separated)
@@ -113,6 +114,12 @@ import dispError from '../additionalFunctions/displayError';
 >>>>>>> 5d30c48 (minor improvements)
 =======
 >>>>>>> fdf6151 (reverted some changes, in order to keep our app functional)
+=======
+import createDiagram, {
+  selfLink,
+  isNeededFor,
+} from '../diagrams/createDiagrams';
+>>>>>>> 8a90232 (added errors, when self link is detected)
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -636,6 +643,7 @@ function App(): JSX.Element {
   if (normalizedObject && !dispError(storeValidationResult)) {
     displayLinks(normalizedObject);
   }
+<<<<<<< HEAD
 >>>>>>> f8728ba (jotde)
 =======
   if (normalizedObject && !dispError(storeValidationResult)) {
@@ -670,6 +678,10 @@ function App(): JSX.Element {
 >>>>>>> 0bfbf90 (Working links)
 =======
 >>>>>>> ccafb6d (zmiana)
+=======
+  console.log(selfLink);
+  console.log(isNeededFor);
+>>>>>>> 8a90232 (added errors, when self link is detected)
   return (
     <>
       <div className="text-editor">
@@ -773,7 +785,15 @@ function App(): JSX.Element {
           ? displayLinks(normalizedObject)
           : ''}
       </div>
+<<<<<<< HEAD
 >>>>>>> f8728ba (jotde)
+=======
+      <div className="selfLink">
+        {selfLink(isNeededFor)
+          ? 'Self link detected! Please check provided YAML!'
+          : ''}
+      </div>
+>>>>>>> 8a90232 (added errors, when self link is detected)
     </>
   );
 }

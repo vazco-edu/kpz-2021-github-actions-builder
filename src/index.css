@@ -157,4 +157,11 @@ li:hover{
 .css-11bc0l7 {
   display: none;
 }
+<<<<<<< HEAD
 >>>>>>> 5d30c48 (minor improvements)
+=======
+.selfLink {
+  color: white;
+  background-color: red;
+}
+>>>>>>> 8a90232 (added errors, when self link is detected)

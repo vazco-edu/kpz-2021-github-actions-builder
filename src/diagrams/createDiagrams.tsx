@@ -137,6 +137,7 @@ class DemoWidget extends React.Component<
   }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -164,7 +165,24 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   });
 =======
 =======
+=======
+export function selfLink(obj: Record<string, string[]>): boolean {
+  console.log(obj);
+  for (let job = 0; job < Object.keys(obj).length; job++) {
+    console.log(Object.keys(obj)[job]);
+    console.log(Object.values(obj)[job]);
+    if (Object.values(obj)[job].includes(Object.keys(obj)[job])) {
+      console.log('TRURURERUEUREU');
+      return true;
+    }
+  }
+  console.log('FLAjsajdjsaknfkasfn');
+  return false;
+}
+>>>>>>> 8a90232 (added errors, when self link is detected)
 const engine = createEngine();
+// ## displays jobs, that are dependent on a specific job ##
+export const isNeededFor: Record<string, string[]> = {};
 // eslint-disable-next-line complexity
 export default function createDiagrams(notNormalized: any, normalized: any) {
 >>>>>>> f69a062 (refactoring#1)
@@ -344,8 +362,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     portsOut.push(node2.addOutPort(j.toString()));
   }
   const jobs: DefaultNodeModel[] = [];
-  // ## displays jobs, that are dependent on a specific job ##
-  const isNeededFor: Record<string, string[]> = {};
+
   // ## creating nodes for jobs and object for reverse tracking our dependencies##
   for (const jobName of key) {
     jobs.push(
@@ -967,6 +984,12 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
     }
   }
   console.log(isNeededFor);
+  //for (let job = 0; job < key.length; job++) {
+  // if (key[job] in Object.values(isNeededFor)[job]) {
+  //   selfLink = true;
+  //  break;
+  //  }
+  // }
   for (let job = 0; job < portsIn.length; job++) {
     if (normalized['jobs'][`${key[job]}`].needs) {
       const needsOfJob = normalized['jobs'][`${key[job]}`].needs;
