@@ -294,12 +294,16 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   // ## storing keys of jobs in normalized object ##
   const key: string[] = Object.keys(normalized.jobs);
   console.log(key);
-  const port2 = node2.addInPort(`${key[0]}`);
+  const port2: DefaultPortModel[] = [];
   const indexOfJobWithoutNeeds: number[] = [];
   for (let i = 0; i < key.length; ++i) {
     if (normalized['jobs'][key[i]]['needs'] === undefined) {
 >>>>>>> f69a062 (refactoring#1)
       //without needs
+      if (port2.length < 1) {
+        port2.push(node2.addInPort(`${key[i]}`));
+        continue;
+      }
       node2.addInPort(`${key[i]}`);
       numWithoutNeeds++;
       indexOfJobWithoutNeeds.push(i);
@@ -607,6 +611,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
   const model = new DiagramModel();
   model.addAll(node1, node2, ...jobs);
+<<<<<<< HEAD
 >>>>>>> f69a062 (refactoring#1)
   const link = port1.link<DefaultLinkModel>(port2);
 <<<<<<< HEAD
@@ -922,6 +927,9 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
             }
             k++;
 =======
+=======
+  const link = port1.link<DefaultLinkModel>(port2[0]);
+>>>>>>> 8dccfbf (working diagrams)
   const linksWithoutNeeds: DefaultLinkModel[] = [];
   const linksWithOneNeed: DefaultLinkModel[] = [];
   const linksWithMultipleNeeds: DefaultLinkModel[] = [];
