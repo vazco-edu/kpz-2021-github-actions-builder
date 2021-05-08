@@ -293,13 +293,16 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 =======
   // ## storing keys of jobs in normalized object ##
   const key: string[] = Object.keys(normalized.jobs);
+  console.log(key);
   const port2 = node2.addInPort(`${key[0]}`);
-  for (let i = 1; i < key.length; ++i) {
+  const indexOfJobWithoutNeeds: number[] = [];
+  for (let i = 0; i < key.length; ++i) {
     if (normalized['jobs'][key[i]]['needs'] === undefined) {
 >>>>>>> f69a062 (refactoring#1)
       //without needs
       node2.addInPort(`${key[i]}`);
       numWithoutNeeds++;
+      indexOfJobWithoutNeeds.push(i);
     } else {
       objWithNeeds.push(key[i]);
       objWithNeeds.push(normalized['jobs'][key[i]]);
@@ -606,6 +609,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   model.addAll(node1, node2, ...jobs);
 >>>>>>> f69a062 (refactoring#1)
   const link = port1.link<DefaultLinkModel>(port2);
+<<<<<<< HEAD
   const links: DefaultLinkModel[] = [];
   const linksWithNeeds: DefaultLinkModel[] = [];
   //storing node, that need more than 1 node (split on ',' sign)
@@ -917,6 +921,24 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 >>>>>>> 16fc321 (fixed conditional needs)
             }
             k++;
+=======
+  const linksWithoutNeeds: DefaultLinkModel[] = [];
+  const linksWithOneNeed: DefaultLinkModel[] = [];
+  const linksWithMultipleNeeds: DefaultLinkModel[] = [];
+  console.log(portsOut.length);
+  for (let job = 0; job < portsIn.length; job++) {
+    if (normalized['jobs'][`${key[job]}`].needs) {
+      const needsOfJob = normalized['jobs'][`${key[job]}`].needs;
+      //connection of nodes with multiple "needs"
+      if (needsOfJob.length > 1) {
+        for (const element of needsOfJob) {
+          for (let jobName = 0; jobName < key.length; ++jobName) {
+            if (element === key[jobName]) {
+              linksWithMultipleNeeds.push(
+                portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
+              );
+            }
+>>>>>>> 0b045eb (working diagrams (some minor bugs))
           }
 <<<<<<< HEAD
           k++;
@@ -924,7 +946,16 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
 >>>>>>> 16fc321 (fixed conditional needs)
         }
-        needsArr = [];
+        console.log(needsOfJob);
+      } else {
+        for (let jobName = 0; jobName < key.length; ++jobName) {
+          if (needsOfJob[0] === key[jobName]) {
+            linksWithOneNeed.push(
+              portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
+            );
+          }
+        }
+        console.log(needsOfJob);
       }
 <<<<<<< HEAD
       // console.log(
@@ -935,7 +966,10 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
 >>>>>>> 74b007e (nomoreconsol.logs)
     } else {
+      //tutaj jak nie ma needs
+      console.log(node2['portsIn'].length);
       const portsOut2: DefaultPortModel[] = [];
+<<<<<<< HEAD
 <<<<<<< HEAD
       portsOut2.push(portsOut[xd]);
       links.push(portsOut2[0].link<DefaultLinkModel>(portsIn[c]));
@@ -948,21 +982,38 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
       if (noNeeds < numWithoutNeeds) {
         noNeeds++;
 >>>>>>> a8725eb (fixed undefined in else statement)
+=======
+      for (
+        let withoutNeeds = 0;
+        withoutNeeds < node2['portsIn'].length;
+        withoutNeeds++
+      ) {
+        if (node2['portsIn'][withoutNeeds]['options'].label === key[job]) {
+          console.log('jestem');
+          portsOut2.push(portsOut[withoutNeeds]);
+          linksWithoutNeeds.push(
+            portsOut2[0].link<DefaultLinkModel>(portsIn[job]),
+          );
+        }
+>>>>>>> 0b045eb (working diagrams (some minor bugs))
       }
     }
   }
-  console.log(allLinksArr);
-  console.log(allLinksWithoutArr);
   // const model = new DiagramModel();
-  model.addAll(link, ...links, ...linksWithNeeds);
+  model.addAll(
+    link,
+    ...linksWithOneNeed,
+    ...linksWithMultipleNeeds,
+    ...linksWithoutNeeds,
+  );
   // user can not alter the output (can be added to the whole model or to specific jobs only)
   engine.setModel(model);
   link.setLocked(true);
-  for (let l = 0; l < links.length; ++l) {
-    links[l].setLocked(true);
+  for (let l = 0; l < linksWithOneNeed.length; ++l) {
+    linksWithOneNeed[l].setLocked(true);
   }
-  for (let l = 0; l < linksWithNeeds.length; ++l) {
-    linksWithNeeds[l].setLocked(true);
+  for (let l = 0; l < linksWithMultipleNeeds.length; ++l) {
+    linksWithMultipleNeeds[l].setLocked(true);
   }
   return <DemoWidget model={model} engine={engine} />;
 }
