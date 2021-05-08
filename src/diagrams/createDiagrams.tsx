@@ -36,6 +36,7 @@ import createEngine, {
   PathFindingLinkFactory,
   DiagramModelGenerics,
 } from '@projectstorm/react-diagrams';
+import { keyword$DataError } from 'ajv/dist/compile/errors';
 import React from 'react';
 
 <<<<<<< HEAD
@@ -169,10 +170,17 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 >>>>>>> f69a062 (refactoring#1)
   let node1: DefaultNodeModel;
   if (notNormalized) {
-    node1 = new DefaultNodeModel({
-      name: `${notNormalized.name}`,
-      color: 'rgb(128,0,128)',
-    });
+    if (notNormalized.name) {
+      node1 = new DefaultNodeModel({
+        name: `${notNormalized.name}`,
+        color: 'rgb(128,0,128)',
+      });
+    } else {
+      node1 = new DefaultNodeModel({
+        name: ``,
+        color: 'rgb(128,0,128)',
+      });
+    }
   } else {
     node1 = new DefaultNodeModel({
       name: ``,
@@ -336,7 +344,9 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     portsOut.push(node2.addOutPort(j.toString()));
   }
   const jobs: DefaultNodeModel[] = [];
-  // ## creating nodes for jobs ##
+  // ## displays jobs, that are dependent on a specific job ##
+  const isNeededFor: Record<string, string[]> = {};
+  // ## creating nodes for jobs and object for reverse tracking our dependencies##
   for (const jobName of key) {
     jobs.push(
 >>>>>>> f69a062 (refactoring#1)
@@ -345,6 +355,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         color: 'rgb(204,204,9)',
       }),
     );
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -390,7 +401,11 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
         `if: ${normalized['jobs'][`${Object.keys(normalized['jobs'])[z]}`].if}`,
       );
 =======
+=======
+    isNeededFor[`${jobName}`] = [];
+>>>>>>> 1a1d60c (added reverse dependency (job is needed by....))
   }
+  console.log(isNeededFor);
   // ## adding specific ports to jobs ##
   for (let nodeNumber = 0; nodeNumber < key.length; ++nodeNumber) {
     const keysJobs = normalized['jobs'][key[nodeNumber]];
@@ -934,6 +949,24 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   const linksWithOneNeed: DefaultLinkModel[] = [];
   const linksWithMultipleNeeds: DefaultLinkModel[] = [];
   console.log(portsOut.length);
+  // ## loop used to add dependencies to our object (isNeededFor)
+  for (let job = 0; job < key.length; job++) {
+    //console.log(jobs[job]['options'].name);
+    for (let nod = 0; nod < key.length; nod++) {
+      if (normalized['jobs'][`${key[job]}`].needs) {
+        for (const element of normalized['jobs'][`${key[job]}`].needs) {
+          console.log('nazwa joba', key[nod]);
+          console.log('needs', element);
+          if (element === key[nod]) {
+            // isNeededFor[jobs[job]['options'].name]
+            //console.log(key[jd]);
+            isNeededFor[`${key[nod]}`].push(`${key[job]}`);
+          }
+        }
+      }
+    }
+  }
+  console.log(isNeededFor);
   for (let job = 0; job < portsIn.length; job++) {
     if (normalized['jobs'][`${key[job]}`].needs) {
       const needsOfJob = normalized['jobs'][`${key[job]}`].needs;
