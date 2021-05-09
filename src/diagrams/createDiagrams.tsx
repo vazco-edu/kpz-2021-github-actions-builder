@@ -181,15 +181,30 @@ export function selfLink(obj: Record<string, string[]>): boolean {
 =======
 
 export function allNeeds(obj: Record<string, string[]>, norm: any): boolean {
-  const jobsInNormalized = Object.keys(norm.jobs);
-  for (let job = 0; job < jobsInNormalized.length; job++) {
-    if (norm['jobs'][jobsInNormalized[job]].needs === undefined) {
-      return false;
+  if (norm !== undefined) {
+    const jobsInNormalized = Object.keys(norm.jobs);
+    for (let job = 0; job < jobsInNormalized.length; job++) {
+      if (norm['jobs'][jobsInNormalized[job]].needs === undefined) {
+        return false;
+      }
     }
+    return true;
   }
-  return true;
+  return false;
 }
+
+export function checkCycles(obj: Record<string, string[]>) {
+  console.log(obj);
+  // if (czy jest cykl) {
+  //   return jest cykl :(
+  // }
+  // return nie ma :)
+}
+<<<<<<< HEAD
 >>>>>>> e3754bf (checking for noNeeds)
+=======
+
+>>>>>>> ff788b5 (fixed undefined normObj error)
 const engine = createEngine();
 const pathfinding = engine
   .getLinkFactories()
@@ -1100,6 +1115,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 
   // user can not alter the output (can be added to the whole model or to specific jobs only)
   engine.setModel(model);
+  checkCycles(isNeededFor);
   for (let l = 0; l < linksWithOneNeed.length; ++l) {
     linksWithOneNeed[l].setLocked(true);
   }
