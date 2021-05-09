@@ -169,19 +169,27 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 =======
 =======
 export function selfLink(obj: Record<string, string[]>): boolean {
-  console.log(obj);
   for (let job = 0; job < Object.keys(obj).length; job++) {
-    console.log(Object.keys(obj)[job]);
-    console.log(Object.values(obj)[job]);
     if (Object.values(obj)[job].includes(Object.keys(obj)[job])) {
-      console.log('TRURURERUEUREU');
       return true;
     }
   }
-  console.log('FLAjsajdjsaknfkasfn');
   return false;
 }
+<<<<<<< HEAD
 >>>>>>> 8a90232 (added errors, when self link is detected)
+=======
+
+export function allNeeds(obj: Record<string, string[]>, norm: any): boolean {
+  const jobsInNormalized = Object.keys(norm.jobs);
+  for (let job = 0; job < jobsInNormalized.length; job++) {
+    if (norm['jobs'][jobsInNormalized[job]].needs === undefined) {
+      return false;
+    }
+  }
+  return true;
+}
+>>>>>>> e3754bf (checking for noNeeds)
 const engine = createEngine();
 const pathfinding = engine
   .getLinkFactories()
@@ -324,7 +332,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 =======
   // ## storing keys of jobs in normalized object ##
   const key: string[] = Object.keys(normalized.jobs);
-  console.log(key);
   const port2: DefaultPortModel[] = [];
   const indexOfJobWithoutNeeds: number[] = [];
   for (let i = 0; i < key.length; ++i) {
@@ -427,7 +434,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     isNeededFor[`${jobName}`] = [];
 >>>>>>> 1a1d60c (added reverse dependency (job is needed by....))
   }
-  console.log(isNeededFor);
   // ## adding specific ports to jobs ##
   for (let nodeNumber = 0; nodeNumber < key.length; ++nodeNumber) {
     const keysJobs = normalized['jobs'][key[nodeNumber]];
@@ -502,8 +508,11 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
 =======
     for (let step = 0; step < keysJobs.steps.length; ++step) {
       for (const prop in keysJobs.steps[step]) {
+<<<<<<< HEAD
         console.log(keysJobs.steps);
 >>>>>>> f69a062 (refactoring#1)
+=======
+>>>>>>> e3754bf (checking for noNeeds)
         if (x === 0) {
           jobs[nodeNumber].addInPort('steps:');
           portsIn.push(
@@ -648,6 +657,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
   const model = new DiagramModel();
   model.addAll(node1, node2, ...jobs);
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> f69a062 (refactoring#1)
   const link = port1.link<DefaultLinkModel>(port2);
@@ -967,28 +977,31 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
   const link = port1.link<DefaultLinkModel>(port2[0]);
 >>>>>>> 8dccfbf (working diagrams)
+=======
+  // TypeError: Cannot read property 'addLink' of undefined - sometimes
+  let link: DefaultLinkModel;
+  if (port2[0] !== undefined) {
+    link = port1.link<DefaultLinkModel>(port2[0]);
+  } else {
+    link = port1.link<DefaultLinkModel>(port1);
+  }
+>>>>>>> e3754bf (checking for noNeeds)
   const linksWithoutNeeds: DefaultLinkModel[] = [];
   const linksWithOneNeed: DefaultLinkModel[] = [];
   const linksWithMultipleNeeds: DefaultLinkModel[] = [];
-  console.log(portsOut.length);
   // ## loop used to add dependencies to our object (isNeededFor)
   for (let job = 0; job < key.length; job++) {
-    //console.log(jobs[job]['options'].name);
     for (let nod = 0; nod < key.length; nod++) {
       if (normalized['jobs'][`${key[job]}`].needs) {
         for (const element of normalized['jobs'][`${key[job]}`].needs) {
-          console.log('nazwa joba', key[nod]);
-          console.log('needs', element);
           if (element === key[nod]) {
             // isNeededFor[jobs[job]['options'].name]
-            //console.log(key[jd]);
             isNeededFor[`${key[nod]}`].push(`${key[job]}`);
           }
         }
       }
     }
   }
-  console.log(isNeededFor);
   //for (let job = 0; job < key.length; job++) {
   // if (key[job] in Object.values(isNeededFor)[job]) {
   //   selfLink = true;
@@ -1019,7 +1032,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 =======
 >>>>>>> 16fc321 (fixed conditional needs)
         }
-        console.log(needsOfJob);
       } else {
         for (let jobName = 0; jobName < key.length; ++jobName) {
           if (needsOfJob[0] === key[jobName]) {
@@ -1028,7 +1040,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
             );
           }
         }
-        console.log(needsOfJob);
       }
 <<<<<<< HEAD
       // console.log(
@@ -1040,7 +1051,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 >>>>>>> 74b007e (nomoreconsol.logs)
     } else {
       //tutaj jak nie ma needs
-      console.log(node2['portsIn'].length);
       const portsOut2: DefaultPortModel[] = [];
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1062,7 +1072,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
         withoutNeeds++
       ) {
         if (node2['portsIn'][withoutNeeds]['options'].label === key[job]) {
-          console.log('jestem');
           portsOut2.push(portsOut[withoutNeeds]);
           linksWithoutNeeds.push(
             portsOut2[0].link<DefaultLinkModel>(portsIn[job]),
@@ -1073,15 +1082,24 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
     }
   }
   // const model = new DiagramModel();
-  model.addAll(
-    link,
-    ...linksWithOneNeed,
-    ...linksWithMultipleNeeds,
-    ...linksWithoutNeeds,
-  );
+  if (link !== undefined) {
+    model.addAll(
+      link,
+      ...linksWithOneNeed,
+      ...linksWithMultipleNeeds,
+      ...linksWithoutNeeds,
+    );
+    link.setLocked(true);
+  } else {
+    model.addAll(
+      ...linksWithOneNeed,
+      ...linksWithMultipleNeeds,
+      ...linksWithoutNeeds,
+    );
+  }
+
   // user can not alter the output (can be added to the whole model or to specific jobs only)
   engine.setModel(model);
-  link.setLocked(true);
   for (let l = 0; l < linksWithOneNeed.length; ++l) {
     linksWithOneNeed[l].setLocked(true);
   }

@@ -168,6 +168,7 @@ li:hover{
 >>>>>>> 8a90232 (added errors, when self link is detected)
 =======
 
+<<<<<<< HEAD
 .point {
   display: none !important;
 }
@@ -176,3 +177,9 @@ li:hover{
   display: none !important;
 }
 >>>>>>> 6f5b1db (changed orientation, added pathfinding)
+=======
+.allNeeds {
+  color: white;
+  background-color: red;
+}
+>>>>>>> e3754bf (checking for noNeeds)

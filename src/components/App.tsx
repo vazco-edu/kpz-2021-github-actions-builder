@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+/* eslint-disable complexity */
+>>>>>>> e3754bf (checking for noNeeds)
 /* eslint-disable @typescript-eslint/prefer-regexp-exec */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -118,6 +122,7 @@ import dispError from '../additionalFunctions/displayError';
 import createDiagram, {
   selfLink,
   isNeededFor,
+  allNeeds,
 } from '../diagrams/createDiagrams';
 >>>>>>> 8a90232 (added errors, when self link is detected)
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -580,7 +585,6 @@ function App(): JSX.Element {
   } catch (e) {
     console.log(e.errors);
   }
-  console.log(normalizedObject);
   if (typeof workflow !== 'object') {
 <<<<<<< HEAD
 >>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
@@ -644,6 +648,7 @@ function App(): JSX.Element {
     displayLinks(normalizedObject);
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f8728ba (jotde)
 =======
   if (normalizedObject && !dispError(storeValidationResult)) {
@@ -682,6 +687,8 @@ function App(): JSX.Element {
   console.log(selfLink);
   console.log(isNeededFor);
 >>>>>>> 8a90232 (added errors, when self link is detected)
+=======
+>>>>>>> e3754bf (checking for noNeeds)
   return (
     <>
       <div className="text-editor">
@@ -789,11 +796,19 @@ function App(): JSX.Element {
 >>>>>>> f8728ba (jotde)
 =======
       <div className="selfLink">
-        {selfLink(isNeededFor)
+        {selfLink(isNeededFor) && click
           ? 'Self link detected! Please check provided YAML!'
           : ''}
       </div>
+<<<<<<< HEAD
 >>>>>>> 8a90232 (added errors, when self link is detected)
+=======
+      <div className="allNeeds">
+        {allNeeds(isNeededFor, normalizedObject) && click
+          ? 'Every job has needs, workflow will never complete! Please check provided YAML!'
+          : ''}
+      </div>
+>>>>>>> e3754bf (checking for noNeeds)
     </>
   );
 }
