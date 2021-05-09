@@ -164,4 +164,15 @@ li:hover{
   color: white;
   background-color: red;
 }
+<<<<<<< HEAD
 >>>>>>> 8a90232 (added errors, when self link is detected)
+=======
+
+.point {
+  display: none !important;
+}
+
+.css-u33b4a {
+  display: none !important;
+}
+>>>>>>> 6f5b1db (changed orientation, added pathfinding)

@@ -89,18 +89,20 @@ class DemoWidget extends React.Component<
     super(props);
     this.engine = new DagreEngine({
       graph: {
-        rankdir: 'BR',
-        ranker: 'longest-path',
+        rankdir: 'LR',
+        align: 'DR',
+        ranker: 'tight-tree',
         marginx: 10,
         marginy: 10,
       },
-      includeLinks: true,
+      includeLinks: false,
     });
   }
   autoDistribute = () => {
     this.engine.redistribute(this.props.model);
     this.reroute();
     this.props.engine.repaintCanvas();
+    this.props.engine.zoomToFit();
   };
 
   componentDidMount(): void {
@@ -181,6 +183,9 @@ export function selfLink(obj: Record<string, string[]>): boolean {
 }
 >>>>>>> 8a90232 (added errors, when self link is detected)
 const engine = createEngine();
+const pathfinding = engine
+  .getLinkFactories()
+  .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME);
 // ## displays jobs, that are dependent on a specific job ##
 export const isNeededFor: Record<string, string[]> = {};
 // eslint-disable-next-line complexity
@@ -1001,6 +1006,10 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
               linksWithMultipleNeeds.push(
                 portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
               );
+              // ## Smart routing links (looks bad)
+              // linksWithMultipleNeeds.push(
+              //   portsOutWithNeeds[jobName].link(portsIn[job], pathfinding),
+              // );
             }
 >>>>>>> 0b045eb (working diagrams (some minor bugs))
           }
@@ -1078,6 +1087,9 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   }
   for (let l = 0; l < linksWithMultipleNeeds.length; ++l) {
     linksWithMultipleNeeds[l].setLocked(true);
+  }
+  for (let l = 0; l < linksWithoutNeeds.length; ++l) {
+    linksWithoutNeeds[l].setLocked(true);
   }
   return <DemoWidget model={model} engine={engine} />;
 }
