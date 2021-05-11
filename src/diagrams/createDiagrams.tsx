@@ -199,6 +199,33 @@ export function checkCycles(obj: Record<string, string[]>) {
   //   return jest cykl :(
   // }
   // return nie ma :)
+  /*const graph: Record<string, string[]> = Object.assign(
+    {},
+    ...Object.keys(obj).map(node => ({ [node]: obj[node].map(String) })),
+  );*/
+  //copy of our object (not reference)
+  const graph2: Record<string, string[]> = Object.assign({}, obj);
+  console.log(obj);
+  console.log(graph2);
+  let queue: string[][] = Object.keys(graph2).map(node => [node]);
+  console.log('kolejka: ', queue);
+  while (queue.length) {
+    const batch: string[][] = [];
+    for (const path of queue) {
+      const parents = graph2[path[0]] || [];
+      console.log('parent: ', parents);
+      for (const node of parents) {
+        console.log('node: ', node);
+        console.log('path: ', path[path.length - 1]);
+        if (node === path[path.length - 1]) {
+          return true;
+        }
+        batch.push([node, ...path]);
+      }
+    }
+    queue = batch;
+  }
+  return false;
 }
 <<<<<<< HEAD
 >>>>>>> e3754bf (checking for noNeeds)
@@ -350,19 +377,29 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   const port2: DefaultPortModel[] = [];
   const indexOfJobWithoutNeeds: number[] = [];
   for (let i = 0; i < key.length; ++i) {
+<<<<<<< HEAD
     if (normalized['jobs'][key[i]]['needs'] === undefined) {
 >>>>>>> f69a062 (refactoring#1)
       //without needs
       if (port2.length < 1) {
         port2.push(node2.addInPort(`${key[i]}`));
         continue;
+=======
+    if (normalized) {
+      if (normalized['jobs'][key[i]]['needs'] === undefined) {
+        //without needs
+        if (port2.length < 1) {
+          port2.push(node2.addInPort(`${key[i]}`));
+          continue;
+        }
+        node2.addInPort(`${key[i]}`);
+        numWithoutNeeds++;
+        indexOfJobWithoutNeeds.push(i);
+      } else {
+        objWithNeeds.push(key[i]);
+        objWithNeeds.push(normalized['jobs'][key[i]]);
+>>>>>>> 97c2311 (cycle detection)
       }
-      node2.addInPort(`${key[i]}`);
-      numWithoutNeeds++;
-      indexOfJobWithoutNeeds.push(i);
-    } else {
-      objWithNeeds.push(key[i]);
-      objWithNeeds.push(normalized['jobs'][key[i]]);
     }
   }
   const portsOut: DefaultPortModel[] = [];
@@ -1115,7 +1152,8 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 
   // user can not alter the output (can be added to the whole model or to specific jobs only)
   engine.setModel(model);
-  checkCycles(isNeededFor);
+  const result = checkCycles(isNeededFor);
+  console.log(result);
   for (let l = 0; l < linksWithOneNeed.length; ++l) {
     linksWithOneNeed[l].setLocked(true);
   }

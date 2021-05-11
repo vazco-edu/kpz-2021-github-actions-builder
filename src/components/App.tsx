@@ -38,6 +38,7 @@ import jsyaml from 'js-yaml';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { log } from 'node:console';
 =======
 import { deepEqual } from 'node:assert';
@@ -74,6 +75,10 @@ import Editor from './Editor';
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, no-console */
 =======
 import React, { useState } from 'react';
+=======
+import debounce from 'lodash.debounce';
+import React, { useState, useCallback } from 'react';
+>>>>>>> 97c2311 (cycle detection)
 
 import { ajv } from '../additionalFunctions/createAjvObject';
 import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
@@ -101,6 +106,7 @@ import createDiagram from '../diagrams/createDiagrams';
 import { ajv } from '../additionalFunctions/createAjvObject';
 import dispError from '../additionalFunctions/displayError';
 import { normalize } from '../additionalFunctions/normalization';
+<<<<<<< HEAD
 import createDiagram from '../diagrams/createDiagrams';
 <<<<<<< HEAD
 >>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
@@ -119,10 +125,14 @@ import dispError from '../additionalFunctions/displayError';
 =======
 >>>>>>> fdf6151 (reverted some changes, in order to keep our app functional)
 =======
+=======
+import { throttleFunction, xD } from '../additionalFunctions/throttledOutput';
+>>>>>>> 97c2311 (cycle detection)
 import createDiagram, {
   selfLink,
   isNeededFor,
   allNeeds,
+  checkCycles,
 } from '../diagrams/createDiagrams';
 >>>>>>> 8a90232 (added errors, when self link is detected)
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -152,6 +162,18 @@ function App(): JSX.Element {
   // console.log(schema);
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
+  /*
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedDisplay = useCallback(
+    debounce(nextValue => setYaml(nextValue), 1000),
+    [],
+  );
+  const handleChangeEvent = (event: { target: { value: any } }) => {
+    const nextValue = event.target.value;
+    setYaml(nextValue);
+    debouncedDisplay(nextValue);
+  };
+  */
   const man = yaml;
 
   function parseYamltoJSON(text: string) {
@@ -657,6 +679,7 @@ function App(): JSX.Element {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> cebe2b6 (links opening in seperate window (safe))
 =======
   console.log(!true);
@@ -689,6 +712,9 @@ function App(): JSX.Element {
 >>>>>>> 8a90232 (added errors, when self link is detected)
 =======
 >>>>>>> e3754bf (checking for noNeeds)
+=======
+  xD();
+>>>>>>> 97c2311 (cycle detection)
   return (
     <>
       <div className="text-editor">
@@ -797,7 +823,7 @@ function App(): JSX.Element {
 =======
       <div className="selfLink">
         {selfLink(isNeededFor) && click
-          ? 'Self link detected! Please check provided YAML!'
+          ? 'Self link detected (job is dependent on itself)! Please check provided YAML!'
           : ''}
       </div>
 <<<<<<< HEAD
@@ -805,7 +831,12 @@ function App(): JSX.Element {
 =======
       <div className="allNeeds">
         {allNeeds(isNeededFor, normalizedObject) && click
-          ? 'Every job has needs, workflow will never complete! Please check provided YAML!'
+          ? 'Every job is dependent on another job, workflow will never complete! Please check provided YAML!'
+          : ''}
+      </div>
+      <div className="allNeeds">
+        {checkCycles(isNeededFor)
+          ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
           : ''}
       </div>
 >>>>>>> e3754bf (checking for noNeeds)
