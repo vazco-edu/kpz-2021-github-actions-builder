@@ -133,6 +133,7 @@ import createDiagram, {
   isNeededFor,
   allNeeds,
   checkCycles,
+  sameNeeds,
 } from '../diagrams/createDiagrams';
 >>>>>>> 8a90232 (added errors, when self link is detected)
 import useLocalStorage from '../hooks/useLocalStorage';
@@ -835,11 +836,19 @@ function App(): JSX.Element {
           : ''}
       </div>
       <div className="allNeeds">
-        {checkCycles(isNeededFor)
+        {checkCycles(isNeededFor) && click
           ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
           : ''}
       </div>
+<<<<<<< HEAD
 >>>>>>> e3754bf (checking for noNeeds)
+=======
+      <div className="allNeeds">
+        {sameNeeds(isNeededFor) && click
+          ? 'One or more of provided jobs, has duplicate jobs needed! Please check provided YAML!'
+          : ''}
+      </div>
+>>>>>>> 4cf2964 (checking for duplicate needs and deleted console logs)
     </>
   );
 }

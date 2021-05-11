@@ -37,6 +37,7 @@ import createEngine, {
   DiagramModelGenerics,
 } from '@projectstorm/react-diagrams';
 import { keyword$DataError } from 'ajv/dist/compile/errors';
+import { truncate } from 'lodash';
 import React from 'react';
 
 <<<<<<< HEAD
@@ -194,29 +195,13 @@ export function allNeeds(obj: Record<string, string[]>, norm: any): boolean {
 }
 
 export function checkCycles(obj: Record<string, string[]>) {
-  console.log(obj);
-  // if (czy jest cykl) {
-  //   return jest cykl :(
-  // }
-  // return nie ma :)
-  /*const graph: Record<string, string[]> = Object.assign(
-    {},
-    ...Object.keys(obj).map(node => ({ [node]: obj[node].map(String) })),
-  );*/
-  //copy of our object (not reference)
   const graph2: Record<string, string[]> = Object.assign({}, obj);
-  console.log(obj);
-  console.log(graph2);
   let queue: string[][] = Object.keys(graph2).map(node => [node]);
-  console.log('kolejka: ', queue);
   while (queue.length) {
     const batch: string[][] = [];
     for (const path of queue) {
       const parents = graph2[path[0]] || [];
-      console.log('parent: ', parents);
       for (const node of parents) {
-        console.log('node: ', node);
-        console.log('path: ', path[path.length - 1]);
         if (node === path[path.length - 1]) {
           return true;
         }
@@ -228,11 +213,30 @@ export function checkCycles(obj: Record<string, string[]>) {
   return false;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> e3754bf (checking for noNeeds)
 =======
+=======
+export function sameNeeds(obj: Record<string, string[]>) {
+  const helperArray: string[][] = Object.values(obj);
+  //element.forEach(x => (empty[x] = (empty[x] || 0) + 1));
+  for (let i = 0; i < helperArray.length; i++) {
+    for (let j = 0; j < helperArray[i].length; j++) {
+      const result: number = helperArray[i].filter(
+        (v: any) => v === Object.keys(obj)[j],
+      ).length;
+      if (result > 1) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+>>>>>>> 4cf2964 (checking for duplicate needs and deleted console logs)
 
 >>>>>>> ff788b5 (fixed undefined normObj error)
 const engine = createEngine();
+// Smart routing engine
 const pathfinding = engine
   .getLinkFactories()
   .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME);
@@ -711,6 +715,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   model.addAll(node1, node2, ...jobs);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> f69a062 (refactoring#1)
   const link = port1.link<DefaultLinkModel>(port2);
 <<<<<<< HEAD
@@ -1031,6 +1036,8 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 >>>>>>> 8dccfbf (working diagrams)
 =======
   // TypeError: Cannot read property 'addLink' of undefined - sometimes
+=======
+>>>>>>> 4cf2964 (checking for duplicate needs and deleted console logs)
   let link: DefaultLinkModel;
   if (port2[0] !== undefined) {
     link = port1.link<DefaultLinkModel>(port2[0]);
@@ -1054,12 +1061,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
       }
     }
   }
-  //for (let job = 0; job < key.length; job++) {
-  // if (key[job] in Object.values(isNeededFor)[job]) {
-  //   selfLink = true;
-  //  break;
-  //  }
-  // }
   for (let job = 0; job < portsIn.length; job++) {
     if (normalized['jobs'][`${key[job]}`].needs) {
       const needsOfJob = normalized['jobs'][`${key[job]}`].needs;
@@ -1152,8 +1153,6 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
 
   // user can not alter the output (can be added to the whole model or to specific jobs only)
   engine.setModel(model);
-  const result = checkCycles(isNeededFor);
-  console.log(result);
   for (let l = 0; l < linksWithOneNeed.length; ++l) {
     linksWithOneNeed[l].setLocked(true);
   }
