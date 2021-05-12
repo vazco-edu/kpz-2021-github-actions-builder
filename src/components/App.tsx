@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/prefer-regexp-exec */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -7,13 +8,22 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import jsyaml from 'js-yaml';
-import React, { useState } from 'react';
+import debounce from 'lodash.debounce';
+import React, { useState, useCallback } from 'react';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
 import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
 import dispError from '../additionalFunctions/displayError';
 import { displayLinks } from '../additionalFunctions/linksToActions';
 import { normalize } from '../additionalFunctions/normalization';
+import { throttleFunction, xD } from '../additionalFunctions/throttledOutput';
+import createDiagram, {
+  selfLink,
+  isNeededFor,
+  allNeeds,
+  checkCycles,
+  sameNeeds,
+} from '../diagrams/createDiagrams';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -23,6 +33,18 @@ export let normalizedObject: any;
 function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState(false);
+  /*
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedDisplay = useCallback(
+    debounce(nextValue => setYaml(nextValue), 1000),
+    [],
+  );
+  const handleChangeEvent = (event: { target: { value: any } }) => {
+    const nextValue = event.target.value;
+    setYaml(nextValue);
+    debouncedDisplay(nextValue);
+  };
+  */
   const man = yaml;
 
   function parseYamltoJSON(text: string) {
@@ -63,7 +85,6 @@ function App(): JSX.Element {
   } catch (e) {
     console.log(e.errors);
   }
-  console.log(normalizedObject);
   if (typeof workflow !== 'object') {
     //creating a seperate object
     workflow = undefined;
@@ -73,14 +94,17 @@ function App(): JSX.Element {
   if (normalizedObject && !dispError(storeValidationResult)) {
     displayLinks(normalizedObject);
   }
+  xD();
   return (
     <>
       <div className="text-editor">
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className="result">
-        {normalizedObject && !dispError(storeValidationResult) && click
-          ? debouncedDiagrams()
+        {normalizedObject !== undefined &&
+        !dispError(storeValidationResult) &&
+        click
+          ? createDiagram(workflow, normalizedObject)
           : ''}
         {/* {click && validate(workflow) ? (
           <pre>{JSON.stringify(workflow, null, 2)}</pre>
@@ -109,6 +133,26 @@ function App(): JSX.Element {
         <span>Actions used in workflow: </span>
         {normalizedObject && !dispError(storeValidationResult) && click
           ? displayLinks(normalizedObject)
+          : ''}
+      </div>
+      <div className="selfLink">
+        {selfLink(isNeededFor) && click
+          ? 'Self link detected (job is dependent on itself)! Please check provided YAML!'
+          : ''}
+      </div>
+      <div className="allNeeds">
+        {allNeeds(isNeededFor, normalizedObject) && click
+          ? 'Every job is dependent on another job, workflow will never complete! Please check provided YAML!'
+          : ''}
+      </div>
+      <div className="allNeeds">
+        {checkCycles(isNeededFor) && click
+          ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
+          : ''}
+      </div>
+      <div className="allNeeds">
+        {sameNeeds(isNeededFor) && click
+          ? 'One or more of provided jobs, has duplicate jobs needed! Please check provided YAML!'
           : ''}
       </div>
     </>

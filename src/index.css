@@ -107,3 +107,12 @@ li:hover{
 .css-11bc0l7 {
   display: none;
 }
+.selfLink {
+  color: white;
+  background-color: red;
+}
+
+.allNeeds {
+  color: white;
+  background-color: red;
+}

@@ -23,7 +23,6 @@ export function helperPortCreation(normal: any, node: DefaultNodeModel): any {
     port = node.addOutPort(`on: ${ttt} `);
     for (const properties in tt) {
       if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
-        // eslint-disable-next-line no-prototype-builtins
         if (preventDuplicate.length === 0) {
           node.addOutPort(`Branches: ${tt[properties]['branches']}`);
           preventDuplicate.push(tt[properties]['branches']);
