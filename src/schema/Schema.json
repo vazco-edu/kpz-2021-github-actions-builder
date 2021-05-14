@@ -1,62 +1,4 @@
 {
-<<<<<<< HEAD
-    "$id": "http://mynet.com/schemas/user.json#",
-    "title": "User",
-    "description": "User profile with connections",
-    "type": "object",
-    "properties": {
-      "id": {
-        "description": "positive integer or string of digits",
-        "type": "integer",
-        "minimum": 1
-      },
-      "name": { "type": "string", "maxLength": 128 }, 
-      "address": {
-        "type": "object",
-        "additionalProperties": { "type": "string" },
-        "maxProperties": 6
-      },
-      "personal": {
-        "type": "object",
-        "properties": {
-          "age": { "type": "integer", "minimum": 13 },
-          "gender": { "enum": ["female", "male"] }
-        },
-        "required": ["age"],
-        "additionalProperties": false
-      },
-      "connections": {
-        "type": "array",
-        "maxItems": 150,
-        "items": {
-          "title": "Connection",
-          "description": "User connection schema",
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer"
-            },
-            "name": { "type": "string", "maxLength": 128 },
-            "connType": { "type": "string" }
-          },
-          "oneOf": [
-            {
-              "properties": {
-                "connType": { "enum": ["relative"] },
-                "relation": { "type": "string" }
-              },
-              "dependencies": {
-                "relation": ["close"]
-              }
-            },
-            {
-              "properties": {
-                "connType": { "enum": ["friend", "colleague", "other"] },
-                "relation": { "not": {} },
-                "close": { "not": {} }
-              }
-            }
-=======
   "$schema": "http://json-schema.org/draft-07/schema",
   "$comment": "https://help.github.com/en/github/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions",
   "definitions": {
@@ -1384,33 +1326,10 @@
           },
           "required": [
             "runs-on"
-<<<<<<< HEAD
->>>>>>> 2324fa9 (working validator (?))
-=======
->>>>>>> 6d36f31 (errors inline, normalizing input)
           ],
-          "required": ["id", "name","connType"],
           "additionalProperties": false
         }
       },
-<<<<<<< HEAD
-<<<<<<< HEAD
-      "feeds": {
-        "title": "feeds",
-        "description": "Feeds user subscribes to",
-        "type": "object",
-        "patternProperties": {
-          "^[A-Za-z]+$": { "type": "boolean" }
-        },
-        "additionalProperties": false
-      },
-      "createdAt": { "type": "string"}
-    },
-    "additionalProperties": false
-  }
-=======
-=======
->>>>>>> 6d36f31 (errors inline, normalizing input)
       "minProperties": 1,
       "additionalProperties": false
     }
@@ -1421,4 +1340,3 @@
   ],
   "additionalProperties": false
 }
->>>>>>> 2324fa9 (working validator (?))

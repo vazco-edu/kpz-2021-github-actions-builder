@@ -27,45 +27,14 @@ body{
 }
 .result{
   display: inline-block;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  background: grey;
-<<<<<<< HEAD
-<<<<<<< HEAD
-  width: 45vw;
-  height: 70vh;
-=======
-=======
->>>>>>> 5d5a48d (added dynamic jobs and name interpretation in diagrams)
   width: 42vw;
   height: 85vh;
->>>>>>> 6ff24f6 (added inline errors)
-=======
-=======
->>>>>>> dfe409a (Added diagrams, dagrejs and first steps with lexer.)
-  width: 42vw;
-  height: 85vh;
->>>>>>> 6d36f31 (errors inline, normalizing input)
   vertical-align: top;
   padding: 0.5rem;
   overflow: hidden;
   overflow-y: auto;
   overflow-x: auto;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
   margin-left: 3vw;
->>>>>>> 6ff24f6 (added inline errors)
-=======
-  margin-left: 3vw;
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 6d36f31 (errors inline, normalizing input)
-=======
-  background-color: white;
->>>>>>> cebe2b6 (links opening in seperate window (safe))
-=======
->>>>>>> 0bfbf90 (Working links)
 }
 .PRESSME{
     background-color: rgba(50,53,59);
@@ -104,24 +73,12 @@ body{
   width: 20%;
   color: white;
 }
-<<<<<<< HEAD
 
 .text {
   color: white;
   text-decoration: none !important;
   font-family: monospace;
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-.links {
-  width: 100%;
-  height: 200px;
-  color: white;
-}
->>>>>>> 6630d54 (added something)
-=======
-=======
 .links{
   margin-top: 0px;
   float: right;
@@ -135,7 +92,6 @@ body{
   margin-bottom: 0%;
   text-align: center;
 }
->>>>>>> cebe2b6 (links opening in seperate window (safe))
 
 ul {
   list-style-type: circle;
@@ -144,49 +100,23 @@ ul {
   font-size: small;
   margin: 3px;
 }
-<<<<<<< HEAD
->>>>>>> f8728ba (jotde)
-=======
 li:hover{
   color:rgb(202, 75, 75);
   font-size: medium;
 }
-<<<<<<< HEAD
->>>>>>> cebe2b6 (links opening in seperate window (safe))
-=======
 .css-11bc0l7 {
   display: none;
 }
-<<<<<<< HEAD
->>>>>>> 5d30c48 (minor improvements)
-=======
 .selfLink {
   color: white;
   background-color: red;
 }
-<<<<<<< HEAD
->>>>>>> 8a90232 (added errors, when self link is detected)
-=======
 
-<<<<<<< HEAD
-.point {
-  display: none !important;
-}
-
-.css-u33b4a {
-  display: none !important;
-}
->>>>>>> 6f5b1db (changed orientation, added pathfinding)
-=======
 .allNeeds {
   color: white;
   background-color: red;
 }
-<<<<<<< HEAD
->>>>>>> e3754bf (checking for noNeeds)
-=======
 .cycles {
   color: white;
   background-color: #043d04;
 }
->>>>>>> cd73ec6 (coloring linkss dependent on a type of error)
