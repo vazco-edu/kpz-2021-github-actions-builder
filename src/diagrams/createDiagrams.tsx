@@ -203,14 +203,16 @@ export function checkCycles(obj: Record<string, string[]>) {
       const parents = graph2[path[0]] || [];
       for (const node of parents) {
         if (node === path[path.length - 1]) {
-          return true;
+          batch.push([node, ...path]);
+          console.log(batch);
+          return [true, batch];
         }
         batch.push([node, ...path]);
       }
     }
     queue = batch;
   }
-  return false;
+  return [false, []];
 }
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1061,6 +1063,7 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
       }
     }
   }
+  const linksBetweenJobs: Record<string, DefaultLinkModel[]> = {};
   for (let job = 0; job < portsIn.length; job++) {
     if (normalized['jobs'][`${key[job]}`].needs) {
       const needsOfJob = normalized['jobs'][`${key[job]}`].needs;
@@ -1069,9 +1072,25 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
         for (const element of needsOfJob) {
           for (let jobName = 0; jobName < key.length; ++jobName) {
             if (element === key[jobName]) {
-              linksWithMultipleNeeds.push(
+              console.log(portsOutWithNeeds[jobName]);
+              console.log(portsIn[job]);
+              const link1 = Object.values(
+                portsOutWithNeeds[jobName]['parent']['options'],
+              )[2];
+              const link2 = Object.values(portsIn[job]['parent']['options'])[2];
+              console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~');
+              console.log(link1);
+              console.log(link2);
+              console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~');
+              if (!linksBetweenJobs[`${link1}${link2}`]) {
+                linksBetweenJobs[`${link1}${link2}`] = [];
+              }
+              linksBetweenJobs[`${link1}${link2}`].push(
                 portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
               );
+              /*linksWithMultipleNeeds.push(
+                portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
+              );*/
               // ## Smart routing links (looks bad)
               // linksWithMultipleNeeds.push(
               //   portsOutWithNeeds[jobName].link(portsIn[job], pathfinding),
@@ -1088,9 +1107,25 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
       } else {
         for (let jobName = 0; jobName < key.length; ++jobName) {
           if (needsOfJob[0] === key[jobName]) {
-            linksWithOneNeed.push(
+            console.log(portsOutWithNeeds[jobName]['parent']['options']);
+            const link1 = Object.values(
+              portsOutWithNeeds[jobName]['parent']['options'],
+            )[2];
+            const link2 = Object.values(portsIn[job]['parent']['options'])[2];
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~');
+            console.log(link1);
+            console.log(link2);
+            console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~');
+            if (!linksBetweenJobs[`${link1}${link2}`]) {
+              linksBetweenJobs[`${link1}${link2}`] = [];
+            }
+
+            linksBetweenJobs[`${link1}${link2}`].push(
               portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
             );
+            /*linksWithOneNeed.push(
+              portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
+            );*/
           }
         }
       }
@@ -1136,20 +1171,36 @@ function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   }
   // const model = new DiagramModel();
   if (link !== undefined) {
-    model.addAll(
-      link,
-      ...linksWithOneNeed,
-      ...linksWithMultipleNeeds,
-      ...linksWithoutNeeds,
-    );
+    model.addAll(link);
     link.setLocked(true);
-  } else {
-    model.addAll(
-      ...linksWithOneNeed,
-      ...linksWithMultipleNeeds,
-      ...linksWithoutNeeds,
-    );
   }
+  model.addAll(...linksWithoutNeeds);
+  const cycledJobs = checkCycles(isNeededFor);
+  console.log(cycledJobs);
+  for (const key in linksBetweenJobs) {
+    if (linksBetweenJobs[key].length > 1) {
+      for (const link of linksBetweenJobs[key]) {
+        link.setColor('#FF0000');
+      }
+    }
+  }
+  if (cycledJobs[0] && Array.isArray(cycledJobs[1])) {
+    for (let i = 0; i < cycledJobs[1][0].length - 1; i++) {
+      const cycledKey = `${cycledJobs[1][0][i]}${cycledJobs[1][0][i + 1]}`;
+      console.log(linksBetweenJobs[cycledKey]);
+      linksBetweenJobs[cycledKey][0].setColor('#043d04');
+    }
+  }
+  for (const key of Object.values(linksBetweenJobs)) {
+    for (let i = 0; i < key.length; i++) {
+      model.addAll(key[i]);
+    }
+  }
+  /*model.addAll(
+    ...linksWithOneNeed,
+    ...linksWithMultipleNeeds,
+    ...linksWithoutNeeds,
+  );*/
 
   // user can not alter the output (can be added to the whole model or to specific jobs only)
   engine.setModel(model);

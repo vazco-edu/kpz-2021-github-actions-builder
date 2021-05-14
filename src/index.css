@@ -182,4 +182,11 @@ li:hover{
   color: white;
   background-color: red;
 }
+<<<<<<< HEAD
 >>>>>>> e3754bf (checking for noNeeds)
+=======
+.cycles {
+  color: white;
+  background-color: #043d04;
+}
+>>>>>>> cd73ec6 (coloring linkss dependent on a type of error)

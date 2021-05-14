@@ -835,8 +835,8 @@ function App(): JSX.Element {
           ? 'Every job is dependent on another job, workflow will never complete! Please check provided YAML!'
           : ''}
       </div>
-      <div className="allNeeds">
-        {checkCycles(isNeededFor) && click
+      <div className="cycles">
+        {checkCycles(isNeededFor)[0] && click
           ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
           : ''}
       </div>
