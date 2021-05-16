@@ -106,24 +106,6 @@ function App(): JSX.Element {
         click
           ? createDiagram(workflow, normalizedObject)
           : ''}
-        {/* {click && validate(workflow) ? (
-          <pre>{JSON.stringify(workflow, null, 2)}</pre>
-        ) : (
-          ''
-        )}
-        {click && validate(workflow) ? (
-          <pre>{util.inspect(workflow, { depth: null })}</pre>
-        ) : (
-          ''
-        )} */}
-        {/* {JSON.stringify(parseYamltoJSON(man), null, 2)} */}
-        {/* <ol>
-          {
-            res.map(data => (
-              <li key={i++}>{data}</li>
-            ))
-          }
-        </ol> */}
       </div>
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
