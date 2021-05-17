@@ -106,24 +106,6 @@ function App(): JSX.Element {
         click
           ? createDiagram(workflow, normalizedObject)
           : ''}
-        {/* {click && validate(workflow) ? (
-          <pre>{JSON.stringify(workflow, null, 2)}</pre>
-        ) : (
-          ''
-        )}
-        {click && validate(workflow) ? (
-          <pre>{util.inspect(workflow, { depth: null })}</pre>
-        ) : (
-          ''
-        )} */}
-        {/* {JSON.stringify(parseYamltoJSON(man), null, 2)} */}
-        {/* <ol>
-          {
-            res.map(data => (
-              <li key={i++}>{data}</li>
-            ))
-          }
-        </ol> */}
       </div>
       <button className="PRESSME" onClick={handleClickEvent}>
         KONWERTUJ
@@ -145,8 +127,8 @@ function App(): JSX.Element {
           ? 'Every job is dependent on another job, workflow will never complete! Please check provided YAML!'
           : ''}
       </div>
-      <div className="allNeeds">
-        {checkCycles(isNeededFor) && click
+      <div className="cycles">
+        {checkCycles(isNeededFor)[0] && click
           ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
           : ''}
       </div>
