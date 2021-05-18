@@ -7,7 +7,7 @@ export interface DemoWorkspaceWidgetProps {
   buttons?: React.DetailedHTMLProps<
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     HTMLButtonElement
-  >;
+  >[];
 }
 
 namespace S {

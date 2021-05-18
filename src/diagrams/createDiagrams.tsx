@@ -63,6 +63,15 @@ class DemoWidget extends React.Component<
     clearTimeout(this.timeoutId);
   }
 
+  changeOrientation = () => {
+    if (this.engine.options.graph.rankdir === 'TB') {
+      this.engine.options.graph.rankdir = 'LR';
+    } else if (this.engine.options.graph.rankdir === 'LR') {
+      this.engine.options.graph.rankdir = 'TB';
+    }
+    this.autoDistribute();
+  };
+
   reroute() {
     this.props.engine
       .getLinkFactories()
@@ -73,9 +82,14 @@ class DemoWidget extends React.Component<
   render() {
     return (
       <DemoWorkspaceWidget
-        buttons={
-          <DemoButton onClick={this.autoDistribute}>Re-distribute</DemoButton>
-        }
+        buttons={[
+          <DemoButton key={0} onClick={this.autoDistribute}>
+            Re-distribute
+          </DemoButton>,
+          <DemoButton key={1} onClick={this.changeOrientation}>
+            Change orientation
+          </DemoButton>,
+        ]}
       >
         <DemoCanvasWidget>
           <CanvasWidget engine={this.props.engine} />
@@ -141,6 +155,7 @@ export function sameNeeds(obj: Record<string, string[]>) {
 }
 
 const engine = createEngine();
+
 // Smart routing engine
 const pathfinding = engine
   .getLinkFactories()
@@ -148,7 +163,11 @@ const pathfinding = engine
 // ## displays jobs, that are dependent on a specific job ##
 export const isNeededFor: Record<string, string[]> = {};
 // eslint-disable-next-line complexity
-export default function createDiagrams(notNormalized: any, normalized: any) {
+export default function createDiagrams(
+  this: any,
+  notNormalized: any,
+  normalized: any,
+) {
   let node1: DefaultNodeModel;
   if (notNormalized) {
     if (notNormalized.name) {
@@ -333,7 +352,7 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
     }
   }
   // const model = new DiagramModel();
-  if (link !== undefined) {
+  if (link !== undefined && port2[0] !== undefined) {
     model.addAll(link);
     link.setLocked(true);
   }
@@ -360,5 +379,6 @@ export default function createDiagrams(notNormalized: any, normalized: any) {
   }
 
   engine.setModel(model);
+  // this.engine.options.graph.rankdir = 'TB';
   return <DemoWidget model={model} engine={engine} />;
 }
