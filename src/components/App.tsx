@@ -9,31 +9,31 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import jsyaml from 'js-yaml';
 import debounce from 'lodash.debounce';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Component } from 'react';
+import Popup from 'reactjs-popup';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
-import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
+// import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
 import dispError from '../additionalFunctions/displayError';
 import { displayLinks } from '../additionalFunctions/linksToActions';
 import { normalize } from '../additionalFunctions/normalization';
-import { throttleFunction, xD } from '../additionalFunctions/throttledOutput';
 import createDiagram, {
   selfLink,
-  isNeededFor,
   allNeeds,
   checkCycles,
   sameNeeds,
 } from '../diagrams/createDiagrams';
+import matrixHandler from '../diagrams/matrixHandling';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
+import 'reactjs-popup/dist/index.css';
 
-export let workflow: any;
-export let normalizedObject: any;
 function App(): JSX.Element {
+  let workflow: any;
+  let normalizedObject: any;
   const [yaml, setYaml] = useLocalStorage('yaml', '');
-  const [click, setClick] = useState(false);
-  /*
+  const [click, setClick] = useState({ editor: true, result: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedDisplay = useCallback(
     debounce(nextValue => setYaml(nextValue), 1000),
@@ -44,7 +44,6 @@ function App(): JSX.Element {
     setYaml(nextValue);
     debouncedDisplay(nextValue);
   };
-  */
   const man = yaml;
 
   function parseYamltoJSON(text: string) {
@@ -77,8 +76,23 @@ function App(): JSX.Element {
   }
   //global variable, for storing parsed yaml in JSON  format
   workflow = parseYamltoJSON(man);
-  function handleClickEvent() {
-    setClick(!click);
+  function showResult() {
+    setClick(() => ({ result: !click.result, editor: click.editor }));
+  }
+  function showEditor() {
+    console.log(click);
+    setClick(prevClick => {
+      console.log(prevClick);
+      return { ...prevClick, result: click.result, editor: !click.editor };
+    });
+    // console.log(click);
+    // setClick(prevClick => {
+    //   return { ...prevClick, result: !click.result };
+    // });
+    // console.log(click);
+    // setClick(prevClick => {
+    //   return { ...prevClick, result: !click.result };
+    // });
   }
   try {
     normalizedObject = normalize(workflow);
@@ -94,46 +108,67 @@ function App(): JSX.Element {
   if (normalizedObject && !dispError(storeValidationResult)) {
     displayLinks(normalizedObject);
   }
-  xD();
+  const isNeededFor: Record<string, string[]> = {};
+  console.log(click);
   return (
     <>
-      <div className="text-editor">
+      <div className={`text-editor ${click.editor ? '' : 'smaller'}`}>
         <Editor value={yaml} onChange={setYaml} press={click} />
+        <button className="PRESSME" onClick={showEditor}>
+          {click.editor ? 'Hide editor' : 'Show editor'}
+        </button>
+        <button className="PRESSME" onClick={showResult}>
+          {click.result ? 'Hide diagrams' : 'Show diagrams'}
+        </button>
+        {matrixHandler(normalizedObject) && click.result ? (
+          <Popup
+            trigger={<button className="PRESSME">Display Matrix</button>}
+            position="right center"
+          >
+            <div className="matrix">{matrixHandler(normalizedObject)}</div>
+          </Popup>
+        ) : (
+          ''
+        )}
       </div>
-      <div className="result">
+      <div className={`result ${click.result ? '' : 'smaller'}`}>
         {normalizedObject !== undefined &&
         !dispError(storeValidationResult) &&
-        click
-          ? createDiagram(workflow, normalizedObject)
+        click.result
+          ? createDiagram(workflow, normalizedObject, isNeededFor)
           : ''}
       </div>
-      <button className="PRESSME" onClick={handleClickEvent}>
-        KONWERTUJ
-      </button>
+
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
-      <div className="links">
-        <span>Actions used in workflow: </span>
-        {normalizedObject && !dispError(storeValidationResult) && click
-          ? displayLinks(normalizedObject)
-          : ''}
-      </div>
+      <span />
+      {normalizedObject && !dispError(storeValidationResult) && click.result ? (
+        <>
+          <div className="links">
+            <span>Actions used in workflow:</span>
+            {displayLinks(normalizedObject)}{' '}
+          </div>
+        </>
+      ) : (
+        <div className="none" />
+      )}
+
       <div className="selfLink">
-        {selfLink(isNeededFor) && click
+        {selfLink(isNeededFor) && click.result
           ? 'Self link detected (job is dependent on itself)! Please check provided YAML!'
           : ''}
       </div>
       <div className="allNeeds">
-        {allNeeds(isNeededFor, normalizedObject) && click
+        {allNeeds(isNeededFor, normalizedObject) && click.result
           ? 'Every job is dependent on another job, workflow will never complete! Please check provided YAML!'
           : ''}
       </div>
       <div className="cycles">
-        {checkCycles(isNeededFor)[0] && click
+        {checkCycles(isNeededFor)[0] && click.result
           ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
           : ''}
       </div>
       <div className="allNeeds">
-        {sameNeeds(isNeededFor) && click
+        {sameNeeds(isNeededFor) && click.result
           ? 'One or more of provided jobs, has duplicate jobs needed! Please check provided YAML!'
           : ''}
       </div>

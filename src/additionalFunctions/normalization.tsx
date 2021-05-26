@@ -69,7 +69,9 @@ function normalizeJob(job: Job) {
   // timeout ## if not set -> set to 60 minutes ##
   job['timeout-minutes'] = job['timeout-minutes'] || 60;
 }
-function normalizeMatrix(matrix: arrKeyable | StrategyMatrix): any[] | string {
+export function normalizeMatrix(
+  matrix: arrKeyable | StrategyMatrix,
+): any[] | string {
   if (typeof matrix === 'string') {
     return matrix;
   }
@@ -85,6 +87,7 @@ function normalizeMatrix(matrix: arrKeyable | StrategyMatrix): any[] | string {
   //        ### experimental ###
   //        ### crossing i.e. every os with every browser ###
   const inv = cartesianProduct(matrixValues);
+  console.log(inv);
   return inv;
 }
 function cartesianProduct(inputs: keyable) {
@@ -98,11 +101,14 @@ function cartesianProduct(inputs: keyable) {
       );
     } else {
       const newResult: arrKeyable[] = [];
-      for (const inputValue of inputs[inputKey]) {
-        for (const r of result) {
-          newResult.push({ ...r, [inputKey]: inputValue });
+      if (inputs[inputKey]) {
+        for (const inputValue of inputs[inputKey]) {
+          for (const r of result) {
+            newResult.push({ ...r, [inputKey]: inputValue });
+          }
         }
       }
+
       result = newResult;
     }
   }

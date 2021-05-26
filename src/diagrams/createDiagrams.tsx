@@ -39,7 +39,7 @@ class DemoWidget extends React.Component<
     super(props);
     this.engine = new DagreEngine({
       graph: {
-        rankdir: 'LR',
+        rankdir: `LR`,
         align: 'DR',
         ranker: 'tight-tree',
         marginx: 10,
@@ -62,7 +62,9 @@ class DemoWidget extends React.Component<
   componentWillUnmount() {
     clearTimeout(this.timeoutId);
   }
-
+  componentDidUpdate() {
+    this.autoDistribute();
+  }
   changeOrientation = () => {
     if (this.engine.options.graph.rankdir === 'TB') {
       this.engine.options.graph.rankdir = 'LR';
@@ -83,10 +85,18 @@ class DemoWidget extends React.Component<
     return (
       <DemoWorkspaceWidget
         buttons={[
-          <DemoButton key={0} onClick={this.autoDistribute}>
+          <DemoButton
+            key={0}
+            onClick={this.autoDistribute}
+            className="resultButton1"
+          >
             Re-distribute
           </DemoButton>,
-          <DemoButton key={1} onClick={this.changeOrientation}>
+          <DemoButton
+            key={1}
+            onClick={this.changeOrientation}
+            className="resultButton2"
+          >
             Change orientation
           </DemoButton>,
         ]}
@@ -108,7 +118,7 @@ export function selfLink(obj: Record<string, string[]>): boolean {
 }
 
 export function allNeeds(obj: Record<string, string[]>, norm: any): boolean {
-  if (norm !== undefined) {
+  if (norm !== undefined && Object.keys(obj).length !== 0) {
     const jobsInNormalized = Object.keys(norm.jobs);
     for (let job = 0; job < jobsInNormalized.length; job++) {
       if (norm['jobs'][jobsInNormalized[job]].needs === undefined) {
@@ -130,7 +140,7 @@ export function checkCycles(obj: Record<string, string[]>) {
       for (const node of parents) {
         if (node === path[path.length - 1]) {
           batch.push([node, ...path]);
-          return [true, batch];
+          return [true, batch[batch.length - 1]];
         }
         batch.push([node, ...path]);
       }
@@ -154,20 +164,20 @@ export function sameNeeds(obj: Record<string, string[]>) {
   return false;
 }
 
-const engine = createEngine();
-
 // Smart routing engine
-const pathfinding = engine
-  .getLinkFactories()
-  .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME);
+// const pathfinding = engine
+//   .getLinkFactories()
+//   .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME);
 // ## displays jobs, that are dependent on a specific job ##
-export const isNeededFor: Record<string, string[]> = {};
+
 // eslint-disable-next-line complexity
 export default function createDiagrams(
-  this: any,
   notNormalized: any,
   normalized: any,
+  isNeededFor: Record<string, string[]>,
 ) {
+  const engine = createEngine();
+  console.log(normalized);
   let node1: DefaultNodeModel;
   if (notNormalized) {
     if (notNormalized.name) {
@@ -366,9 +376,11 @@ export default function createDiagrams(
     }
   }
   if (cycledJobs[0] && Array.isArray(cycledJobs[1])) {
-    for (let i = 0; i < cycledJobs[1][0].length - 1; i++) {
-      const cycledKey = `${cycledJobs[1][0][i + 1]}${cycledJobs[1][0][i]}`;
-      linksBetweenJobs[cycledKey][0].setColor('#c46415');
+    for (let i = 0; i < cycledJobs[1].length - 1; i++) {
+      const cycledKey = `${cycledJobs[1][i + 1]}${cycledJobs[1][i]}`;
+      if (linksBetweenJobs[cycledKey]) {
+        linksBetweenJobs[cycledKey][0].setColor('#c46415');
+      }
     }
   }
   for (const key of Object.values(linksBetweenJobs)) {

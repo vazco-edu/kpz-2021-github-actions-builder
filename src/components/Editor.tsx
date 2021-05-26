@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import React from 'react';
 import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
+import 'codemirror/theme/monokai.css';
 import 'codemirror/mode/yaml/yaml';
 import { Controlled } from 'react-codemirror2';
 import 'codemirror/addon/lint/yaml-lint';
@@ -39,7 +39,7 @@ export default function Editor(props: any): JSX.Element {
               'CodeMirror-foldgutter',
               'CodeMirror-lint-markers',
             ],
-            theme: 'material',
+            theme: 'monokai',
             lineNumbers: true,
             extraKeys: { 'Ctrl-Space': 'autocomplete' },
           }}
