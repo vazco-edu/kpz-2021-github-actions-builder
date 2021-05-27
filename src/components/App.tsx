@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import jsyaml from 'js-yaml';
 import debounce from 'lodash.debounce';
-import React, { useState, useCallback, Component } from 'react';
+import React, { useState, useCallback, Component, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
@@ -77,13 +77,12 @@ function App(): JSX.Element {
   //global variable, for storing parsed yaml in JSON  format
   workflow = parseYamltoJSON(man);
   function showResult() {
-    setClick(() => ({ result: !click.result, editor: click.editor }));
+    setClick(click => ({ result: !click.result, editor: click.editor }));
   }
   function showEditor() {
     console.log(click);
-    setClick(prevClick => {
-      console.log(prevClick);
-      return { ...prevClick, result: click.result, editor: !click.editor };
+    setClick(click => {
+      return { result: click.result, editor: !click.editor };
     });
     // console.log(click);
     // setClick(prevClick => {
@@ -110,6 +109,24 @@ function App(): JSX.Element {
   }
   const isNeededFor: Record<string, string[]> = {};
   console.log(click);
+
+  const [renderedDiagram, setrenderedDiagram] = useState<React.ReactNode>(null);
+
+  useEffect(() => {
+    if (normalizedObject === undefined || dispError(storeValidationResult)) {
+      setrenderedDiagram(null);
+      return;
+    }
+    const timerId = setTimeout(() => {
+      setrenderedDiagram(
+        createDiagram(workflow, normalizedObject, isNeededFor),
+      );
+    }, 1000);
+    return () => {
+      clearTimeout(timerId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [normalizedObject, workflow]);
   return (
     <>
       <div className={`text-editor ${click.editor ? '' : 'smaller'}`}>
@@ -132,11 +149,7 @@ function App(): JSX.Element {
         )}
       </div>
       <div className={`result ${click.result ? '' : 'smaller'}`}>
-        {normalizedObject !== undefined &&
-        !dispError(storeValidationResult) &&
-        click.result
-          ? createDiagram(workflow, normalizedObject, isNeededFor)
-          : ''}
+        {renderedDiagram}
       </div>
 
       <div className="checkValid"> {dispError(storeValidationResult)}</div>

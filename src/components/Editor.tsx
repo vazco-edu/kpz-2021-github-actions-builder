@@ -15,8 +15,6 @@ export default function Editor(props: any): JSX.Element {
   const { value, onChange } = props;
 
   function handleChange(editor: unknown, data: unknown, value: string) {
-    console.log(editor);
-    console.log(data);
     onChange(value);
   }
   return (
