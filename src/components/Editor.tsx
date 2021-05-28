@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import jsyaml from 'js-yaml';
 import React from 'react';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
@@ -10,11 +11,20 @@ import 'codemirror/addon/hint/anyword-hint';
 import 'codemirror/addon/hint/show-hint.css';
 import 'codemirror/addon/hint/show-hint';
 import 'codemirror/addon/display/placeholder';
+import 'codemirror/addon/fold/foldgutter.css';
+import 'codemirror/addon/lint/lint';
+import 'codemirror/addon/fold/foldcode.js';
+import 'codemirror/addon/fold/foldgutter.js';
+import 'codemirror/addon/fold/indent-fold.js';
+
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 export default function Editor(props: any): JSX.Element {
   const { value, onChange } = props;
+  window.jsyaml = jsyaml;
 
   function handleChange(editor: unknown, data: unknown, value: string) {
+    console.log(editor);
+    console.log(data);
     onChange(value);
   }
   return (
@@ -32,6 +42,8 @@ export default function Editor(props: any): JSX.Element {
             indentWithTabs: false,
             smartIndent: true,
             tabSize: 2,
+            lintGutter: true,
+            foldGutter: true,
             gutters: [
               'CodeMirror-linenumbers',
               'CodeMirror-foldgutter',

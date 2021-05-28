@@ -35,7 +35,7 @@ function App(): JSX.Element {
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState({ editor: true, result: true });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedDisplay = useCallback(
+  /*const debouncedDisplay = useCallback(
     debounce(nextValue => setYaml(nextValue), 1000),
     [],
   );
@@ -43,7 +43,7 @@ function App(): JSX.Element {
     const nextValue = event.target.value;
     setYaml(nextValue);
     debouncedDisplay(nextValue);
-  };
+  };*/
   const man = yaml;
 
   function parseYamltoJSON(text: string) {
@@ -104,9 +104,6 @@ function App(): JSX.Element {
   }
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
-  if (normalizedObject && !dispError(storeValidationResult)) {
-    displayLinks(normalizedObject);
-  }
   const isNeededFor: Record<string, string[]> = {};
   console.log(click);
 
@@ -122,15 +119,15 @@ function App(): JSX.Element {
         createDiagram(workflow, normalizedObject, isNeededFor),
       );
     }, 1000);
+    console.log('ROBIE');
     return () => {
       clearTimeout(timerId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [normalizedObject, workflow]);
+  }, [yaml]);
   return (
     <>
       <div className={`text-editor ${click.editor ? '' : 'smaller'}`}>
-        <Editor value={yaml} onChange={setYaml} press={click} />
         <button className="PRESSME" onClick={showEditor}>
           {click.editor ? 'Hide editor' : 'Show editor'}
         </button>
@@ -140,13 +137,14 @@ function App(): JSX.Element {
         {matrixHandler(normalizedObject) && click.result ? (
           <Popup
             trigger={<button className="PRESSME">Display Matrix</button>}
-            position="right center"
+            position="bottom center"
           >
             <div className="matrix">{matrixHandler(normalizedObject)}</div>
           </Popup>
         ) : (
           ''
         )}
+        <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
       <div className={`result ${click.result ? '' : 'smaller'}`}>
         {renderedDiagram}

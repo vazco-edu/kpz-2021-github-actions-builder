@@ -53,18 +53,21 @@ class DemoWidget extends React.Component<
     this.reroute();
     this.props.engine.repaintCanvas();
     this.props.engine.zoomToFit();
+    this.forceUpdate();
   };
 
   componentDidMount(): void {
+    console.log('did mount');
     this.autoDistribute();
   }
 
   componentWillUnmount() {
     clearTimeout(this.timeoutId);
   }
-  componentDidUpdate() {
+  /*componentDidUpdate() {
+    console.log('update');
     this.autoDistribute();
-  }
+  }*/
   changeOrientation = () => {
     if (this.engine.options.graph.rankdir === 'TB') {
       this.engine.options.graph.rankdir = 'LR';
@@ -75,6 +78,7 @@ class DemoWidget extends React.Component<
   };
 
   reroute() {
+    console.log('reroute');
     this.props.engine
       .getLinkFactories()
       .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME)
@@ -367,6 +371,9 @@ export default function createDiagrams(
     link.setLocked(true);
   }
   model.addAll(...linksWithoutNeeds);
+  for (const link of linksWithoutNeeds) {
+    link.setLocked(true);
+  }
   const cycledJobs = checkCycles(isNeededFor);
   for (const key in linksBetweenJobs) {
     if (linksBetweenJobs[key].length > 1) {

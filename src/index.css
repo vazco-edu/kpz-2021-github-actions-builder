@@ -2,10 +2,9 @@ body{
   margin: 0;
   background: url("./images/cool-background.png") no-repeat center center fixed;
   background-size: cover;
-  overflow: hidden;
+  overflow: auto;
 }
 .text-editor{
-  background-color: rgba(45,42,46);
   height: 65vh;
   width: 35vw;
   display: inline-block;
@@ -53,6 +52,7 @@ body{
   border-radius: 3px;
   display: inline-block;
   margin-top: 1.77vh;
+  margin-bottom: 1vh;
 }
 .PRESSME:hover {
   background: rgb(0, 192, 255);
