@@ -93,6 +93,36 @@ function App(): JSX.Element {
     //   return { ...prevClick, result: !click.result };
     // });
   }
+  function handleClick() {
+    if (click.result && click.editor) {
+      setClick(click => {
+        return { result: !click.result, editor: click.editor };
+      });
+    } else if (!click.result && click.editor) {
+      setClick(click => {
+        return { result: !click.result, editor: !click.editor };
+      });
+    } else if (click.result && !click.editor) {
+      setClick(click => {
+        return { result: !click.result, editor: !click.editor };
+      });
+    }
+  }
+  function showBoth() {
+    if (!click.editor && !click.result) {
+      setClick(click => {
+        return { result: !click.result, editor: !click.editor };
+      });
+    } else if (!click.editor && click.result) {
+      setClick(click => {
+        return { result: click.result, editor: !click.editor };
+      });
+    } else if (click.editor && !click.result) {
+      setClick(click => {
+        return { result: !click.result, editor: click.editor };
+      });
+    }
+  }
   try {
     normalizedObject = normalize(workflow);
   } catch (e) {
@@ -118,7 +148,7 @@ function App(): JSX.Element {
       setrenderedDiagram(
         createDiagram(workflow, normalizedObject, isNeededFor),
       );
-    }, 1000);
+    }, 500);
     console.log('ROBIE');
     return () => {
       clearTimeout(timerId);
@@ -127,12 +157,12 @@ function App(): JSX.Element {
   }, [yaml]);
   return (
     <>
-      <div className={`text-editor ${click.editor ? '' : 'smaller'}`}>
-        <button className="PRESSME" onClick={showEditor}>
-          {click.editor ? 'Hide editor' : 'Show editor'}
+      <div className="buttonsWrapper">
+        <button className="PRESSME" onClick={handleClick}>
+          {click.editor ? 'Hide Diagrams' : 'Show Diagrams'}
         </button>
-        <button className="PRESSME" onClick={showResult}>
-          {click.result ? 'Hide diagrams' : 'Show diagrams'}
+        <button className="PRESSME" onClick={showBoth}>
+          show editor and diagrams
         </button>
         {matrixHandler(normalizedObject) && click.result ? (
           <Popup
@@ -144,9 +174,27 @@ function App(): JSX.Element {
         ) : (
           ''
         )}
+      </div>
+      <div
+        className={`text-editor ${
+          click.editor && click.result
+            ? 'normal'
+            : click.editor && !click.result
+            ? 'bigger'
+            : 'smaller'
+        } `}
+      >
         <Editor value={yaml} onChange={setYaml} press={click} />
       </div>
-      <div className={`result ${click.result ? '' : 'smaller'}`}>
+      <div
+        className={`result ${
+          click.editor && click.result
+            ? 'normal'
+            : !click.editor && click.result
+            ? 'bigger'
+            : 'smaller'
+        }`}
+      >
         {renderedDiagram}
       </div>
 
