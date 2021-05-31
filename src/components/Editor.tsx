@@ -16,6 +16,9 @@ import 'codemirror/addon/lint/lint';
 import 'codemirror/addon/fold/foldcode.js';
 import 'codemirror/addon/fold/foldgutter.js';
 import 'codemirror/addon/fold/indent-fold.js';
+import 'codemirror/addon/scroll/annotatescrollbar.js';
+import 'codemirror/addon/scroll/simplescrollbars.css';
+import 'codemirror/addon/scroll/simplescrollbars.js';
 
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 export default function Editor(props: any): JSX.Element {
@@ -52,6 +55,7 @@ export default function Editor(props: any): JSX.Element {
             theme: 'monokai',
             lineNumbers: true,
             extraKeys: { 'Ctrl-Space': 'autocomplete' },
+            scrollbarStyle: 'overlay',
           }}
         />
       </div>

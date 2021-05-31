@@ -137,67 +137,74 @@ function App(): JSX.Element {
   const isNeededFor: Record<string, string[]> = {};
   console.log(click);
 
-  const [renderedDiagram, setrenderedDiagram] = useState<React.ReactNode>(null);
+  // const [renderedDiagram, setrenderedDiagram] = useState<React.ReactNode>(null);
 
-  useEffect(() => {
-    if (normalizedObject === undefined || dispError(storeValidationResult)) {
-      setrenderedDiagram(null);
-      return;
-    }
-    const timerId = setTimeout(() => {
-      setrenderedDiagram(
-        createDiagram(workflow, normalizedObject, isNeededFor),
-      );
-    }, 500);
-    console.log('ROBIE');
-    return () => {
-      clearTimeout(timerId);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [yaml]);
+  // useEffect(() => {
+  //   if (normalizedObject === undefined || dispError(storeValidationResult)) {
+  //     setrenderedDiagram(null);
+  //     return;
+  //   }
+  //   const timerId = setTimeout(() => {
+  //     setrenderedDiagram(
+  //       createDiagram(workflow, normalizedObject, isNeededFor),
+  //     );
+  //   }, 500);
+  //   console.log('ROBIE');
+  //   return () => {
+  //     clearTimeout(timerId);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [yaml]);
+
+  console.log(checkCycles(isNeededFor)[0]);
   return (
     <>
-      <div className="buttonsWrapper">
-        <button className="PRESSME" onClick={handleClick}>
-          {click.editor ? 'Hide Diagrams' : 'Show Diagrams'}
-        </button>
-        <button className="PRESSME" onClick={showBoth}>
-          show editor and diagrams
-        </button>
-        {matrixHandler(normalizedObject) && click.result ? (
-          <Popup
-            trigger={<button className="PRESSME">Display Matrix</button>}
-            position="bottom center"
-          >
-            <div className="matrix">{matrixHandler(normalizedObject)}</div>
-          </Popup>
-        ) : (
-          ''
-        )}
+      <div className="grid">
+        <div className="buttonsWrapper">
+          <button className="PRESSME" onClick={handleClick}>
+            {click.editor ? 'Hide Diagrams' : 'Show Diagrams'}
+          </button>
+          <button className="PRESSME" onClick={showBoth}>
+            Show editor and diagrams
+          </button>
+          {matrixHandler(normalizedObject) && click.result ? (
+            <Popup
+              trigger={<button className="PRESSME">Display Matrix</button>}
+              position="bottom center"
+            >
+              <div className="matrix">{matrixHandler(normalizedObject)}</div>
+            </Popup>
+          ) : (
+            ''
+          )}
+        </div>
+        <div
+          className={`result ${
+            click.editor && click.result
+              ? 'normal'
+              : !click.editor && click.result
+              ? 'bigger'
+              : 'smaller'
+          }`}
+        >
+          {normalizedObject !== undefined &&
+          !dispError(storeValidationResult) &&
+          click.result
+            ? createDiagram(workflow, normalizedObject, isNeededFor)
+            : ''}
+        </div>
+        <div
+          className={`text-editor ${
+            click.editor && click.result
+              ? 'normal'
+              : click.editor && !click.result
+              ? 'bigger'
+              : 'smaller'
+          } `}
+        >
+          <Editor value={yaml} onChange={setYaml} press={click} />
+        </div>
       </div>
-      <div
-        className={`text-editor ${
-          click.editor && click.result
-            ? 'normal'
-            : click.editor && !click.result
-            ? 'bigger'
-            : 'smaller'
-        } `}
-      >
-        <Editor value={yaml} onChange={setYaml} press={click} />
-      </div>
-      <div
-        className={`result ${
-          click.editor && click.result
-            ? 'normal'
-            : !click.editor && click.result
-            ? 'bigger'
-            : 'smaller'
-        }`}
-      >
-        {renderedDiagram}
-      </div>
-
       <div className="checkValid"> {dispError(storeValidationResult)}</div>
       <span />
       {normalizedObject && !dispError(storeValidationResult) && click.result ? (
@@ -222,7 +229,7 @@ function App(): JSX.Element {
           : ''}
       </div>
       <div className="cycles">
-        {checkCycles(isNeededFor)[0] && click.result
+        {checkCycles(isNeededFor)[0]
           ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
           : ''}
       </div>

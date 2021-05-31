@@ -142,6 +142,8 @@ export function checkCycles(obj: Record<string, string[]>) {
     for (const path of queue) {
       const parents = graph2[path[0]] || [];
       for (const node of parents) {
+        console.log(node);
+        console.log(path[path.length - 1]);
         if (node === path[path.length - 1]) {
           batch.push([node, ...path]);
           return [true, batch[batch.length - 1]];
@@ -180,6 +182,7 @@ export default function createDiagrams(
   normalized: any,
   isNeededFor: Record<string, string[]>,
 ) {
+  console.log(checkCycles(isNeededFor));
   const engine = createEngine();
   console.log(normalized);
   let node1: DefaultNodeModel;
@@ -187,18 +190,18 @@ export default function createDiagrams(
     if (notNormalized.name) {
       node1 = new DefaultNodeModel({
         name: `${notNormalized.name}`,
-        color: 'rgb(128,0,128)',
+        color: 'rgb(128, 149, 255)',
       });
     } else {
       node1 = new DefaultNodeModel({
         name: ``,
-        color: 'rgb(128,0,128)',
+        color: 'rgb(128, 149, 255)',
       });
     }
   } else {
     node1 = new DefaultNodeModel({
       name: ``,
-      color: 'rgb(128,0,128)',
+      color: 'rgb(128, 149, 255)',
     });
   }
 
@@ -211,7 +214,7 @@ export default function createDiagrams(
   }
   const node2 = new DefaultNodeModel({
     name: 'jobs',
-    color: 'rgb(0,200,100)',
+    color: 'rgb(128, 255, 234)',
   });
   //variable storing number or jobs withour parameter "needs" - default value is 1, as the first job will never have parameter needs
   let numWithoutNeeds = 1;
@@ -253,7 +256,7 @@ export default function createDiagrams(
     jobs.push(
       new DefaultNodeModel({
         name: `${jobName}`,
-        color: 'rgb(204,204,9)',
+        color: 'rgb(170, 128, 255)',
       }),
     );
     isNeededFor[`${jobName}`] = [];
