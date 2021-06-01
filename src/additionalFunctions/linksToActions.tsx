@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable no-console */
-/* eslint-disable guard-for-in */
 import React from 'react';
 
 import { Workflow } from '../schema/Schema';
 
 export function displayLinks(normalized: Workflow) {
   const tableOfUses: string[] = [];
+  // eslint-disable-next-line guard-for-in
   for (const properties in normalized.jobs) {
-    let helper: Record<string, any> = {};
+    let helper: any = {};
     helper = normalized.jobs[properties];
     for (let item = 0; item < helper.steps.length; ++item) {
       if ('uses' in helper.steps[item]) {

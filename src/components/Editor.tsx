@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import jsyaml from 'js-yaml';
 import React from 'react';
 import 'codemirror/lib/codemirror.css';
@@ -26,8 +25,6 @@ export default function Editor(props: any): JSX.Element {
   window.jsyaml = jsyaml;
 
   function handleChange(editor: unknown, data: unknown, value: string) {
-    console.log(editor);
-    console.log(data);
     onChange(value);
   }
   return (
@@ -45,6 +42,7 @@ export default function Editor(props: any): JSX.Element {
             indentWithTabs: false,
             smartIndent: true,
             tabSize: 2,
+            scrollbarStyle: 'overlay',
             lintGutter: true,
             foldGutter: true,
             gutters: [
@@ -55,7 +53,6 @@ export default function Editor(props: any): JSX.Element {
             theme: 'monokai',
             lineNumbers: true,
             extraKeys: { 'Ctrl-Space': 'autocomplete' },
-            scrollbarStyle: 'overlay',
           }}
         />
       </div>

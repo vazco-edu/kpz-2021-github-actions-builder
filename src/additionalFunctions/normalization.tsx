@@ -1,9 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import {
   Workflow,
@@ -13,7 +8,7 @@ import {
   Event,
 } from '../schema/Schema';
 
-interface keyable {
+export interface keyable {
   [key: string]: any;
 }
 
@@ -39,6 +34,7 @@ export function normalize(workflow: Workflow): keyable {
     };
     objResult.on = workflow.on;
   } else if (Array.isArray(workflow.on)) {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     objResult.on = workflow.on.reduce<Partial<Record<Event, {}>>>((o, z) => {
       o[z] = {};
       return o;
@@ -87,7 +83,7 @@ export function normalizeMatrix(
   //        ### experimental ###
   //        ### crossing i.e. every os with every browser ###
   const inv = cartesianProduct(matrixValues);
-  console.log(inv);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return inv;
 }
 function cartesianProduct(inputs: keyable) {
@@ -95,6 +91,7 @@ function cartesianProduct(inputs: keyable) {
   for (const inputKey of Object.keys(inputs)) {
     if (result.length === 0) {
       result.push(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         ...inputs[inputKey].map((x: keyable) => ({
           [inputKey]: x,
         })),
@@ -104,6 +101,7 @@ function cartesianProduct(inputs: keyable) {
       if (inputs[inputKey]) {
         for (const inputValue of inputs[inputKey]) {
           for (const r of result) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             newResult.push({ ...r, [inputKey]: inputValue });
           }
         }
@@ -112,5 +110,6 @@ function cartesianProduct(inputs: keyable) {
       result = newResult;
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return result;
 }

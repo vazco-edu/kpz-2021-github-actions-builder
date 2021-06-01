@@ -1,8 +1,4 @@
-/* eslint-disable no-prototype-builtins */
 /* eslint-disable guard-for-in */
-/* eslint-disable @typescript-eslint/prefer-regexp-exec */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
@@ -142,8 +138,6 @@ export function checkCycles(obj: Record<string, string[]>) {
     for (const path of queue) {
       const parents = graph2[path[0]] || [];
       for (const node of parents) {
-        console.log(node);
-        console.log(path[path.length - 1]);
         if (node === path[path.length - 1]) {
           batch.push([node, ...path]);
           return [true, batch[batch.length - 1]];
@@ -157,11 +151,17 @@ export function checkCycles(obj: Record<string, string[]>) {
 }
 export function sameNeeds(obj: Record<string, string[]>) {
   const helperArray: string[][] = Object.values(obj);
-  for (let i = 0; i < helperArray.length; i++) {
-    for (let j = 0; j < helperArray[i].length; j++) {
-      const result: number = helperArray[i].filter(
-        (v: any) => v === Object.keys(obj)[j],
+  for (let valueArr = 0; valueArr < helperArray.length; valueArr++) {
+    for (
+      let elementOfValueArr = 0;
+      elementOfValueArr < helperArray[valueArr].length;
+      elementOfValueArr++
+    ) {
+      console.log('jestem');
+      const result: number = helperArray[valueArr].filter(
+        (v: any) => v === Object.keys(obj)[elementOfValueArr],
       ).length;
+      console.log(result);
       if (result > 1) {
         return true;
       }
@@ -246,8 +246,12 @@ export default function createDiagrams(
   const portsOutWithNeeds: DefaultPortModel[] = [];
   const portsIn: DefaultPortModel[] = [];
   // displaying number of ports
-  for (let j = 1; j < numWithoutNeeds + 1; ++j) {
-    portsOut.push(node2.addOutPort(j.toString()));
+  for (
+    let withoutNeeds = 1;
+    withoutNeeds < numWithoutNeeds + 1;
+    ++withoutNeeds
+  ) {
+    portsOut.push(node2.addOutPort(withoutNeeds.toString()));
   }
   const jobs: DefaultNodeModel[] = [];
 
@@ -272,10 +276,10 @@ export default function createDiagrams(
       jobs[nodeNumber].addInPort(`if: ${keysJobs.if}`);
     }
     //preventing additional output, that we dont want
-    let x = 0;
+    let preventOutput = 0;
     for (let step = 0; step < keysJobs.steps.length; ++step) {
       for (const prop in keysJobs.steps[step]) {
-        if (x === 0) {
+        if (preventOutput === 0) {
           jobs[nodeNumber].addInPort('steps:');
           portsIn.push(
             jobs[nodeNumber].addInPort(
@@ -284,7 +288,7 @@ export default function createDiagrams(
           );
           // out port, just in case said job is needed by another job
           portsOutWithNeeds.push(jobs[nodeNumber].addOutPort(''));
-          x++;
+          preventOutput++;
           continue;
         }
         jobs[nodeNumber].addInPort(`${prop}: ${keysJobs.steps[step][prop]}`);

@@ -1,12 +1,7 @@
 /* eslint-disable guard-for-in */
-/* eslint-disable @typescript-eslint/prefer-regexp-exec */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import {
   DefaultNodeModel,
   DefaultPortModel,
@@ -14,6 +9,7 @@ import {
 
 export function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   const ttt = Object.keys(normal['on']);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const tt = normal['on'];
   const preventDuplicate: string[] = [];
   let port: DefaultPortModel;

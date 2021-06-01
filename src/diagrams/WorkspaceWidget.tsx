@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-namespace */
 import styled from '@emotion/styled';
 import * as React from 'react';
@@ -42,7 +41,6 @@ export const DemoButton = styled.button`
   cursor: pointer;
   margin: 2px;
   border-radius: 3px;
-
   &:hover {
     background: rgb(0, 192, 255);
   }

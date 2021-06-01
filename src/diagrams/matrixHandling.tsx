@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import createEngine, {
   DiagramModel,
@@ -19,8 +16,10 @@ export default function matrixHandler(normalized: Record<string, any>) {
     const key: string[] = Object.keys(normalized.jobs);
     const matrixes: DefaultNodeModel[] = [];
     for (const jobName of key) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (normalized.jobs[`${jobName}`]?.strategy?.matrix) {
         const combinations = normalizeMatrix(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           normalized.jobs[`${jobName}`]?.strategy?.matrix,
         );
         matrixes.push(
@@ -33,8 +32,10 @@ export default function matrixHandler(normalized: Record<string, any>) {
           const entry = Object.entries(combination);
           const por: string[] = [];
           for (let i = 0; i < entry.length; i++) {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             por.push(` ${entry[i][0]} - ${entry[i][1]}`);
           }
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           matrixes[matrixes.length - 1].addInPort(`[ ${por} ]`);
         }
       }

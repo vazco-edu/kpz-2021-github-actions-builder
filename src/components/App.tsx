@@ -1,9 +1,4 @@
 /* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/prefer-regexp-exec */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
@@ -16,7 +11,7 @@ import { ajv } from '../additionalFunctions/createAjvObject';
 // import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
 import dispError from '../additionalFunctions/displayError';
 import { displayLinks } from '../additionalFunctions/linksToActions';
-import { normalize } from '../additionalFunctions/normalization';
+import { normalize, keyable } from '../additionalFunctions/normalization';
 import createDiagram, {
   selfLink,
   allNeeds,
@@ -52,6 +47,7 @@ function App(): JSX.Element {
     try {
       doc = jsyaml.load(text);
     } catch (e) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const error = `${e.reason} on line ${e.mark.line}`;
       return error;
     }
@@ -69,12 +65,12 @@ function App(): JSX.Element {
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
-      const s: any = validate.errors;
-      return s;
+      const errors: any = validate.errors;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return errors;
     }
     return valid;
   }
-  //global variable, for storing parsed yaml in JSON  format
   workflow = parseYamltoJSON(man);
   function showResult() {
     setClick(click => ({ result: !click.result, editor: click.editor }));
@@ -126,6 +122,7 @@ function App(): JSX.Element {
   try {
     normalizedObject = normalize(workflow);
   } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     console.log(e.errors);
   }
   if (typeof workflow !== 'object') {
@@ -155,14 +152,19 @@ function App(): JSX.Element {
   //   };
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [yaml]);
-
+  console.log(isNeededFor);
   console.log(checkCycles(isNeededFor)[0]);
+  console.log(sameNeeds(isNeededFor));
   return (
     <>
       <div className="grid">
         <div className="buttonsWrapper">
           <button className="PRESSME" onClick={handleClick}>
-            {click.editor ? 'Hide Diagrams' : 'Show Diagrams'}
+            {click.editor && click.result
+              ? 'Expand Editor'
+              : click.editor && !click.result
+              ? 'Show Diagrams'
+              : 'Show Editor'}
           </button>
           <button className="PRESSME" onClick={showBoth}>
             Show editor and diagrams
@@ -234,8 +236,8 @@ function App(): JSX.Element {
           : ''}
       </div>
       <div className="allNeeds">
-        {sameNeeds(isNeededFor) && click.result
-          ? 'One or more of provided jobs, has duplicate jobs needed! Please check provided YAML!'
+        {sameNeeds(isNeededFor)
+          ? 'One or more of provided jobs, has duplicate of the same job needed! Please check provided YAML!'
           : ''}
       </div>
     </>
