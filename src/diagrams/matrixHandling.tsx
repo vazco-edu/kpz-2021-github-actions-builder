@@ -2,10 +2,7 @@ import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import createEngine, {
   DiagramModel,
   DefaultNodeModel,
-  DefaultLinkModel,
 } from '@projectstorm/react-diagrams';
-import { normalizeId } from 'ajv/dist/compile/resolve';
-import { ENGINE_METHOD_ALL } from 'node:constants';
 import React from 'react';
 
 import { normalizeMatrix } from '../additionalFunctions/normalization';

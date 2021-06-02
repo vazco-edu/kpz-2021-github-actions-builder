@@ -12,12 +12,8 @@ import createEngine, {
   DiagramEngine,
   DagreEngine,
   DefaultPortModel,
-  NodeModel,
   PathFindingLinkFactory,
-  DiagramModelGenerics,
 } from '@projectstorm/react-diagrams';
-import { keyword$DataError } from 'ajv/dist/compile/errors';
-import { truncate } from 'lodash';
 import React from 'react';
 
 import { helperPortCreation } from '../additionalFunctions/diagramFunctions/helperPortCreation';
@@ -53,7 +49,6 @@ class DemoWidget extends React.Component<
   };
 
   componentDidMount(): void {
-    console.log('did mount');
     this.autoDistribute();
   }
 
@@ -74,7 +69,6 @@ class DemoWidget extends React.Component<
   };
 
   reroute() {
-    console.log('reroute');
     this.props.engine
       .getLinkFactories()
       .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME)
@@ -157,11 +151,9 @@ export function sameNeeds(obj: Record<string, string[]>) {
       elementOfValueArr < helperArray[valueArr].length;
       elementOfValueArr++
     ) {
-      console.log('jestem');
       const result: number = helperArray[valueArr].filter(
         (v: any) => v === Object.keys(obj)[elementOfValueArr],
       ).length;
-      console.log(result);
       if (result > 1) {
         return true;
       }
@@ -372,7 +364,6 @@ export default function createDiagrams(
       }
     }
   }
-  // const model = new DiagramModel();
   if (link !== undefined && port2[0] !== undefined) {
     model.addAll(link);
     link.setLocked(true);
@@ -405,6 +396,5 @@ export default function createDiagrams(
   }
 
   engine.setModel(model);
-  // this.engine.options.graph.rankdir = 'TB';
   return <DemoWidget model={model} engine={engine} />;
 }

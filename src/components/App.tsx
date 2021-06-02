@@ -3,15 +3,13 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import jsyaml from 'js-yaml';
-import debounce from 'lodash.debounce';
-import React, { useState, useCallback, Component, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
-// import { debouncedDiagrams } from '../additionalFunctions/debouncedOutput';
 import dispError from '../additionalFunctions/displayError';
 import { displayLinks } from '../additionalFunctions/linksToActions';
-import { normalize, keyable } from '../additionalFunctions/normalization';
+import { normalize } from '../additionalFunctions/normalization';
 import createDiagram, {
   selfLink,
   allNeeds,
@@ -24,24 +22,16 @@ import schema from '../schema/Schema.json';
 import Editor from './Editor';
 import 'reactjs-popup/dist/index.css';
 
+type parsedYaml = any;
+
 function App(): JSX.Element {
-  let workflow: any;
-  let normalizedObject: any;
+  let workflow: parsedYaml;
+  let normalizedObject: parsedYaml;
   const [yaml, setYaml] = useLocalStorage('yaml', '');
   const [click, setClick] = useState({ editor: true, result: true });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  /*const debouncedDisplay = useCallback(
-    debounce(nextValue => setYaml(nextValue), 1000),
-    [],
-  );
-  const handleChangeEvent = (event: { target: { value: any } }) => {
-    const nextValue = event.target.value;
-    setYaml(nextValue);
-    debouncedDisplay(nextValue);
-  };*/
   const man = yaml;
 
-  function parseYamltoJSON(text: string) {
+  function parseYamltoJSON(text: string): parsedYaml {
     let doc;
     // Parsing string to JSON
     try {
@@ -58,37 +48,21 @@ function App(): JSX.Element {
   // };
   //predykat
   // Check, whether provided json is valid against json Schema (if correct returning boolean, if not returning object of errors)
-  function validate(data: any) {
+  function validate(data: parsedYaml) {
     if (typeof data === 'string') {
       return false;
     }
     const validate = ajv.compile(schema);
     const valid = validate(data);
     if (!valid) {
-      const errors: any = validate.errors;
+      const errors: parsedYaml = validate.errors;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return errors;
     }
     return valid;
   }
   workflow = parseYamltoJSON(man);
-  function showResult() {
-    setClick(click => ({ result: !click.result, editor: click.editor }));
-  }
-  function showEditor() {
-    console.log(click);
-    setClick(click => {
-      return { result: click.result, editor: !click.editor };
-    });
-    // console.log(click);
-    // setClick(prevClick => {
-    //   return { ...prevClick, result: !click.result };
-    // });
-    // console.log(click);
-    // setClick(prevClick => {
-    //   return { ...prevClick, result: !click.result };
-    // });
-  }
+
   function handleClick() {
     if (click.result && click.editor) {
       setClick(click => {
@@ -166,9 +140,15 @@ function App(): JSX.Element {
               ? 'Show Diagrams'
               : 'Show Editor'}
           </button>
-          <button className="PRESSME" onClick={showBoth}>
-            Show editor and diagrams
-          </button>
+          {!click.result && click.editor ? (
+            <button className="PRESSME" onClick={showBoth}>
+              {' '}
+              Show editor and diagrams
+            </button>
+          ) : (
+            ''
+          )}
+
           {matrixHandler(normalizedObject) && click.result ? (
             <Popup
               trigger={<button className="PRESSME">Display Matrix</button>}
