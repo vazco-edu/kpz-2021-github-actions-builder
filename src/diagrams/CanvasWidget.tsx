@@ -2,12 +2,12 @@ import { css, Global } from '@emotion/react';
 import styled from '@emotion/styled';
 import * as React from 'react';
 
-export interface DemoCanvasWidgetProps {
+interface DemoCanvasWidgetProps {
   color?: string;
   background?: string;
 }
 
-export const Container = styled.div<{ color: string; background: string }>`
+const Container = styled.div<{ color: string; background: string }>`
   height: 100%;
   background-color: ${p => p.background};
   background-size: 50px 50px;
@@ -43,7 +43,7 @@ export const Container = styled.div<{ color: string; background: string }>`
     );
 `;
 
-export const Expand = css`
+const Expand = css`
   html,
   body,
   #root {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import styled from '@emotion/styled';
 import * as React from 'react';
 

@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
@@ -12,12 +12,8 @@ import createEngine, {
   DiagramEngine,
   DagreEngine,
   DefaultPortModel,
-  NodeModel,
   PathFindingLinkFactory,
-  DiagramModelGenerics,
 } from '@projectstorm/react-diagrams';
-import { keyword$DataError } from 'ajv/dist/compile/errors';
-import { truncate } from 'lodash';
 import React from 'react';
 
 import { helperPortCreation } from '../additionalFunctions/diagramFunctions/helperPortCreation';
@@ -49,21 +45,15 @@ class DemoWidget extends React.Component<
     this.reroute();
     this.props.engine.repaintCanvas();
     this.props.engine.zoomToFit();
-    this.forceUpdate();
   };
 
   componentDidMount(): void {
-    console.log('did mount');
     this.autoDistribute();
   }
 
   componentWillUnmount() {
     clearTimeout(this.timeoutId);
   }
-  /*componentDidUpdate() {
-    console.log('update');
-    this.autoDistribute();
-  }*/
   changeOrientation = () => {
     if (this.engine.options.graph.rankdir === 'TB') {
       this.engine.options.graph.rankdir = 'LR';
@@ -74,7 +64,6 @@ class DemoWidget extends React.Component<
   };
 
   reroute() {
-    console.log('reroute');
     this.props.engine
       .getLinkFactories()
       .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME)
@@ -157,11 +146,9 @@ export function sameNeeds(obj: Record<string, string[]>) {
       elementOfValueArr < helperArray[valueArr].length;
       elementOfValueArr++
     ) {
-      console.log('jestem');
       const result: number = helperArray[valueArr].filter(
         (v: any) => v === Object.keys(obj)[elementOfValueArr],
       ).length;
-      console.log(result);
       if (result > 1) {
         return true;
       }
@@ -185,25 +172,23 @@ export default function createDiagrams(
   console.log(checkCycles(isNeededFor));
   const engine = createEngine();
   console.log(normalized);
-  let node1: DefaultNodeModel;
-  if (notNormalized) {
-    if (notNormalized.name) {
-      node1 = new DefaultNodeModel({
-        name: `${notNormalized.name}`,
-        color: 'rgb(128, 149, 255)',
-      });
-    } else {
-      node1 = new DefaultNodeModel({
-        name: ``,
-        color: 'rgb(128, 149, 255)',
-      });
-    }
-  } else {
-    node1 = new DefaultNodeModel({
-      name: ``,
-      color: 'rgb(128, 149, 255)',
-    });
-  }
+  // // if (notNormalized) {
+  // //   if (notNormalized.name) {
+  // //     node1 = new DefaultNodeModel({
+  //       name: String(notNormalized.name),
+  //       color: 'rgb(128, 149, 255)',
+  //     });
+  //   } else {
+  //     node1 = new DefaultNodeModel({
+  //       name: ``,
+  //       color: 'rgb(128, 149, 255)',
+  //     });
+  //   }
+  // } else {
+  let node1 = new DefaultNodeModel({
+    name: notNormalized?.name ? String(notNormalized.name) : '',
+    color: 'rgb(128, 149, 255)',
+  });
 
   let port1: DefaultPortModel;
   const helper = helperPortCreation(normalized, node1);
@@ -227,7 +212,7 @@ export default function createDiagrams(
   const indexOfJobWithoutNeeds: number[] = [];
   for (let i = 0; i < key.length; ++i) {
     if (normalized) {
-      if (normalized['jobs'][key[i]]['needs'] === undefined) {
+      if (normalized.jobs[key[i]]['needs'] === undefined) {
         //without needs
         if (port2.length < 1) {
           port2.push(node2.addInPort(`${key[i]}`));
@@ -238,7 +223,7 @@ export default function createDiagrams(
         indexOfJobWithoutNeeds.push(i);
       } else {
         objWithNeeds.push(key[i]);
-        objWithNeeds.push(normalized['jobs'][key[i]]);
+        objWithNeeds.push(normalized.jobs[key[i]]);
       }
     }
   }
@@ -372,7 +357,6 @@ export default function createDiagrams(
       }
     }
   }
-  // const model = new DiagramModel();
   if (link !== undefined && port2[0] !== undefined) {
     model.addAll(link);
     link.setLocked(true);
@@ -405,6 +389,5 @@ export default function createDiagrams(
   }
 
   engine.setModel(model);
-  // this.engine.options.graph.rankdir = 'TB';
-  return <DemoWidget model={model} engine={engine} />;
+  return <DemoWidget model={model} engine={engine} key={Math.random()} />;
 }

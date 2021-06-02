@@ -8,7 +8,7 @@ import {
   Event,
 } from '../schema/Schema';
 
-export interface keyable {
+interface keyable {
   [key: string]: any;
 }
 
