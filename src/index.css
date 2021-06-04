@@ -187,8 +187,6 @@ li:hover {
 }
 
 .bigger {
-  /* width: 100%;
-  z-index: 999 !important; */
   grid-row: 2;
   grid-column-start: 1;
   grid-column-end: 2;
@@ -206,7 +204,6 @@ li:hover {
   margin: auto;
   color: white !important;
   background: rgb(37, 1, 1) !important;
-  width: 50%;
   padding: 5px;
 }
 

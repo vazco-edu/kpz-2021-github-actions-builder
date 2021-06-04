@@ -3,12 +3,13 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import jsyaml from 'js-yaml';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 
 import { ajv } from '../additionalFunctions/createAjvObject';
-import dispError from '../additionalFunctions/displayError';
+import displayError from '../additionalFunctions/displayError';
 import { displayLinks } from '../additionalFunctions/linksToActions';
+import dependencyObject from '../additionalFunctions/neededFor';
 import { normalize } from '../additionalFunctions/normalization';
 import createDiagram, {
   selfLink,
@@ -105,19 +106,15 @@ function App(): JSX.Element {
   }
   // Storing a boolean or an error object
   const storeValidationResult = validate(workflow);
-  const isNeededFor: Record<string, string[]> = {};
+  let isNeededFor: Record<string, string[]> = {};
+  isNeededFor = dependencyObject(workflow, normalizedObject, isNeededFor);
   console.log(click);
 
   const [renderedDiagram, setRenderedDiagram] = useState<React.ReactNode>(null);
 
   useEffect(() => {
-    if (normalizedObject === undefined) {
+    if (normalizedObject === undefined || displayError(storeValidationResult)) {
       setRenderedDiagram(null);
-      return;
-    }
-    const displayedError = dispError(storeValidationResult);
-    if (displayedError) {
-      setRenderedDiagram(displayedError);
       return;
     }
     const timerId = setTimeout(() => {
@@ -125,7 +122,6 @@ function App(): JSX.Element {
         createDiagram(workflow, normalizedObject, isNeededFor),
       );
     }, 500);
-    console.log('ROBIE');
     return () => {
       clearTimeout(timerId);
     };
@@ -134,6 +130,7 @@ function App(): JSX.Element {
   console.log(isNeededFor);
   console.log(checkCycles(isNeededFor)[0]);
   console.log(sameNeeds(isNeededFor));
+  const isError = displayError(storeValidationResult);
   return (
     <>
       <div className="grid">
@@ -145,7 +142,8 @@ function App(): JSX.Element {
               ? 'Show Diagrams'
               : 'Show Editor'}
           </button>
-          {!click.result && click.editor ? (
+          {(!click.result && click.editor) ||
+          (!click.editor && click.result) ? (
             <button className="PRESSME" onClick={showBoth}>
               {' '}
               Show editor and diagrams
@@ -188,9 +186,9 @@ function App(): JSX.Element {
           <Editor value={yaml} onChange={setYaml} press={click} />
         </div>
       </div>
-      <div className="checkValid"> {dispError(storeValidationResult)}</div>
+      <div className="checkValid"> {isError}</div>
       <span />
-      {normalizedObject && !dispError(storeValidationResult) && click.result ? (
+      {normalizedObject && !isError && click.result ? (
         <>
           <div className="links">
             <span>Actions used in workflow:</span>
@@ -202,22 +200,22 @@ function App(): JSX.Element {
       )}
 
       <div className="selfLink">
-        {selfLink(isNeededFor) && click.result
+        {selfLink(isNeededFor) && click.result && !isError
           ? 'Self link detected (job is dependent on itself)! Please check provided YAML!'
           : ''}
       </div>
       <div className="allNeeds">
-        {allNeeds(isNeededFor, normalizedObject) && click.result
+        {allNeeds(isNeededFor, normalizedObject) && click.result && !isError
           ? 'Every job is dependent on another job, workflow will never complete! Please check provided YAML!'
           : ''}
       </div>
       <div className="cycles">
-        {checkCycles(isNeededFor)[0]
+        {checkCycles(isNeededFor)[0] && click.result && !isError
           ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
           : ''}
       </div>
       <div className="allNeeds">
-        {sameNeeds(isNeededFor)
+        {sameNeeds(isNeededFor) && click.result && !isError
           ? 'One or more of provided jobs, has duplicate of the same job needed! Please check provided YAML!'
           : ''}
       </div>
