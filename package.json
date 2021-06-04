@@ -18,24 +18,18 @@
     "ajv": "^8.0.5",
     "ajv-errors": "^3.0.0",
     "better-ajv-errors": "^0.7.0",
-    "chevrotain": "^9.0.1",
     "closest": "0.0.1",
     "codemirror": "^5.60.0",
     "dagre": "^0.8.5",
     "js-yaml": "^4.0.0",
     "lodash": "^4.17.21",
-    "lodash.debounce": "^4.0.8",
-    "mathjs": "^9.3.2",
     "pathfinding": "^0.4.18",
     "paths-js": "^0.4.11",
     "react": "^17.0.2",
     "react-codemirror2": "^7.2.1",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
-<<<<<<< HEAD
     "reactjs-popup": "^2.0.4",
-=======
->>>>>>> afcf16a6ffba74b98d53b35ff267b7d6668df140
     "require-from-string": "^2.0.2",
     "resize-observer-polyfill": "^1.5.1",
     "web-vitals": "^1.1.1"
@@ -84,11 +78,8 @@
     "husky": "^6.0.0",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
-<<<<<<< HEAD
     "stylelint": "^13.13.1",
     "stylelint-config-standard": "^22.0.0",
-=======
->>>>>>> afcf16a6ffba74b98d53b35ff267b7d6668df140
     "typescript": "^4.2.3"
   }
 }
