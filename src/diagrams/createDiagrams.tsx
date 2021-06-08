@@ -2,7 +2,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import createEngine, {
@@ -157,37 +156,25 @@ export function sameNeeds(obj: Record<string, string[]>) {
   return false;
 }
 
-// Smart routing engine
-// const pathfinding = engine
-//   .getLinkFactories()
-//   .getFactory<PathFindingLinkFactory>(PathFindingLinkFactory.NAME);
-// ## displays jobs, that are dependent on a specific job ##
+// ## Colors of nodes and links ##
 
+const colors: Record<string, string> = {
+  firstNode: 'rgb(128, 149, 255)',
+  jobsWithoutNeeds: 'rgb(128, 255, 234)',
+  jobs: 'rgb(170, 128, 255)',
+  doubleNeeds: '#FF0000',
+  cycle: '#c46415',
+};
 // eslint-disable-next-line complexity
 export default function createDiagrams(
   notNormalized: any,
   normalized: any,
   isNeededFor: Record<string, string[]>,
 ) {
-  console.log(checkCycles(isNeededFor));
   const engine = createEngine();
-  console.log(normalized);
-  // // if (notNormalized) {
-  // //   if (notNormalized.name) {
-  // //     node1 = new DefaultNodeModel({
-  //       name: String(notNormalized.name),
-  //       color: 'rgb(128, 149, 255)',
-  //     });
-  //   } else {
-  //     node1 = new DefaultNodeModel({
-  //       name: ``,
-  //       color: 'rgb(128, 149, 255)',
-  //     });
-  //   }
-  // } else {
   let node1 = new DefaultNodeModel({
     name: notNormalized?.name ? String(notNormalized.name) : '',
-    color: 'rgb(128, 149, 255)',
+    color: colors.firstNode,
   });
 
   let port1: DefaultPortModel;
@@ -199,13 +186,12 @@ export default function createDiagrams(
   }
   const node2 = new DefaultNodeModel({
     name: 'jobs',
-    color: 'rgb(128, 255, 234)',
+    color: colors.jobsWithoutNeeds,
   });
   //variable storing number or jobs withour parameter "needs" - default value is 1, as the first job will never have parameter needs
   let numWithoutNeeds = 1;
   // array storing objects, that have parameter "needs" in format [name_of_the_job, job_object]
   const objWithNeeds: any[] = [];
-  //node2.setPosition(49, 350);
   // ## storing keys of jobs in normalized object ##
   const key: string[] = Object.keys(normalized.jobs);
   const port2: DefaultPortModel[] = [];
@@ -245,7 +231,7 @@ export default function createDiagrams(
     jobs.push(
       new DefaultNodeModel({
         name: `${jobName}`,
-        color: 'rgb(170, 128, 255)',
+        color: colors.jobs,
       }),
     );
     isNeededFor[`${jobName}`] = [];
@@ -369,7 +355,7 @@ export default function createDiagrams(
   for (const key in linksBetweenJobs) {
     if (linksBetweenJobs[key].length > 1) {
       for (const link of linksBetweenJobs[key]) {
-        link.setColor('#FF0000');
+        link.setColor(colors.doubleNeeds);
       }
     }
   }
@@ -377,7 +363,7 @@ export default function createDiagrams(
     for (let i = 0; i < cycledJobs[1].length - 1; i++) {
       const cycledKey = `${cycledJobs[1][i + 1]}${cycledJobs[1][i]}`;
       if (linksBetweenJobs[cycledKey]) {
-        linksBetweenJobs[cycledKey][0].setColor('#c46415');
+        linksBetweenJobs[cycledKey][0].setColor(colors.cycle);
       }
     }
   }

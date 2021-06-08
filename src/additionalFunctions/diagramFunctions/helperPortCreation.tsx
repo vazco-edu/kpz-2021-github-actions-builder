@@ -12,11 +12,9 @@ export function helperPortCreation(normal: any, node: DefaultNodeModel): any {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const tt = normal['on'];
   const preventDuplicate: string[] = [];
-  let port: DefaultPortModel;
-  if (typeof tt !== 'object' || Array.isArray(tt)) {
-    port = node.addOutPort(`on: ${ttt} `);
-  } else {
-    port = node.addOutPort(`on: ${ttt} `);
+
+  const port: DefaultPortModel = node.addOutPort(`on: ${ttt} `);
+  if (typeof tt === 'object' || !Array.isArray(tt)) {
     for (const properties in tt) {
       if (tt[properties] !== null && Object.keys(tt[properties]).length !== 0) {
         if (preventDuplicate.length === 0) {

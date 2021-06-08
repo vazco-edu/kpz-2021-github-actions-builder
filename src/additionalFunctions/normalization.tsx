@@ -80,7 +80,6 @@ export function normalizeMatrix(
     // Assigning values of matrix passed to function to previously created empty object with properly assigned types
     matrixValues[matrixKey] = matrix[matrixKey];
   }
-  //        ### experimental ###
   //        ### crossing i.e. every os with every browser ###
   const inv = cartesianProduct(matrixValues);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return

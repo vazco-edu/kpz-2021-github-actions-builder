@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Workflow } from '../schema/Schema';
 
-export function displayLinks(normalized: Workflow) {
+export function LinksToActions(normalized: Workflow) {
   const tableOfUses: string[] = [];
   // eslint-disable-next-line guard-for-in
   for (const properties in normalized.jobs) {

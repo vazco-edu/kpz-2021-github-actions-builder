@@ -1,6 +1,5 @@
 /* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import jsyaml from 'js-yaml';
 import React, { useState, useEffect } from 'react';
@@ -9,7 +8,7 @@ import Popup from 'reactjs-popup';
 import allJobsNeeds from '../additionalFunctions/allNeededJobs';
 import { ajv } from '../additionalFunctions/createAjvObject';
 import displayError from '../additionalFunctions/displayError';
-import { displayLinks } from '../additionalFunctions/linksToActions';
+import { LinksToActions } from '../additionalFunctions/linksToActions';
 import dependencyObject from '../additionalFunctions/neededFor';
 import { normalize } from '../additionalFunctions/normalization';
 import createDiagram, {
@@ -66,40 +65,19 @@ function App(): JSX.Element {
   workflow = parseYamltoJSON(man);
 
   function handleClick() {
-    if (click.result && click.editor) {
-      setClick(click => {
-        return { result: !click.result, editor: click.editor };
-      });
-    } else if (!click.result && click.editor) {
-      setClick(click => {
-        return { result: !click.result, editor: !click.editor };
-      });
-    } else if (click.result && !click.editor) {
-      setClick(click => {
-        return { result: !click.result, editor: !click.editor };
-      });
+    if (click.result) {
+      setClick({ result: false, editor: true });
+    } else {
+      setClick({ result: true, editor: false });
     }
   }
   function showBoth() {
-    if (!click.editor && !click.result) {
-      setClick(click => {
-        return { result: !click.result, editor: !click.editor };
-      });
-    } else if (!click.editor && click.result) {
-      setClick(click => {
-        return { result: click.result, editor: !click.editor };
-      });
-    } else if (click.editor && !click.result) {
-      setClick(click => {
-        return { result: !click.result, editor: click.editor };
-      });
-    }
+    setClick({ result: true, editor: true });
   }
   try {
     normalizedObject = normalize(workflow);
   } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    console.log(e.errors);
+    // error
   }
   if (typeof workflow !== 'object') {
     //creating a seperate object
@@ -131,9 +109,6 @@ function App(): JSX.Element {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yaml]);
-  console.log(isNeededFor);
-  console.log(checkCycles(isNeededFor)[0]);
-  console.log(sameNeeds(isNeededFor));
   const isError = displayError(storeValidationResult);
   return (
     <>
@@ -146,8 +121,7 @@ function App(): JSX.Element {
               ? 'Show Diagrams'
               : 'Show Editor'}
           </button>
-          {(!click.result && click.editor) ||
-          (!click.editor && click.result) ? (
+          {!click.result || !click.editor ? (
             <button className="PRESSME" onClick={showBoth}>
               {' '}
               Show editor and diagrams
@@ -192,42 +166,45 @@ function App(): JSX.Element {
       </div>
       <div className="checkValid"> {isError}</div>
       <span />
-      {normalizedObject && !isError && click.result ? (
+      {click.result && !isError && (
         <>
-          <div className="links">
-            <span>Actions used in workflow:</span>
-            {displayLinks(normalizedObject)}{' '}
-          </div>
+          {normalizedObject && (
+            <div className="links">
+              <span>Actions used in workflow:</span>
+              {LinksToActions(normalizedObject)}{' '}
+            </div>
+          )}
+          {selfLink(isNeededFor) && (
+            <div className="selfLink">
+              Self link detected (job is dependent on itself)! Please check
+              provided YAML!
+            </div>
+          )}
+          {allNeeds(isNeededFor, normalizedObject) && (
+            <div className="allNeeds">
+              Every job is dependent on another job, workflow will never
+              complete! Please check provided YAML!
+            </div>
+          )}
+          {checkCycles(isNeededFor)[0] && (
+            <div className="cycles">
+              Cycle detected! Part of the provided workflow will never execute!
+              Please check provided YAML!
+            </div>
+          )}
+          {sameNeeds(isNeededFor) && (
+            <div className="allNeeds">
+              One or more of provided jobs, has duplicate of the same job
+              needed! Please check provided YAML!
+            </div>
+          )}
+          {allNeedsFromJobs && (
+            <div className="jobDoesntExist">
+              Job passed in need does not exists! Please check provided YAML!
+            </div>
+          )}
         </>
-      ) : (
-        <div className="none" />
       )}
-
-      <div className="selfLink">
-        {selfLink(isNeededFor) && click.result && !isError
-          ? 'Self link detected (job is dependent on itself)! Please check provided YAML!'
-          : ''}
-      </div>
-      <div className="allNeeds">
-        {allNeeds(isNeededFor, normalizedObject) && click.result && !isError
-          ? 'Every job is dependent on another job, workflow will never complete! Please check provided YAML!'
-          : ''}
-      </div>
-      <div className="cycles">
-        {checkCycles(isNeededFor)[0] && click.result && !isError
-          ? 'Cycle detected! Part of the provided workflow will never execute! Please check provided YAML!'
-          : ''}
-      </div>
-      <div className="allNeeds">
-        {sameNeeds(isNeededFor) && click.result && !isError
-          ? 'One or more of provided jobs, has duplicate of the same job needed! Please check provided YAML!'
-          : ''}
-      </div>
-      <div className="jobDoesntExist">
-        {allNeedsFromJobs && click.result && !isError
-          ? 'Job passed in need does not exists! Please check provided YAML!'
-          : ''}
-      </div>
     </>
   );
 }
