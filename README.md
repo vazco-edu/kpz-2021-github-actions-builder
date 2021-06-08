@@ -28,6 +28,7 @@
 1. Interpreting a workflow, based on "if" statement
 2. Displaying all kinds of errors inline
 3. Extend error handling logic
+4. 'End', 'with', matrix depth handling
 ## Technologies
 * [DagreJS](https://github.com/dagrejs/dagre/wiki)
 * [React-Diagrams](https://github.com/projectstorm/react-diagrams)
