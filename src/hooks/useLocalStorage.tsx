@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return  */
 //used to differentiate variables from this project
 const PREFIX = 'gui-';
 
-export default function useLocalStorage(key: string, initialValue: any) {
+type initValue = any;
+type returned = any | any[];
+export default function useLocalStorage(
+  key: string,
+  initialValue: initValue,
+): returned {
   const prefixedKey = PREFIX + key;
 
   const [value, setValue] = useState(() => {

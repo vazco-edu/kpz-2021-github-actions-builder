@@ -13,10 +13,8 @@ export default function matrixHandler(normalized: Record<string, any>) {
     const key: string[] = Object.keys(normalized.jobs);
     const matrixes: DefaultNodeModel[] = [];
     for (const jobName of key) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (normalized.jobs[`${jobName}`]?.strategy?.matrix) {
         const combinations = normalizeMatrix(
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           normalized.jobs[`${jobName}`]?.strategy?.matrix,
         );
         matrixes.push(

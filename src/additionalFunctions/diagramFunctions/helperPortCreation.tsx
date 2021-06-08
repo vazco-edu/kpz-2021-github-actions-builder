@@ -1,15 +1,15 @@
 /* eslint-disable guard-for-in */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import {
   DefaultNodeModel,
   DefaultPortModel,
 } from '@projectstorm/react-diagrams';
-
-export function helperPortCreation(normal: any, node: DefaultNodeModel): any {
+type normalized = any;
+type returned = any;
+export function helperPortCreation(
+  normal: normalized,
+  node: DefaultNodeModel,
+): returned {
   const ttt = Object.keys(normal['on']);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const tt = normal['on'];
   const preventDuplicate: string[] = [];
 

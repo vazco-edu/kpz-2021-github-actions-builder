@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable guard-for-in */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import { CanvasWidget } from '@projectstorm/react-canvas-core';
 import createEngine, {
   DefaultLinkModel,
@@ -18,15 +14,17 @@ import React from 'react';
 import { helperPortCreation } from '../additionalFunctions/diagramFunctions/helperPortCreation';
 import { DemoCanvasWidget } from '../diagrams/CanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from '../diagrams/WorkspaceWidget';
-
+import { checkCycles } from '../diagrams/selfLink';
+type timeout = any;
+type props = any;
 class DemoWidget extends React.Component<
   { model: DiagramModel; engine: DiagramEngine },
   any
 > {
   // eslint-disable-next-line react/sort-comp
   engine: DagreEngine;
-  timeoutId?: any;
-  constructor(props: any) {
+  timeoutId?: timeout;
+  constructor(props: props) {
     super(props);
     this.engine = new DagreEngine({
       graph: {
@@ -96,65 +94,6 @@ class DemoWidget extends React.Component<
     );
   }
 }
-export function selfLink(obj: Record<string, string[]>): boolean {
-  for (let job = 0; job < Object.keys(obj).length; job++) {
-    if (Object.values(obj)[job].includes(Object.keys(obj)[job])) {
-      return true;
-    }
-  }
-  return false;
-}
-
-export function allNeeds(obj: Record<string, string[]>, norm: any): boolean {
-  if (norm !== undefined && Object.keys(obj).length !== 0) {
-    const jobsInNormalized = Object.keys(norm.jobs);
-    for (let job = 0; job < jobsInNormalized.length; job++) {
-      if (norm['jobs'][jobsInNormalized[job]].needs === undefined) {
-        return false;
-      }
-    }
-    return true;
-  }
-  return false;
-}
-
-export function checkCycles(obj: Record<string, string[]>) {
-  const graph2: Record<string, string[]> = Object.assign({}, obj);
-  let queue: string[][] = Object.keys(graph2).map(node => [node]);
-  while (queue.length) {
-    const batch: string[][] = [];
-    for (const path of queue) {
-      const parents = graph2[path[0]] || [];
-      for (const node of parents) {
-        if (node === path[path.length - 1]) {
-          batch.push([node, ...path]);
-          return [true, batch[batch.length - 1]];
-        }
-        batch.push([node, ...path]);
-      }
-    }
-    queue = batch;
-  }
-  return [false, []];
-}
-export function sameNeeds(obj: Record<string, string[]>) {
-  const helperArray: string[][] = Object.values(obj);
-  for (let valueArr = 0; valueArr < helperArray.length; valueArr++) {
-    for (
-      let elementOfValueArr = 0;
-      elementOfValueArr < helperArray[valueArr].length;
-      elementOfValueArr++
-    ) {
-      const result: number = helperArray[valueArr].filter(
-        (v: any) => v === Object.keys(obj)[elementOfValueArr],
-      ).length;
-      if (result > 1) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
 // ## Colors of nodes and links ##
 
@@ -165,10 +104,11 @@ const colors: Record<string, string> = {
   doubleNeeds: '#FF0000',
   cycle: '#c46415',
 };
+type workflow = any;
 // eslint-disable-next-line complexity
 export default function createDiagrams(
-  notNormalized: any,
-  normalized: any,
+  notNormalized: workflow,
+  normalized: workflow,
   isNeededFor: Record<string, string[]>,
 ) {
   const engine = createEngine();
@@ -191,7 +131,7 @@ export default function createDiagrams(
   //variable storing number or jobs withour parameter "needs" - default value is 1, as the first job will never have parameter needs
   let numWithoutNeeds = 1;
   // array storing objects, that have parameter "needs" in format [name_of_the_job, job_object]
-  const objWithNeeds: any[] = [];
+  const objWithNeeds: string[] = [];
   // ## storing keys of jobs in normalized object ##
   const key: string[] = Object.keys(normalized.jobs);
   const port2: DefaultPortModel[] = [];

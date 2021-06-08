@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import React from 'react';
 
+type workflow = any;
 export default function allJobsNeeds(
-  notNormalized: any,
-  normalized: any,
+  normalized: workflow,
   isNeededFor: Record<string, string[]>,
 ) {
   if (normalized) {

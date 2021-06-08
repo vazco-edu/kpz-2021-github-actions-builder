@@ -1,6 +1,4 @@
 /* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
 import jsyaml from 'js-yaml';
 import React, { useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
@@ -11,13 +9,14 @@ import displayError from '../additionalFunctions/displayError';
 import { LinksToActions } from '../additionalFunctions/linksToActions';
 import dependencyObject from '../additionalFunctions/neededFor';
 import { normalize } from '../additionalFunctions/normalization';
-import createDiagram, {
+import createDiagram from '../diagrams/createDiagrams';
+import matrixHandler from '../diagrams/matrixHandling';
+import {
   selfLink,
   allNeeds,
   checkCycles,
   sameNeeds,
-} from '../diagrams/createDiagrams';
-import matrixHandler from '../diagrams/matrixHandling';
+} from '../diagrams/selfLink';
 import useLocalStorage from '../hooks/useLocalStorage';
 import schema from '../schema/Schema.json';
 import Editor from './Editor';
@@ -38,16 +37,11 @@ function App(): JSX.Element {
     try {
       doc = jsyaml.load(text);
     } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const error = `${e.reason} on line ${e.mark.line}`;
       return error;
     }
     return doc;
   }
-  // type gitHubAction = {
-  //   name: string;
-  // };
-  //predykat
   // Check, whether provided json is valid against json Schema (if correct returning boolean, if not returning object of errors)
   function validate(data: parsedYaml) {
     if (typeof data === 'string') {
@@ -87,11 +81,7 @@ function App(): JSX.Element {
   const storeValidationResult = validate(workflow);
   let isNeededFor: Record<string, string[]> = {};
   isNeededFor = dependencyObject(workflow, normalizedObject, isNeededFor);
-  const allNeedsFromJobs: boolean = allJobsNeeds(
-    workflow,
-    normalizedObject,
-    isNeededFor,
-  );
+  const allNeedsFromJobs: boolean = allJobsNeeds(normalizedObject, isNeededFor);
   const [renderedDiagram, setRenderedDiagram] = useState<React.ReactNode>(null);
 
   useEffect(() => {

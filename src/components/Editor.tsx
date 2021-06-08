@@ -19,8 +19,8 @@ import 'codemirror/addon/scroll/annotatescrollbar.js';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 import 'codemirror/addon/scroll/simplescrollbars.js';
 
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call */
-export default function Editor(props: any): JSX.Element {
+type props = any;
+export default function Editor(props: props): JSX.Element {
   const { value, onChange } = props;
   window.jsyaml = jsyaml;
 
