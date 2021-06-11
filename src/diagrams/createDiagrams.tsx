@@ -15,6 +15,9 @@ import { helperPortCreation } from '../additionalFunctions/diagramFunctions/help
 import { DemoCanvasWidget } from '../diagrams/CanvasWidget';
 import { DemoButton, DemoWorkspaceWidget } from '../diagrams/WorkspaceWidget';
 import { checkCycles } from '../diagrams/selfLink';
+import { addPortsToJobNode } from './createDiagramFunctions/addPortsToJobNode';
+import { createLinksBetweenJobs } from './createDiagramFunctions/createLinksBetweenJobs';
+import { specificPorts } from './createDiagramFunctions/specificPorts';
 type timeout = any;
 type props = any;
 class DemoWidget extends React.Component<
@@ -97,21 +100,16 @@ class DemoWidget extends React.Component<
 
 // ## Colors of nodes and links ##
 
-const colors: Record<string, string> = {
+export const colors: Record<string, string> = {
   firstNode: 'rgb(128, 149, 255)',
   jobsWithoutNeeds: 'rgb(128, 255, 234)',
   jobs: 'rgb(170, 128, 255)',
   doubleNeeds: '#FF0000',
   cycle: '#c46415',
 };
-type workflow = any;
-// eslint-disable-next-line complexity
-export default function createDiagrams(
-  notNormalized: workflow,
-  normalized: workflow,
-  isNeededFor: Record<string, string[]>,
-) {
-  const engine = createEngine();
+export type workflow = any;
+
+function createFirstNodes(notNormalized: workflow, normalized: workflow) {
   let node1 = new DefaultNodeModel({
     name: notNormalized?.name ? String(notNormalized.name) : '',
     color: colors.firstNode,
@@ -128,34 +126,64 @@ export default function createDiagrams(
     name: 'jobs',
     color: colors.jobsWithoutNeeds,
   });
-  //variable storing number or jobs withour parameter "needs" - default value is 1, as the first job will never have parameter needs
-  let numWithoutNeeds = 1;
-  // array storing objects, that have parameter "needs" in format [name_of_the_job, job_object]
-  const objWithNeeds: string[] = [];
-  // ## storing keys of jobs in normalized object ##
-  const key: string[] = Object.keys(normalized.jobs);
-  const port2: DefaultPortModel[] = [];
-  const indexOfJobWithoutNeeds: number[] = [];
-  for (let i = 0; i < key.length; ++i) {
-    if (normalized) {
-      if (normalized.jobs[key[i]]['needs'] === undefined) {
-        //without needs
-        if (port2.length < 1) {
-          port2.push(node2.addInPort(`${key[i]}`));
-          continue;
-        }
-        node2.addInPort(`${key[i]}`);
-        numWithoutNeeds++;
-        indexOfJobWithoutNeeds.push(i);
-      } else {
-        objWithNeeds.push(key[i]);
-        objWithNeeds.push(normalized.jobs[key[i]]);
+  return [port1, node1, node2] as const;
+}
+
+function lockLinks(
+  link: DefaultLinkModel,
+  model: DiagramModel,
+  port2: DefaultPortModel[],
+  linksWithoutNeeds: DefaultLinkModel[],
+  linksBetweenJobs: Record<string, DefaultLinkModel[]>,
+) {
+  if (link !== undefined && port2[0] !== undefined) {
+    model.addAll(link);
+    link.setLocked(true);
+  }
+  model.addAll(...linksWithoutNeeds);
+  for (const link of linksWithoutNeeds) {
+    link.setLocked(true);
+  }
+  for (const key of Object.values(linksBetweenJobs)) {
+    for (let i = 0; i < key.length; i++) {
+      model.addAll(key[i]);
+      key[i].setLocked(true);
+    }
+  }
+}
+
+function colorCycles(
+  isNeededFor: Record<string, string[]>,
+  linksBetweenJobs: Record<string, DefaultLinkModel[]>,
+) {
+  const cycledJobs = checkCycles(isNeededFor);
+  for (const key in linksBetweenJobs) {
+    if (linksBetweenJobs[key].length > 1) {
+      for (const link of linksBetweenJobs[key]) {
+        link.setColor(colors.doubleNeeds);
       }
     }
   }
+  if (cycledJobs[0] && Array.isArray(cycledJobs[1])) {
+    for (let i = 0; i < cycledJobs[1].length - 1; i++) {
+      const cycledKey = `${cycledJobs[1][i + 1]}${cycledJobs[1][i]}`;
+      if (linksBetweenJobs[cycledKey]) {
+        linksBetweenJobs[cycledKey][0].setColor(colors.cycle);
+      }
+    }
+  }
+}
+export default function createDiagrams(
+  notNormalized: workflow,
+  normalized: workflow,
+  isNeededFor: Record<string, string[]>,
+) {
+  const [port1, node1, node2] = createFirstNodes(notNormalized, normalized);
+  // ## storing keys of jobs in normalized object ##
+  const key: string[] = Object.keys(normalized.jobs);
+
   const portsOut: DefaultPortModel[] = [];
-  const portsOutWithNeeds: DefaultPortModel[] = [];
-  const portsIn: DefaultPortModel[] = [];
+  const [port2, numWithoutNeeds] = addPortsToJobNode(key, normalized, node2);
   // displaying number of ports
   for (
     let withoutNeeds = 1;
@@ -164,48 +192,15 @@ export default function createDiagrams(
   ) {
     portsOut.push(node2.addOutPort(withoutNeeds.toString()));
   }
-  const jobs: DefaultNodeModel[] = [];
-
+  const [portsIn, portsOutWithNeeds, jobs] = specificPorts(
+    key,
+    normalized,
+    isNeededFor,
+  );
   // ## creating nodes for jobs and object for reverse tracking our dependencies##
-  for (const jobName of key) {
-    jobs.push(
-      new DefaultNodeModel({
-        name: `${jobName}`,
-        color: colors.jobs,
-      }),
-    );
-    isNeededFor[`${jobName}`] = [];
-  }
+
   // ## adding specific ports to jobs ##
-  for (let nodeNumber = 0; nodeNumber < key.length; ++nodeNumber) {
-    const keysJobs = normalized['jobs'][key[nodeNumber]];
-    if (keysJobs.needs) {
-      jobs[nodeNumber].addInPort(`${keysJobs.needs}`);
-    }
-    jobs[nodeNumber].addInPort(`runs-on: ${keysJobs['runs-on']}`);
-    if (keysJobs.if) {
-      jobs[nodeNumber].addInPort(`if: ${keysJobs.if}`);
-    }
-    //preventing additional output, that we dont want
-    let preventOutput = 0;
-    for (let step = 0; step < keysJobs.steps.length; ++step) {
-      for (const prop in keysJobs.steps[step]) {
-        if (preventOutput === 0) {
-          jobs[nodeNumber].addInPort('steps:');
-          portsIn.push(
-            jobs[nodeNumber].addInPort(
-              `${prop}: ${keysJobs.steps[step][prop]}`,
-            ),
-          );
-          // out port, just in case said job is needed by another job
-          portsOutWithNeeds.push(jobs[nodeNumber].addOutPort(''));
-          preventOutput++;
-          continue;
-        }
-        jobs[nodeNumber].addInPort(`${prop}: ${keysJobs.steps[step][prop]}`);
-      }
-    }
-  }
+
   const model = new DiagramModel();
   model.addAll(node1, node2, ...jobs);
   let link: DefaultLinkModel;
@@ -227,93 +222,18 @@ export default function createDiagrams(
       }
     }
   }
-  const linksBetweenJobs: Record<string, DefaultLinkModel[]> = {};
-  for (let job = 0; job < portsIn.length; job++) {
-    if (normalized['jobs'][`${key[job]}`].needs) {
-      const needsOfJob = normalized['jobs'][`${key[job]}`].needs;
-      //connection of nodes with multiple "needs"
-      if (needsOfJob.length > 1) {
-        for (const element of needsOfJob) {
-          for (let jobName = 0; jobName < key.length; ++jobName) {
-            if (element === key[jobName]) {
-              const link1 = Object.values(
-                portsOutWithNeeds[jobName]['parent']['options'],
-              )[2];
-              const link2 = Object.values(portsIn[job]['parent']['options'])[2];
-              if (!linksBetweenJobs[`${link1}${link2}`]) {
-                linksBetweenJobs[`${link1}${link2}`] = [];
-              }
-              linksBetweenJobs[`${link1}${link2}`].push(
-                portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
-              );
-            }
-          }
-        }
-      } else {
-        for (let jobName = 0; jobName < key.length; ++jobName) {
-          if (needsOfJob[0] === key[jobName]) {
-            const link1 = Object.values(
-              portsOutWithNeeds[jobName]['parent']['options'],
-            )[2];
-            const link2 = Object.values(portsIn[job]['parent']['options'])[2];
-            if (!linksBetweenJobs[`${link1}${link2}`]) {
-              linksBetweenJobs[`${link1}${link2}`] = [];
-            }
-
-            linksBetweenJobs[`${link1}${link2}`].push(
-              portsOutWithNeeds[jobName].link<DefaultLinkModel>(portsIn[job]),
-            );
-          }
-        }
-      }
-    } else {
-      //handle independent jobs
-      const portsOut2: DefaultPortModel[] = [];
-      for (
-        let withoutNeeds = 0;
-        withoutNeeds < node2['portsIn'].length;
-        withoutNeeds++
-      ) {
-        if (node2['portsIn'][withoutNeeds]['options'].label === key[job]) {
-          portsOut2.push(portsOut[withoutNeeds]);
-          linksWithoutNeeds.push(
-            portsOut2[0].link<DefaultLinkModel>(portsIn[job]),
-          );
-        }
-      }
-    }
-  }
-  if (link !== undefined && port2[0] !== undefined) {
-    model.addAll(link);
-    link.setLocked(true);
-  }
-  model.addAll(...linksWithoutNeeds);
-  for (const link of linksWithoutNeeds) {
-    link.setLocked(true);
-  }
-  const cycledJobs = checkCycles(isNeededFor);
-  for (const key in linksBetweenJobs) {
-    if (linksBetweenJobs[key].length > 1) {
-      for (const link of linksBetweenJobs[key]) {
-        link.setColor(colors.doubleNeeds);
-      }
-    }
-  }
-  if (cycledJobs[0] && Array.isArray(cycledJobs[1])) {
-    for (let i = 0; i < cycledJobs[1].length - 1; i++) {
-      const cycledKey = `${cycledJobs[1][i + 1]}${cycledJobs[1][i]}`;
-      if (linksBetweenJobs[cycledKey]) {
-        linksBetweenJobs[cycledKey][0].setColor(colors.cycle);
-      }
-    }
-  }
-  for (const key of Object.values(linksBetweenJobs)) {
-    for (let i = 0; i < key.length; i++) {
-      model.addAll(key[i]);
-      key[i].setLocked(true);
-    }
-  }
-
+  const linksBetweenJobs = createLinksBetweenJobs(
+    normalized,
+    portsIn,
+    portsOut,
+    key,
+    portsOutWithNeeds,
+    node2,
+    linksWithoutNeeds,
+  );
+  lockLinks(link, model, port2, linksWithoutNeeds, linksBetweenJobs);
+  colorCycles(isNeededFor, linksBetweenJobs);
+  const engine = createEngine();
   engine.setModel(model);
   return <DemoWidget model={model} engine={engine} key={Math.random()} />;
 }
