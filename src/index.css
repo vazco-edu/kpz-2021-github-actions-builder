@@ -27,8 +27,8 @@ body {
   height: 100%;
 }
 
-.CodeMirror {
-  height: 100% !important;
+.CodeMirror.CodeMirror {
+  height: 100%;
 }
 
 .editor-wrapper {
@@ -99,15 +99,16 @@ body {
 .text {
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   color: white;
-  text-decoration: none !important;
+  text-decoration: none;
   font-family: monospace;
+  display: inline-block;
 }
 
 .links {
   float: right;
   margin-right: 10vw;
   width: 30vw;
-  z-index: -1 !important;
+  z-index: -1;
 }
 
 .links > span {
@@ -121,19 +122,24 @@ body {
 
 li {
   width: fit-content;
+  margin: 0px 4px 2px 0px;
 }
 
 ul {
+  display: inline-block;
   list-style-type: circle;
   columns: 2;
   padding: 0;
-  font-size: small;
+  font-size: min(calc(6px + 0.7vw), 14px);
   margin: 3px;
+  color: white;
 }
 
 li:hover {
-  color: rgb(202, 75, 75);
-  font-size: medium;
+  color: pink;
+}
+.text:hover {
+  color: pink;
 }
 
 .css-11bc0l7 {
@@ -172,9 +178,7 @@ li:hover {
   width: 100%;
 }
 
-.css-vr1t9p {
-  background: none !important;
-}
+
 
 .result.smaller {
   display: none;
@@ -198,10 +202,10 @@ li:hover {
   width: auto;
 }
 
-.popup-content {
+.popup-content.popup-content {
   margin: auto;
-  color: white !important;
-  background: rgb(37, 1, 1) !important;
+  color: white;
+  background: rgb(37, 1, 1);
   padding: 5px;
 }
 
@@ -209,10 +213,10 @@ li:hover {
   color: rgb(255, 255, 255);
 }
 
-[role='tooltip'].popup-content {
-  width: 20vw !important;
+[role='tooltip'].popup-content.popup-content {
+  width: 20vw;
   min-width: 250px;
-  height: auto !important;
+  height: auto;
   box-shadow: rgba(0, 0, 0, 0.16) 3px;
 }
 
