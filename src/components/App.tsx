@@ -160,7 +160,7 @@ function App(): JSX.Element {
         <>
           {normalizedObject && (
             <div className="links">
-              <span>Actions used in workflow:</span>
+              <span>Actions used in provided workflow:</span>
               {LinksToActions(normalizedObject)}{' '}
             </div>
           )}

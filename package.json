@@ -1,5 +1,5 @@
 {
-  "homepage": "https://vazco-edu.github.io/kpz-2021-github-actions-builder",
+  "homepage": "http://vazco-edu.github.io/kpz-2021-github-actions-builder",
   "name": "gui",
   "version": "0.1.0",
   "private": true,
@@ -42,7 +42,9 @@
     "eject": "react-scripts eject",
     "lint": "eslint . --ext .ts,.tsx",
     "fix": "eslint . --ext .ts,.tsx --fix",
-    "style": "stylelint '**/*.css'"
+    "style": "stylelint '**/*.css'",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "vazco/typescript",
@@ -82,6 +84,7 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "gh-pages": "^3.2.0",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "stylelint": "^13.13.1",
