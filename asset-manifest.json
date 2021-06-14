@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/kpz-2021-github-actions-builder/static/css/main.5561ecd6.chunk.css",
+    "main.js": "/kpz-2021-github-actions-builder/static/js/main.56c1648c.chunk.js",
+    "main.js.map": "/kpz-2021-github-actions-builder/static/js/main.56c1648c.chunk.js.map",
+    "runtime-main.js": "/kpz-2021-github-actions-builder/static/js/runtime-main.dd3bdcb6.js",
+    "runtime-main.js.map": "/kpz-2021-github-actions-builder/static/js/runtime-main.dd3bdcb6.js.map",
+    "static/css/2.b34ba865.chunk.css": "/kpz-2021-github-actions-builder/static/css/2.b34ba865.chunk.css",
+    "static/js/2.9e3496c3.chunk.js": "/kpz-2021-github-actions-builder/static/js/2.9e3496c3.chunk.js",
+    "static/js/2.9e3496c3.chunk.js.map": "/kpz-2021-github-actions-builder/static/js/2.9e3496c3.chunk.js.map",
+    "index.html": "/kpz-2021-github-actions-builder/index.html",
+    "static/css/2.b34ba865.chunk.css.map": "/kpz-2021-github-actions-builder/static/css/2.b34ba865.chunk.css.map",
+    "static/css/main.5561ecd6.chunk.css.map": "/kpz-2021-github-actions-builder/static/css/main.5561ecd6.chunk.css.map",
+    "static/js/2.9e3496c3.chunk.js.LICENSE.txt": "/kpz-2021-github-actions-builder/static/js/2.9e3496c3.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.dd3bdcb6.js",
+    "static/css/2.b34ba865.chunk.css",
+    "static/js/2.9e3496c3.chunk.js",
+    "static/css/main.5561ecd6.chunk.css",
+    "static/js/main.56c1648c.chunk.js"
+  ]
+}
